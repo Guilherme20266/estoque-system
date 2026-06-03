@@ -425,13 +425,30 @@ def historico():
     if not operador_ou_admin():
         return redirect('/menu')
 
+    busca = request.args.get('busca', '')
+
     registros = Historico.query.order_by(
         Historico.id.desc()
     ).all()
 
+    if busca:
+
+        registros = [
+
+            r for r in registros
+
+            if busca.lower() in (r.usuario or '').lower()
+            or busca.lower() in (r.produto or '').lower()
+            or busca.lower() in (r.data or '').lower()
+            or busca.lower() in (r.origem or '').lower()
+            or busca.lower() in (r.destino or '').lower()
+
+        ]
+
     return render_template(
         'historico.html',
-        registros=registros
+        registros=registros,
+        busca=busca
     )
 
 # ==========================
