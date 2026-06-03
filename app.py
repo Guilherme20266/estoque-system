@@ -175,46 +175,46 @@ def cadastrar():
     if not operador_ou_admin():
         return redirect('/menu')
 
-    if request.method == 'POST':
+if request.method == 'POST':
 
-        endereco = (
-            f"{request.form['rua']}-"
-            f"{request.form['coluna']}-"
-            f"{request.form['nivel']}"
-        )
+    endereco = (
+        f"{request.form['rua']}-"
+        f"{request.form['coluna']}-"
+        f"{request.form['nivel']}"
+    )
 
-if not request.form['rua'].startswith("LAJE"):
-    existe = Produto.query.filter_by(endereco=endereco).first()
+    # regra: só valida duplicado se NÃO for LAJE
+    if not request.form['rua'].startswith("LAJE"):
 
-    if existe:
-        return redirect('/cadastrar?erro=endereco')
+        existe = Produto.query.filter_by(endereco=endereco).first()
 
-        produto = Produto(
-            codigo=request.form['codigo'],
-            nome=request.form['nome'],
-            quantidade=int(request.form['quantidade']),
-            validade=request.form['validade'],
-            endereco=endereco
-        )
+        if existe:
+            return redirect('/cadastrar?erro=endereco')
 
-        db.session.add(produto)
+    produto = Produto(
+        codigo=request.form['codigo'],
+        nome=request.form['nome'],
+        quantidade=int(request.form['quantidade']),
+        validade=request.form['validade'],
+        endereco=endereco
+    )
 
-        historico = Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-            usuario=session.get('usuario'),
-            acao="CADASTRO",
-            produto=produto.nome,
-            quantidade=produto.quantidade,
-            origem="-",
-            destino=endereco
-        )
+    db.session.add(produto)
 
-        db.session.add(historico)
+    historico = Historico(
+        data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+        usuario=session.get('usuario'),
+        acao="CADASTRO",
+        produto=produto.nome,
+        quantidade=produto.quantidade,
+        origem="-",
+        destino=endereco
+    )
 
-        db.session.commit()
+    db.session.add(historico)
+    db.session.commit()
 
-        return redirect('/cadastrar?sucesso=1')
-
+    return redirect('/cadastrar?sucesso=1')
     return render_template('cadastrar.html')
 
 # ==========================
