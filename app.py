@@ -175,48 +175,46 @@ def cadastrar():
     if not operador_ou_admin():
         return redirect('/menu')
 
-if request.method == 'POST':
+    if request.method == 'POST':
 
-    rua = request.form['rua']
-    coluna = int(request.form['coluna'])
-    nivel = int(request.form['nivel'])
+        endereco = (
+            f"{request.form['rua']}-"
+            f"{request.form['coluna']}-"
+            f"{request.form['nivel']}"
+        )
 
-    regras = {
-        "A": (60, 5),
-        "B": (70, 5),
-        "C": (80, 5),
-        "D": (80, 5),
-        "E": (44, 5),
-        "F": (44, 5),
-        "G": (46, 6),
-    }
+        existe = Produto.query.filter_by(endereco=endereco).first()
 
-    max_coluna, max_nivel = regras.get(rua, (0, 0))
+        if existe:
+            return redirect('/cadastrar?erro=endereco')
 
-    if coluna > max_coluna or nivel > max_nivel:
-        return redirect('/cadastrar?erro=endereco_invalido')
+        produto = Produto(
+            codigo=request.form['codigo'],
+            nome=request.form['nome'],
+            quantidade=int(request.form['quantidade']),
+            validade=request.form['validade'],
+            endereco=endereco
+        )
 
-    endereco = f"{rua}-{coluna}-{nivel}"
+        db.session.add(produto)
 
-    existe = Produto.query.filter_by(endereco=endereco).first()
+        historico = Historico(
+            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+            usuario=session.get('usuario'),
+            acao="CADASTRO",
+            produto=produto.nome,
+            quantidade=produto.quantidade,
+            origem="-",
+            destino=endereco
+        )
 
-    if existe:
-        return redirect('/cadastrar?erro=endereco')
+        db.session.add(historico)
 
-    produto = Produto(
-        codigo=request.form['codigo'],
-        nome=request.form['nome'],
-        quantidade=int(request.form['quantidade']),
-        validade=request.form['validade'],
-        endereco=endereco
-    )
+        db.session.commit()
 
-    db.session.add(produto)
-    db.session.commit()
+        return redirect('/cadastrar?sucesso=1')
 
-    return redirect('/cadastrar?sucesso=1')
-
-return render_template('cadastrar.html')
+    return render_template('cadastrar.html')
 
 # ==========================
 # INVENTÁRIO
