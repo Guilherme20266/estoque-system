@@ -177,11 +177,26 @@ def cadastrar():
 
     if request.method == 'POST':
 
-        endereco = (
-            f"{request.form['rua']}-"
-            f"{request.form['coluna']}-"
-            f"{request.form['nivel']}"
-        )
+    rua = request.form['rua']
+    coluna = int(request.form['coluna'])
+    nivel = int(request.form['nivel'])
+
+    regras = {
+        "A": (60, 5),
+        "B": (70, 5),
+        "C": (80, 5),
+        "D": (80, 5),
+        "E": (44, 5),
+        "F": (44, 5),
+        "G": (46, 6),
+    }
+
+    max_coluna, max_nivel = regras.get(rua, (0, 0))
+
+    if coluna > max_coluna or nivel > max_nivel:
+        return redirect('/cadastrar?erro=endereco_invalido')
+
+    endereco = f"{rua}-{coluna}-{nivel}"
 
         existe = Produto.query.filter_by(endereco=endereco).first()
 
