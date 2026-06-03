@@ -198,31 +198,18 @@ def cadastrar():
 
     endereco = f"{rua}-{coluna}-{nivel}"
 
-        existe = Produto.query.filter_by(endereco=endereco).first()
+    existe = Produto.query.filter_by(endereco=endereco).first()
 
-        if existe:
-            return redirect('/cadastrar?erro=endereco')
+    if existe:
+        return redirect('/cadastrar?erro=endereco')
 
-        produto = Produto(
-            codigo=request.form['codigo'],
-            nome=request.form['nome'],
-            quantidade=int(request.form['quantidade']),
-            validade=request.form['validade'],
-            endereco=endereco
-        )
-
-        db.session.add(produto)
-
-        historico = Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-            usuario=session.get('usuario'),
-            acao="CADASTRO",
-            produto=produto.nome,
-            quantidade=produto.quantidade,
-            origem="-",
-            destino=endereco
-        )
-
+    produto = Produto(
+        codigo=request.form['codigo'],
+        nome=request.form['nome'],
+        quantidade=int(request.form['quantidade']),
+        validade=request.form['validade'],
+        endereco=endereco
+    )
         db.session.add(historico)
 
         db.session.commit()
