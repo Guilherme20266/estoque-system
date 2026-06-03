@@ -183,7 +183,7 @@ def cadastrar():
             f"{request.form['nivel']}"
         )
 
-        if not request.form['rua'].startswith("LAJE"):
+if not request.form['rua'].startswith("LAJE"):
     existe = Produto.query.filter_by(endereco=endereco).first()
 
     if existe:
