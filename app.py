@@ -183,10 +183,11 @@ def cadastrar():
             f"{request.form['nivel']}"
         )
 
-        existe = Produto.query.filter_by(endereco=endereco).first()
+        if not request.form['rua'].startswith("LAJE"):
+    existe = Produto.query.filter_by(endereco=endereco).first()
 
-        if existe:
-            return redirect('/cadastrar?erro=endereco')
+    if existe:
+        return redirect('/cadastrar?erro=endereco')
 
         produto = Produto(
             codigo=request.form['codigo'],
