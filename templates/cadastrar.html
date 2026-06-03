@@ -4,6 +4,8 @@
 
 <title>Cadastrar</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 
 body{
@@ -12,29 +14,38 @@ background:#f4f4f4;
 padding:15px;
 }
 
+/* CONTAINER */
 .box{
 background:white;
 max-width:500px;
+width:100%;
 margin:auto;
-padding:15px;
+padding:20px;
 border-radius:10px;
+box-sizing:border-box;
 }
 
+/* INPUTS */
 input,select{
 width:100%;
-padding:10px;
-margin-bottom:10px;
+padding:12px;
+margin-bottom:12px;
+font-size:16px;
+box-sizing:border-box;
 }
 
+/* BOTÃO */
 button{
 width:100%;
-padding:12px;
+padding:14px;
 background:#007bff;
 color:white;
 border:none;
 border-radius:8px;
+font-size:16px;
 }
 
+/* ALERTAS */
 .alert{
 padding:12px;
 border-radius:8px;
@@ -50,6 +61,28 @@ background:#28a745;
 
 .erro{
 background:#dc3545;
+}
+
+/* 🔥 AJUSTE MOBILE */
+@media (max-width: 768px) {
+
+body{
+padding:10px;
+}
+
+.box{
+padding:15px;
+}
+
+input,select,button{
+font-size:16px;
+padding:14px;
+}
+
+h2{
+font-size:20px;
+}
+
 }
 
 </style>
@@ -76,14 +109,12 @@ background:#dc3545;
 
 <div class="box">
 
-<!-- SUCESSO -->
 {% if request.args.get('sucesso') %}
 <div class="alert sucesso">
     ✅ Produto cadastrado com sucesso!
 </div>
 {% endif %}
 
-<!-- ERRO ENDEREÇO -->
 {% if request.args.get('erro') == 'endereco' %}
 <div class="alert erro">
     ❌ Esse endereço já está ocupado!
@@ -116,9 +147,9 @@ background:#dc3545;
 <option value="K">K</option>
 <option value="L">L</option>
 <option value="M">M</option>
-<option value="M">LAJE1</option>
-<option value="M">LAJE2</option>
-<option value="M">LAJE3</option>
+<option value="LAJE1">LAJE1</option>
+<option value="LAJE2">LAJE2</option>
+<option value="LAJE3">LAJE3</option>
 </select>
 
 <select name="coluna">
