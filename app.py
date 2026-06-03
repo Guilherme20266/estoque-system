@@ -210,13 +210,13 @@ def cadastrar():
         validade=request.form['validade'],
         endereco=endereco
     )
-        db.session.add(historico)
 
-        db.session.commit()
+    db.session.add(produto)
+    db.session.commit()
 
-        return redirect('/cadastrar?sucesso=1')
+    return redirect('/cadastrar?sucesso=1')
 
-    return render_template('cadastrar.html')
+return render_template('cadastrar.html')
 
 # ==========================
 # INVENTÁRIO
