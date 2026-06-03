@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Inventário</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+    padding:15px;
+    margin:0;
+}
+
+.box{
+    max-width:600px;
+    margin:auto;
+}
+
+h2{
+    text-align:center;
+}
+
+.menu-btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#6c757d;
+    color:white;
+    font-size:15px;
+    margin-bottom:10px;
+}
+
+.busca{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin-bottom:15px;
+    box-sizing:border-box;
+}
+
+.card{
+    background:white;
+    padding:14px;
+    margin-bottom:12px;
+    border-radius:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+.urgente{
+    border-left:8px solid #dc3545;
+}
+
+.atencao{
+    border-left:8px solid #ffc107;
+}
+
+.ok{
+    border-left:8px solid #28a745;
+}
+
+.status{
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.piscando{
+    color:#dc3545;
+    font-weight:bold;
+    animation:piscar 1s infinite;
+}
+
+@keyframes piscar{
+    0%{opacity:1;}
+    50%{opacity:0;}
+    100%{opacity:1;}
+}
+
+.nome{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.info{
+    color:#555;
+    line-height:1.7;
+}
+
+.botoes{
+    margin-top:12px;
+}
+
+.btn{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    margin-top:6px;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.mov{
+    background:#007bff;
+}
+
+.transf{
+    background:#28a745;
+}
+
+.edit{
+    background:#ffc107;
+    color:#000;
+}
+
+.del{
+    background:#dc3545;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>📦 Inventário</h2>
+
+<a href="/menu">
+    <button class="menu-btn">🏠 Menu</button>
+</a>
+
+<input
+type="text"
+id="busca"
+class="busca"
+placeholder="Buscar produto, código ou endereço..."
+onkeyup="filtrar()"
+>
+
+{% for item in lista %}
+
+<div
+class="card
+{% if item.status == 'URGENTE' %}
+urgente
+{% elif item.status == 'ATENCAO' %}
+atencao
+{% else %}
+ok
+{% endif %}"
+data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.endereco }}"
+>
+
+<div class="status">
+
+{% if item.status == 'URGENTE' %}
+<span class="piscando">🚨 URGENTE</span>
+
+{% elif item.status == 'ATENCAO' %}
+🟡 ATENÇÃO
+
+{% else %}
+🟢 OK
+{% endif %}
+
+</div>
+
+<div class="nome">
+{{ item.produto.nome }}
+</div>
+
+<div class="info">
+
+🏷️ Código: {{ item.produto.codigo }}<br>
+📦 Quantidade: {{ item.produto.quantidade }}<br>
+📅 Validade: {{ item.produto.validade }}<br>
+📍 Endereço: {{ item.produto.endereco }}
+
+</div>
+
+<div class="botoes">
+
+<a href="/movimentacao">
+<button class="btn mov">🔄 Movimentação</button>
+</a>
+
+<a href="/transferencia">
+<button class="btn transf">📍 Transferir</button>
+</a>
+
+<a href="/editar/{{ item.produto.id }}">
+<button class="btn edit">✏️ Editar Produto</button>
+</a>
+
+<a href="/excluir/{{ item.produto.id }}"
+   onclick="return confirm('Deseja realmente excluir este produto?')">
+    <button class="btn del">🗑️ Excluir</button>
+</a>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<script>
+
+function filtrar(){
+
+let busca =
+document.getElementById("busca").value.toLowerCase();
+
+let cards =
+document.querySelectorAll(".card");
+
+cards.forEach(card => {
+
+let texto =
+card.dataset.texto.toLowerCase();
+
+if(texto.includes(busca)){
+card.style.display = "block";
+}else{
+card.style.display = "none";
+}
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

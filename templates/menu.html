@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Sistema de Estoque</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+    margin:0;
+    padding:15px;
+}
+
+.box{
+    max-width:550px;
+    margin:auto;
+}
+
+.topo{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    text-align:center;
+    margin-bottom:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+h1{
+    margin:0;
+    font-size:24px;
+}
+
+.sub{
+    color:#666;
+    margin-top:5px;
+}
+
+.usuario{
+    margin-top:10px;
+    font-size:14px;
+    color:#555;
+}
+
+.btn{
+    width:100%;
+    padding:16px;
+    margin-bottom:12px;
+    border:none;
+    border-radius:12px;
+    color:white;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.cadastro{
+    background:#28a745;
+}
+
+.inventario{
+    background:#007bff;
+}
+
+.movimentacao{
+    background:#fd7e14;
+}
+
+.transferencia{
+    background:#6f42c1;
+}
+
+.historico{
+    background:#343a40;
+}
+
+.admin{
+    background:#dc3545;
+}
+
+.logout{
+    background:#6c757d;
+}
+
+a{
+    text-decoration:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<div class="topo">
+
+<h1>📦 Sistema de Estoque</h1>
+
+<div class="sub">
+Controle de produtos e endereços
+</div>
+
+<div class="usuario">
+👤 {{ usuario }} | {{ perfil }}
+</div>
+
+</div>
+
+{% if perfil == "admin" %}
+
+<a href="/cadastrar">
+<button class="btn cadastro">
+➕ Cadastrar Produto
+</button>
+</a>
+
+{% endif %}
+
+<a href="/consulta">
+<button class="btn inventario">
+🔎 Consulta
+</button>
+</a>
+
+<a href="/inventario">
+<button class="btn inventario">
+📦 Inventário
+</button>
+</a>
+
+{% if perfil == "admin" or perfil == "operador" %}
+
+<a href="/movimentacao">
+<button class="btn movimentacao">
+🔄 Movimentação
+</button>
+</a>
+
+<a href="/transferencia">
+<button class="btn transferencia">
+📍 Transferência
+</button>
+</a>
+
+<a href="/historico">
+<button class="btn historico">
+📜 Histórico
+</button>
+</a>
+
+{% endif %}
+
+{% if perfil == "admin" %}
+
+<a href="/administracao">
+<button class="btn admin">
+⚙️ Administração
+</button>
+</a>
+
+{% endif %}
+
+<a href="/logout">
+<button class="btn logout">
+🚪 Sair
+</button>
+</a>
+
+</div>
+
+</body>
+</html>

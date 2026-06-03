@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Cadastrar</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+padding:15px;
+}
+
+.box{
+background:white;
+max-width:500px;
+margin:auto;
+padding:15px;
+border-radius:10px;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#007bff;
+color:white;
+border:none;
+border-radius:8px;
+}
+
+.alert{
+padding:12px;
+border-radius:8px;
+margin-bottom:10px;
+text-align:center;
+font-weight:bold;
+color:white;
+}
+
+.sucesso{
+background:#28a745;
+}
+
+.erro{
+background:#dc3545;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<a href="/menu">
+    <button style="
+        width:100%;
+        padding:12px;
+        border:none;
+        border-radius:8px;
+        background:#6c757d;
+        color:white;
+        font-size:15px;
+        margin-bottom:10px;
+        cursor:pointer;
+    ">
+        🏠 Voltar ao Menu
+    </button>
+</a>
+
+<div class="box">
+
+<!-- SUCESSO -->
+{% if request.args.get('sucesso') %}
+<div class="alert sucesso">
+    ✅ Produto cadastrado com sucesso!
+</div>
+{% endif %}
+
+<!-- ERRO ENDEREÇO -->
+{% if request.args.get('erro') == 'endereco' %}
+<div class="alert erro">
+    ❌ Esse endereço já está ocupado!
+</div>
+{% endif %}
+
+<h2>➕ Cadastrar Produto</h2>
+
+<form method="POST">
+
+<input name="nome" placeholder="Nome" required>
+
+<input name="codigo" placeholder="Código">
+
+<input type="number" name="quantidade" placeholder="Quantidade" required>
+
+<input name="validade" placeholder="DD/MM/AAAA">
+
+<select name="rua">
+<option value="A">A</option>
+<option value="B">B</option>
+<option value="C">C</option>
+<option value="D">D</option>
+<option value="E">E</option>
+<option value="F">F</option>
+<option value="G">G</option>
+<option value="H">H</option>
+<option value="I">I</option>
+<option value="J">J</option>
+<option value="K">K</option>
+<option value="L">L</option>
+<option value="M">M</option>
+<option value="M">LAJE1</option>
+<option value="M">LAJE2</option>
+<option value="M">LAJE3</option>
+</select>
+
+<select name="coluna">
+{% for i in range(1,61) %}
+<option value="{{i}}">{{i}}</option>
+{% endfor %}
+</select>
+
+<select name="nivel">
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+</select>
+
+<button type="submit">
+Salvar
+</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

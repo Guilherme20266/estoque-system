@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Transferência</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+    margin:0;
+    padding:15px;
+}
+
+.box{
+    max-width:600px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+h2{
+    text-align:center;
+}
+
+.menu{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#6c757d;
+    color:white;
+    margin-bottom:15px;
+}
+
+select,input{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    background:#28a745;
+    color:white;
+}
+
+.info{
+    color:#555;
+    line-height:1.8;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>📍 Transferência</h2>
+
+<a href="/">
+<button class="menu">
+🏠 Voltar ao Menu
+</button>
+</a>
+
+{% for produto in produtos %}
+
+<div class="card">
+
+<b>{{ produto.nome }}</b>
+
+<div class="info">
+
+🏷️ Código: {{ produto.codigo }}
+
+<br>
+
+📦 Quantidade: {{ produto.quantidade }}
+
+<br>
+
+📍 Atual: {{ produto.endereco }}
+
+</div>
+
+<form method="POST">
+
+<input
+type="hidden"
+name="produto_id"
+value="{{ produto.id }}"
+>
+
+<input
+type="text"
+name="novo_endereco"
+placeholder="Novo endereço (Ex: A-10-3)"
+required
+>
+
+<button type="submit">
+Transferir
+</button>
+
+</form>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>

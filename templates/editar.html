@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Editar Produto</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+    padding:15px;
+}
+
+.box{
+    max-width:500px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#28a745;
+    color:white;
+    font-size:16px;
+}
+
+.voltar{
+    background:#6c757d;
+    margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>✏️ Editar Produto</h2>
+
+<form method="POST">
+
+<input type="text" name="nome" value="{{ produto.nome }}" required>
+
+<input type="text" name="codigo" value="{{ produto.codigo }}" required>
+
+<input type="text" name="validade" value="{{ produto.validade }}" placeholder="dd/mm/aaaa">
+
+<button type="submit">
+💾 Salvar Alterações
+</button>
+
+</form>
+
+<a href="/inventario">
+<button class="voltar">
+⬅️ Voltar
+</button>
+</a>
+
+</div>
+
+</body>
+</html>

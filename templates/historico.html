@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Histórico</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+    margin:0;
+    padding:15px;
+}
+
+.box{
+    max-width:700px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.menu{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#6c757d;
+    color:white;
+    margin-bottom:15px;
+}
+
+h2{
+    text-align:center;
+}
+
+.info{
+    line-height:1.8;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>📜 Histórico</h2>
+
+<a href="/">
+<button class="menu">
+🏠 Voltar ao Menu
+</button>
+</a>
+
+{% for item in registros %}
+
+<div class="card">
+
+<div class="info">
+
+🕒 {{ item.data }}
+
+<br>
+
+📌 {{ item.acao }}
+
+<br>
+
+📦 {{ item.produto }}
+
+<br>
+
+🔢 Quantidade: {{ item.quantidade }}
+
+<br>
+
+📍 Origem: {{ item.origem }}
+
+<br>
+
+📍 Destino: {{ item.destino }}
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>
