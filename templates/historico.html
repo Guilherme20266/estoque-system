@@ -62,6 +62,22 @@ h2{
 </button>
 </a>
 
+<form method="GET" action="/historico">
+
+<input 
+    type="text" 
+    name="busca" 
+    placeholder="Buscar usuário, produto, data ou endereço"
+    value="{{ busca }}"
+    style="width:100%;padding:10px;margin-bottom:15px;border-radius:8px;border:1px solid #ccc;"
+>
+
+<button type="submit" class="menu">
+🔍 Pesquisar
+</button>
+
+</form>
+    
 {% for item in registros %}
 
 <div class="card">
