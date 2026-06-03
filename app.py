@@ -486,11 +486,25 @@ def consulta():
 
 @app.route('/excluir/<int:id>')
 def excluir(id):
+
     produto = Produto.query.get_or_404(id)
+
+    historico = Historico(
+        data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+        usuario=session.get('usuario'),
+        acao="EXCLUSAO",
+        produto=produto.nome,
+        quantidade=produto.quantidade,
+        origem=produto.endereco,
+        destino="-"
+    )
+
+    db.session.add(historico)
+
     db.session.delete(produto)
     db.session.commit()
-    return redirect('/inventario')
 
+    return redirect('/inventario')
 # ==========================
 # ADMINISTRAÇÃO
 # ==========================
