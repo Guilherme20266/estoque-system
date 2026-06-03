@@ -219,8 +219,8 @@ def cadastrar():
 
         except Exception as e:
             db.session.rollback()
-            print("ERRO CADASTRO:", e)
-            return "Erro interno no cadastro"
+            print("ERRO CADASTRO COMPLETO:", str(e))
+            return f"Erro interno: {str(e)}"
 
     return render_template('cadastrar.html')
 
