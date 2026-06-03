@@ -38,6 +38,8 @@ class Historico(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     data = db.Column(db.String(30))
+    usuario = db.Column(db.String(100))
+
     acao = db.Column(db.String(50))
     produto = db.Column(db.String(200))
     quantidade = db.Column(db.Integer)
@@ -198,6 +200,7 @@ def cadastrar():
 
         historico = Historico(
             data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+            usuario=session.get('usuario'),
             acao="CADASTRO",
             produto=produto.nome,
             quantidade=produto.quantidade,
@@ -318,6 +321,7 @@ def movimentacao():
 
             historico = Historico(
                 data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+                usuario=session.get('usuario'),
                 acao="ENTRADA",
                 produto=produto.nome,
                 quantidade=quantidade,
@@ -333,6 +337,7 @@ def movimentacao():
 
             historico = Historico(
                 data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+                usuario=session.get('usuario'),
                 acao="SAIDA",
                 produto=produto.nome,
                 quantidade=quantidade,
@@ -391,6 +396,7 @@ def transferencia():
 
         historico = Historico(
             data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+            usuario=session.get('usuario'),
             acao="TRANSFERENCIA",
             produto=produto.nome,
             quantidade=produto.quantidade,
