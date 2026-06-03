@@ -1,3 +1,5 @@
+APP.PY
+
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -300,63 +302,60 @@ def movimentacao():
 
     if request.method == 'POST':
 
-    produto_id = request.form['produto_id']
-    acao = request.form['acao']
-    quantidade = int(request.form['quantidade'])
+        produto_id = request.form['produto_id']
 
-    produto = Produto.query.get(produto_id)
+        acao = request.form['acao']
 
-    if not produto:
+        quantidade = int(
+            request.form['quantidade']
+        )
+
+        produto = Produto.query.get(
+            produto_id
+        )
+
+        if not produto:
+            return redirect('/movimentacao')
+
+        if acao == "entrada":
+
+            produto.quantidade += quantidade
+
+            historico = Historico(
+                data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+                usuario=session.get('usuario'),
+                acao="ENTRADA",
+                produto=produto.nome,
+                quantidade=quantidade,
+                origem=produto.endereco,
+                destino=produto.endereco
+            )
+
+            db.session.add(historico)
+
+        if acao == "saida":
+
+            produto.quantidade -= quantidade
+
+            historico = Historico(
+                data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+                usuario=session.get('usuario'),
+                acao="SAIDA",
+                produto=produto.nome,
+                quantidade=quantidade,
+                origem=produto.endereco,
+                destino="-"
+            )
+
+            db.session.add(historico)
+
+            if produto.quantidade <= 0:
+
+                db.session.delete(produto)
+
+        db.session.commit()
+
         return redirect('/movimentacao')
-
-    # ======================
-    # ENTRADA
-    # ======================
-    if acao == "entrada":
-
-        quantidade_antes = produto.quantidade
-        produto.quantidade += quantidade
-        quantidade_depois = produto.quantidade
-
-        historico = Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-            usuario=session.get('usuario'),
-            acao="ENTRADA",
-            produto=produto.nome,
-            quantidade=quantidade,
-            origem=f"{quantidade_antes} → {quantidade_depois}",
-            destino=produto.endereco
-        )
-
-        db.session.add(historico)
-
-    # ======================
-    # SAÍDA
-    # ======================
-    if acao == "saida":
-
-        quantidade_antes = produto.quantidade
-        produto.quantidade -= quantidade
-        quantidade_depois = produto.quantidade
-
-        historico = Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-            usuario=session.get('usuario'),
-            acao="SAIDA",
-            produto=produto.nome,
-            quantidade=quantidade,
-            origem=f"{quantidade_antes} → {quantidade_depois}",
-            destino="-"
-        )
-
-        db.session.add(historico)
-
-        if produto.quantidade <= 0:
-            db.session.delete(produto)
-
-    db.session.commit()
-
-    return redirect('/movimentacao')
 
     return render_template(
         'movimentacao.html',
@@ -489,25 +488,9 @@ def consulta():
 
 @app.route('/excluir/<int:id>')
 def excluir(id):
-
     produto = Produto.query.get_or_404(id)
-
-    historico = Historico(
-        data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-        usuario=session.get('usuario'),
-        acao="EXCLUSAO",
-        produto=produto.nome,
-        quantidade=produto.quantidade,
-        origem=produto.endereco,
-        destino="-"
-    )
-
-    db.session.add(historico)
-
     db.session.delete(produto)
-
     db.session.commit()
-
     return redirect('/inventario')
 
 # ==========================
