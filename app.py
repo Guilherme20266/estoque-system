@@ -175,7 +175,7 @@ def cadastrar():
     if not operador_ou_admin():
         return redirect('/menu')
 
-    if request.method == 'POST':
+if request.method == 'POST':
 
     rua = request.form['rua']
     coluna = int(request.form['coluna'])
