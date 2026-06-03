@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 app.secret_key = "estoque_super_secreto_2026"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///estoque.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://automatico:yC0t7wVgQ2ozXUMfhtdUT8l4FZue9HW3@dpg-d8fpjbv7f7vs73ejl8sg-a.oregon-postgres.render.com/estoque_zd9a"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
