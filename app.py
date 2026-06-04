@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # ==========================
-# MODELS
+# MODELOS
 # ==========================
 class Produto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -39,28 +39,24 @@ class Usuario(db.Model):
     senha = db.Column(db.String(100), nullable=False)
     perfil = db.Column(db.String(20), nullable=False)
 
+
 # ==========================
-# PERMISSÕES (CORRIGIDO)
+# PERMISSÕES
 # ==========================
 def logado():
     return session.get('usuario') is not None
 
-
 def perfil():
     return session.get('perfil')
-
 
 def is_admin():
     return perfil() == 'admin'
 
-
 def is_operador():
     return perfil() == 'operador'
 
-
 def is_separacao():
     return perfil() == 'separacao'
-
 
 def is_consulta():
     return perfil() == 'consulta'
@@ -69,42 +65,41 @@ def is_consulta():
 def pode_consultar():
     return perfil() in ['admin', 'operador', 'separacao', 'consulta']
 
-
-def pode_cadastrar():
-    return perfil() in ['admin', 'separacao']
-
-
 def pode_inventario():
     return perfil() in ['admin', 'operador', 'separacao']
-
 
 def pode_editar():
     return perfil() in ['admin', 'operador']
 
+def pode_transferir():
+    return perfil() in ['admin', 'operador']
+
+def pode_cadastrar():
+    return perfil() in ['admin', 'separacao']
 
 def pode_movimentar():
     return perfil() in ['admin', 'operador', 'separacao']
 
 
-def pode_transferir():
-    return perfil() in ['admin', 'operador']
-
-
+# ==========================
+# STATUS
+# ==========================
 def calcular_status(validade):
     try:
         hoje = datetime.today()
         data = datetime.strptime(validade, "%d/%m/%Y")
 
-        meses = (data.year - hoje.year) * 12 + data.month - hoje.month
+        meses = (data.year - hoje.year) * 12 + (data.month - hoje.month)
 
         if meses <= 4:
             return "URGENTE", 1
         elif meses <= 7:
             return "ATENÇÃO", 2
-        return "OK", 3
-
+        else:
+            return "OK", 3
     except:
         return "SEM_DATA", 4
+
 
 # ==========================
 # LOGIN
@@ -132,24 +127,18 @@ def entrar():
     return redirect('/menu')
 
 
+@app.route('/menu')
+def menu():
+    if not logado():
+        return redirect('/')
+    return render_template('menu.html', usuario=session['usuario'], perfil=session['perfil'])
+
+
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect('/')
 
-# ==========================
-# MENU (CONTROLADO POR PERFIL)
-# ==========================
-@app.route('/menu')
-def menu():
-    if not logado():
-        return redirect('/')
-
-    return render_template(
-        'menu.html',
-        perfil=perfil(),
-        usuario=session.get('usuario')
-    )
 
 # ==========================
 # INVENTÁRIO
@@ -167,7 +156,6 @@ def inventario():
     lista = []
     for p in produtos:
         status, prioridade = calcular_status(p.validade)
-
         lista.append({
             "produto": p,
             "status": status,
@@ -175,38 +163,39 @@ def inventario():
         })
 
     lista.sort(key=lambda x: x["prioridade"])
-
     return render_template('inventario.html', lista=lista)
+
 
 # ==========================
 # CADASTRO
 # ==========================
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
+    if not logado():
+        return redirect('/')
+
     if not pode_cadastrar():
         return redirect('/menu')
 
     if request.method == 'POST':
-
         endereco = f"{request.form['rua']}-{request.form['coluna']}-{request.form['nivel']}"
 
         if Produto.query.filter_by(endereco=endereco).first():
             return redirect('/cadastrar?erro=endereco')
 
-        produto = Produto(
+        db.session.add(Produto(
             codigo=request.form['codigo'],
             nome=request.form['nome'],
             quantidade=int(request.form['quantidade']),
             validade=request.form['validade'],
             endereco=endereco
-        )
+        ))
 
-        db.session.add(produto)
         db.session.commit()
-
         return redirect('/cadastrar?sucesso=1')
 
     return render_template('cadastrar.html')
+
 
 # ==========================
 # EDITAR
@@ -222,11 +211,11 @@ def editar(id):
         produto.nome = request.form['nome']
         produto.codigo = request.form['codigo']
         produto.validade = request.form['validade']
-
         db.session.commit()
         return redirect('/inventario')
 
     return render_template('editar.html', produto=produto)
+
 
 # ==========================
 # MOVIMENTAÇÃO
@@ -237,23 +226,18 @@ def movimentacao():
         return redirect('/menu')
 
     produto = Produto.query.get(request.form['produto_id'])
-    acao = request.form['acao']
     qtd = int(request.form['quantidade'])
 
-    if not produto:
-        return redirect('/inventario')
-
-    if acao == "entrada":
+    if request.form['acao'] == "entrada":
         produto.quantidade += qtd
-
-    if acao == "saida":
+    else:
         produto.quantidade -= qtd
-
         if produto.quantidade <= 0:
             db.session.delete(produto)
 
     db.session.commit()
     return redirect('/inventario')
+
 
 # ==========================
 # TRANSFERÊNCIA
@@ -271,8 +255,8 @@ def transferencia():
 
     produto.endereco = novo
     db.session.commit()
-
     return redirect('/inventario')
+
 
 # ==========================
 # CONSULTA
@@ -282,30 +266,16 @@ def consulta():
     if not pode_consultar():
         return redirect('/menu')
 
-    busca = request.args.get('busca', '')
-
     produtos = Produto.query.all()
-
-    if busca:
-        produtos = [
-            p for p in produtos
-            if busca.lower() in p.nome.lower()
-            or busca.lower() in p.codigo.lower()
-            or busca.lower() in p.endereco.lower()
-        ]
 
     lista = []
     for p in produtos:
         status, prioridade = calcular_status(p.validade)
-        lista.append({
-            "produto": p,
-            "status": status,
-            "prioridade": prioridade
-        })
+        lista.append({"produto": p, "status": status, "prioridade": prioridade})
 
     lista.sort(key=lambda x: x["prioridade"])
-
     return render_template('consulta.html', lista=lista)
+
 
 # ==========================
 # ADMIN
@@ -315,16 +285,14 @@ def administracao():
     if not is_admin():
         return redirect('/menu')
 
-    usuarios = Usuario.query.all()
-
     return render_template(
         'administracao.html',
-        usuarios=usuarios
+        usuarios=Usuario.query.all(),
+        produtos=Produto.query.all(),
+        historicos=Historico.query.order_by(Historico.id.desc()).limit(50).all()
     )
 
-# ==========================
-# CRIAR USUÁRIO
-# ==========================
+
 @app.route('/criar-usuario', methods=['POST'])
 def criar_usuario():
     if not is_admin():
@@ -333,28 +301,42 @@ def criar_usuario():
     if Usuario.query.filter_by(usuario=request.form['usuario']).first():
         return redirect('/administracao')
 
-    novo = Usuario(
+    db.session.add(Usuario(
         usuario=request.form['usuario'],
         senha=request.form['senha'],
         perfil=request.form['perfil']
-    )
+    ))
 
-    db.session.add(novo)
     db.session.commit()
-
     return redirect('/administracao')
 
+
+@app.route('/excluir-usuario/<int:id>')
+def excluir_usuario(id):
+    if not is_admin():
+        return redirect('/menu')
+
+    user = Usuario.query.get_or_404(id)
+
+    if user.usuario == "admin":
+        return redirect('/administracao')
+
+    db.session.delete(user)
+    db.session.commit()
+    return redirect('/administracao')
+
+
 # ==========================
-# INIT DB
+# INIT
 # ==========================
 with app.app_context():
     db.create_all()
 
-    if not Usuario.query.filter_by(usuario='admin').first():
+    if not Usuario.query.filter_by(usuario="admin").first():
         db.session.add(Usuario(
-            usuario='admin',
-            senha='10080810',
-            perfil='admin'
+            usuario="admin",
+            senha="10080810",
+            perfil="admin"
         ))
         db.session.commit()
 
