@@ -42,7 +42,7 @@ class Historico(db.Model):
 
     acao = db.Column(db.String(50))
     produto = db.Column(db.String(200))
-    quantidade = db.Column(db.Integer)
+    quantidade = db.Column(db.String(50))
 
     origem = db.Column(db.String(20))
     destino = db.Column(db.String(20))
@@ -321,7 +321,9 @@ def movimentacao():
             return redirect('/movimentacao')
 
         if acao == "entrada":
-
+            
+            quantidade_antes = produto.quantidade
+            
             produto.quantidade += quantidade
 
             historico = Historico(
@@ -329,7 +331,7 @@ def movimentacao():
                 usuario=session.get('usuario'),
                 acao="ENTRADA",
                 produto=produto.nome,
-                quantidade=quantidade,
+                quantidade=f"{quantidade_antes}+{quantidade}",
                 origem=produto.endereco,
                 destino=produto.endereco
             )
@@ -341,7 +343,8 @@ def movimentacao():
             return redirect('/movimentacao?sucesso=entrada')
 
         if acao == "saida":
-
+            quantidade_antes = produto.quantidade
+            
             produto.quantidade -= quantidade
 
             historico = Historico(
@@ -349,7 +352,7 @@ def movimentacao():
                 usuario=session.get('usuario'),
                 acao="SAIDA",
                 produto=produto.nome,
-                quantidade=quantidade,
+                quantidade=f"{quantidade_antes}-{quantidade}",
                 origem=produto.endereco,
                 destino="-"
             )
