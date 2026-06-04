@@ -85,6 +85,11 @@ def admin():
 
 def operador_ou_admin():
     return session.get('perfil') in ['admin', 'operador']
+    
+
+def operador_ou_admin_ou_separacao():
+    return session.get('perfil') in ['admin', 'operador', 'separacao']
+
 
 def calcular_status(validade):
 
