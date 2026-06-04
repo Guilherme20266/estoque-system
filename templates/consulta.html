@@ -31,7 +31,7 @@ border:none;
 border-radius:8px;
 background:#6c757d;
 color:white;
-margin-bottom:15px;
+margin-bottom:10px;
 }
 
 .busca{
@@ -39,8 +39,20 @@ width:100%;
 padding:12px;
 border-radius:8px;
 border:1px solid #ccc;
-margin-bottom:15px;
+margin-bottom:10px;
 box-sizing:border-box;
+}
+
+.export{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#28a745;
+color:white;
+margin-bottom:15px;
+font-size:15px;
+cursor:pointer;
 }
 
 .card{
@@ -51,17 +63,9 @@ margin-bottom:12px;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.urgente{
-border-left:8px solid red;
-}
-
-.atencao{
-border-left:8px solid orange;
-}
-
-.ok{
-border-left:8px solid green;
-}
+.urgente{ border-left:8px solid red; }
+.atencao{ border-left:8px solid orange; }
+.ok{ border-left:8px solid green; }
 
 .piscando{
 color:red;
@@ -86,11 +90,10 @@ animation:piscar 1s infinite;
 <h2>🔎 Consulta</h2>
 
 <a href="/">
-<button class="menu">
-🏠 Voltar ao Menu
-</button>
+<button class="menu">🏠 Voltar ao Menu</button>
 </a>
 
+<!-- BUSCA -->
 <form method="GET">
 
 <input
@@ -102,6 +105,13 @@ value="{{ busca }}"
 >
 
 </form>
+
+<!-- BOTÃO EXPORTAR -->
+<a href="/exportar-consulta?busca={{ busca }}">
+    <button class="export">
+        📊 Exportar Excel
+    </button>
+</a>
 
 {% for item in lista %}
 
@@ -125,23 +135,19 @@ ok
 
 <br><br>
 
-🏷️ Código:
-{{ item.produto.codigo }}
+🏷️ Código: {{ item.produto.codigo }}
 
 <br>
 
-📦 Quantidade:
-{{ item.produto.quantidade }}
+📦 Quantidade: {{ item.produto.quantidade }}
 
 <br>
 
-📅 Validade:
-{{ item.produto.validade }}
+📅 Validade: {{ item.produto.validade }}
 
 <br>
 
-📍 Endereço:
-{{ item.produto.endereco }}
+📍 Endereço: {{ item.produto.endereco }}
 
 </div>
 
