@@ -321,6 +321,7 @@ def movimentacao():
             return redirect('/movimentacao')
 
         if acao == "entrada":
+            return redirect('/movimentacao?sucesso=entrada')
 
             produto.quantidade += quantidade
 
@@ -337,6 +338,7 @@ def movimentacao():
             db.session.add(historico)
 
         if acao == "saida":
+            return redirect('/movimentacao?sucesso=saida')
 
             produto.quantidade -= quantidade
 
@@ -358,7 +360,7 @@ def movimentacao():
 
         db.session.commit()
 
-        return redirect('/movimentacao')
+        return redirect('/movimentacao?sucesso=zerado')
 
     return render_template(
         'movimentacao.html',
