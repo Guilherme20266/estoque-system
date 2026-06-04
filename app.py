@@ -175,32 +175,36 @@ def cadastrar():
     if not operador_ou_admin():
         return redirect('/menu')
 
-    if request.method == 'POST':
+if request.method == 'POST':
 
-        rua = request.form.get('rua', '')
-        coluna = request.form.get('coluna', '')
-        nivel = request.form.get('nivel', '')
+    rua = request.form.get('rua', '')
+    coluna = request.form.get('coluna', '')
+    nivel = request.form.get('nivel', '')
 
+    # LAJE pode repetir → cria ID único interno
+    if rua.startswith("LAJE"):
+        endereco = f"{rua}-{coluna}-{nivel}-{datetime.now().timestamp()}"
+    else:
         endereco = f"{rua}-{coluna}-{nivel}"
 
-        # só valida duplicado se NÃO for LAJE
-        if not rua.startswith("LAJE"):
+    # só valida duplicado se NÃO for LAJE
+    if not rua.startswith("LAJE"):
 
-            existe = Produto.query.filter_by(endereco=endereco).first()
+        existe = Produto.query.filter_by(endereco=endereco).first()
 
-            if existe:
-                return redirect('/cadastrar?erro=endereco')
+        if existe:
+            return redirect('/cadastrar?erro=endereco')
 
-        try:
-            produto = Produto(
-                codigo=request.form.get('codigo', ''),
-                nome=request.form.get('nome', ''),
-                quantidade=int(request.form.get('quantidade', 0)),
-                validade=request.form.get('validade', ''),
-                endereco=endereco
-            )
+    try:
+        produto = Produto(
+            codigo=request.form.get('codigo', ''),
+            nome=request.form.get('nome', ''),
+            quantidade=int(request.form.get('quantidade', 0)),
+            validade=request.form.get('validade', ''),
+            endereco=endereco
+        )
 
-            db.session.add(produto)
+        db.session.add(produto)
 
             historico = Historico(
                 data=datetime.now().strftime("%d/%m/%Y %H:%M"),
