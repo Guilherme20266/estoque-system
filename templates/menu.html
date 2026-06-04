@@ -121,6 +121,16 @@ Controle de produtos e endereços
 
 {% endif %}
 
+{% if perfil == "admin" or perfil == "separacao" %}
+
+<a href="/administracao">
+<button class="btn admin">
+⚙️ Administração
+</button>
+</a>
+
+{% endif %}
+
 <a href="/consulta">
 <button class="btn inventario">
 🔎 Consulta
