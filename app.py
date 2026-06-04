@@ -322,9 +322,7 @@ def movimentacao():
             return redirect('/movimentacao')
 
         if acao == "entrada":
-            
-            quantidade_antes = produto.quantidade
-            
+
             produto.quantidade += quantidade
 
             historico = Historico(
@@ -332,7 +330,7 @@ def movimentacao():
                 usuario=session.get('usuario'),
                 acao="ENTRADA",
                 produto=produto.nome,
-                quantidade=f"{quantidade_antes}+{quantidade}",
+                quantidade=quantidade,
                 origem=produto.endereco,
                 destino=produto.endereco
             )
@@ -344,8 +342,7 @@ def movimentacao():
             return redirect('/movimentacao?sucesso=entrada')
 
         if acao == "saida":
-            quantidade_antes = produto.quantidade
-            
+
             produto.quantidade -= quantidade
 
             historico = Historico(
@@ -353,7 +350,7 @@ def movimentacao():
                 usuario=session.get('usuario'),
                 acao="SAIDA",
                 produto=produto.nome,
-                quantidade=f"{quantidade_antes}-{quantidade}",
+                quantidade=quantidade,
                 origem=produto.endereco,
                 destino="-"
             )
@@ -377,7 +374,6 @@ def movimentacao():
         produtos=produtos,
         busca=busca
     )
-
 # ==========================
 # TRANSFERÊNCIA
 # ==========================
