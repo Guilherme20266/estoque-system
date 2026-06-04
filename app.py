@@ -86,6 +86,9 @@ def admin():
 def operador_ou_admin():
     return session.get('perfil') in ['admin', 'operador']
 
+def acesso_movimentacao():
+    return session.get('perfil') in ['admin', 'operador', 'separacao']
+
 def calcular_status(validade):
 
     try:
@@ -291,9 +294,7 @@ def movimentacao():
             p for p in produtos
 
             if busca.lower() in p.nome.lower()
-
             or busca.lower() in p.codigo.lower()
-
             or busca.lower() in p.endereco.lower()
 
         ]
@@ -301,16 +302,10 @@ def movimentacao():
     if request.method == 'POST':
 
         produto_id = request.form['produto_id']
-
         acao = request.form['acao']
+        quantidade = int(request.form['quantidade'])
 
-        quantidade = int(
-            request.form['quantidade']
-        )
-
-        produto = Produto.query.get(
-            produto_id
-        )
+        produto = Produto.query.get(produto_id)
 
         if not produto:
             return redirect('/movimentacao')
@@ -331,7 +326,7 @@ def movimentacao():
 
             db.session.add(historico)
 
-        if acao == "saida":
+        elif acao == "saida":
 
             produto.quantidade -= quantidade
 
@@ -348,7 +343,6 @@ def movimentacao():
             db.session.add(historico)
 
             if produto.quantidade <= 0:
-
                 db.session.delete(produto)
 
         db.session.commit()
