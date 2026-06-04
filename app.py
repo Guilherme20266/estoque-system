@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect, session, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash, Response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from openpyxl import Workbook
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -522,15 +524,11 @@ def exportar_consulta():
     produtos = Produto.query.all()
 
     if busca:
-
         produtos = [
-
             p for p in produtos
-
             if busca.lower() in p.nome.lower()
             or busca.lower() in p.codigo.lower()
             or busca.lower() in p.endereco.lower()
-
         ]
 
     wb = Workbook()
@@ -548,14 +546,12 @@ def exportar_consulta():
             p.endereco
         ])
 
-    file_path = "/tmp/consulta.xlsx"
-    wb.save(file_path)
-
-    with open(file_path, "rb") as f:
-        file_data = f.read()
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
 
     return Response(
-        file_data,
+        output.read(),
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={
             "Content-Disposition": "attachment; filename=consulta.xlsx"
