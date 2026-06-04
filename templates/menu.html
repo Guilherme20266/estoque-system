@@ -57,16 +57,37 @@ h1{
     cursor:pointer;
 }
 
-.cadastro{ background:#28a745; }
-.inventario{ background:#007bff; }
-.movimentacao{ background:#fd7e14; }
-.transferencia{ background:#6f42c1; }
-.historico{ background:#343a40; }
-.admin{ background:#dc3545; }
-.consulta{ background:#17a2b8; }
-.logout{ background:#6c757d; }
+.cadastro{
+    background:#28a745;
+}
 
-a{ text-decoration:none; }
+.inventario{
+    background:#007bff;
+}
+
+.movimentacao{
+    background:#fd7e14;
+}
+
+.transferencia{
+    background:#6f42c1;
+}
+
+.historico{
+    background:#343a40;
+}
+
+.admin{
+    background:#dc3545;
+}
+
+.logout{
+    background:#6c757d;
+}
+
+a{
+    text-decoration:none;
+}
 
 </style>
 
@@ -90,60 +111,52 @@ Controle de produtos e endereços
 
 </div>
 
-<!-- 👑 ADMIN + OPERADOR -->
-{% if perfil in ['admin', 'operador'] %}
+{% if perfil == "admin" or perfil == "operador" %}
 
 <a href="/cadastrar">
-<button class="btn cadastro">➕ Cadastrar Produto</button>
+<button class="btn cadastro">
+➕ Cadastrar Produto
+</button>
+</a>
+
+{% endif %}
+
+<a href="/consulta">
+<button class="btn inventario">
+🔎 Consulta
+</button>
 </a>
 
 <a href="/inventario">
-<button class="btn inventario">📦 Inventário</button>
+<button class="btn inventario">
+📦 Inventário
+</button>
 </a>
 
-<a href="/movimentacao">
-<button class="btn movimentacao">📊 Movimentação</button>
-</a>
+{% if perfil == "admin" or perfil == "operador" %}
 
 <a href="/historico">
-<button class="btn historico">📜 Histórico</button>
-</a>
-
-<a href="/transferencia">
-<button class="btn transferencia">🔁 Transferência</button>
-</a>
-
-{% endif %}
-
-<!-- 📦 SEPARAÇÃO -->
-{% if perfil == 'separacao' %}
-
-<a href="/movimentacao">
-<button class="btn movimentacao">📦 Separação (Entrada/Saída)</button>
+<button class="btn historico">
+📜 Histórico
+</button>
 </a>
 
 {% endif %}
 
-<!-- 👁 CONSULTA -->
-{% if perfil == 'consulta' %}
-
-<a href="/consulta">
-<button class="btn consulta">🔎 Consulta</button>
-</a>
-
-{% endif %}
-
-<!-- 👑 ADMIN ONLY -->
-{% if perfil == 'admin' %}
+{% if perfil == "admin" %}
 
 <a href="/administracao">
-<button class="btn admin">⚙️ Administração</button>
+<button class="btn admin">
+⚙️ Administração
+</button>
 </a>
 
 {% endif %}
 
 <a href="/logout">
-<button class="btn logout">🚪 Sair</button>
+<button class="btn logout">
+🚪 Sair
+</button>
 </a>
 
 </div>
