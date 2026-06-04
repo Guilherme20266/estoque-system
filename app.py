@@ -89,6 +89,7 @@ PERMISSOES = {
     ],
 
     "operador": [
+        "cadastrar",
         "inventario",
         "movimentar",
         "transferir",
