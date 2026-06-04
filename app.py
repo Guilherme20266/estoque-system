@@ -83,8 +83,8 @@ def admin():
     return session.get('perfil') == 'admin'
 
 
-def operador_ou_admin():
-    return session.get('perfil') in ['admin', 'operador']
+def separação_ou_admin():
+    return session.get('perfil') in ['admin', 'separação']
 
 def calcular_status(validade):
 
@@ -172,7 +172,7 @@ def logout():
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
 
-    if not operador_ou_admin():
+    if not separação_ou_admin():
         return redirect('/menu')
 
     if request.method == 'POST':
@@ -277,7 +277,7 @@ def editar(id):
 @app.route('/movimentacao', methods=['GET', 'POST'])
 def movimentacao():
 
-    if not operador_ou_admin():
+    if not separação_ou_admin():
         return redirect('/menu')
 
     busca = request.args.get("busca", "")
@@ -368,7 +368,7 @@ def movimentacao():
 @app.route('/transferencia', methods=['GET', 'POST'])
 def transferencia():
 
-    if not operador_ou_admin():
+    if not separação_ou_admin():
         return redirect('/menu')
 
     produtos = Produto.query.all()
@@ -422,7 +422,7 @@ def transferencia():
 @app.route('/historico')
 def historico():
 
-    if not operador_ou_admin():
+    if not separação_ou_admin():
         return redirect('/menu')
 
     busca = request.args.get('busca', '')
