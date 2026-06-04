@@ -53,17 +53,9 @@ h2{
     box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
 
-.urgente{
-    border-left:8px solid #dc3545;
-}
-
-.atencao{
-    border-left:8px solid #ffc107;
-}
-
-.ok{
-    border-left:8px solid #28a745;
-}
+.urgente{ border-left:8px solid #dc3545; }
+.atencao{ border-left:8px solid #ffc107; }
+.ok{ border-left:8px solid #28a745; }
 
 .status{
     font-weight:bold;
@@ -93,9 +85,7 @@ h2{
     line-height:1.7;
 }
 
-.botoes{
-    margin-top:12px;
-}
+.botoes{ margin-top:12px; }
 
 .btn{
     width:100%;
@@ -108,22 +98,10 @@ h2{
     cursor:pointer;
 }
 
-.mov{
-    background:#007bff;
-}
-
-.transf{
-    background:#28a745;
-}
-
-.edit{
-    background:#ffc107;
-    color:#000;
-}
-
-.del{
-    background:#dc3545;
-}
+.mov{ background:#007bff; }
+.transf{ background:#28a745; }
+.edit{ background:#ffc107; color:#000; }
+.del{ background:#dc3545; }
 
 </style>
 
@@ -149,15 +127,10 @@ onkeyup="filtrar()"
 
 {% for item in lista %}
 
-<div
-class="card
-{% if item.status == 'URGENTE' %}
-urgente
-{% elif item.status == 'ATENCAO' %}
-atencao
-{% else %}
-ok
-{% endif %}"
+<div class="card
+{% if item.status == 'URGENTE' %}urgente
+{% elif item.status == 'ATENCAO' %}atencao
+{% else %}ok{% endif %}"
 data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.endereco }}"
 >
 
@@ -206,7 +179,7 @@ data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.en
    onclick="confirmarExclusao(event, '/excluir/{{ item.produto.id }}', '{{ item.produto.nome }}')">
     <button class="btn del">🗑️ Excluir</button>
 </a>
-    
+
 </div>
 
 </div>
@@ -218,31 +191,14 @@ data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.en
 <script>
 
 function filtrar(){
-
-let busca =
-document.getElementById("busca").value.toLowerCase();
-
-let cards =
-document.querySelectorAll(".card");
+let busca = document.getElementById("busca").value.toLowerCase();
+let cards = document.querySelectorAll(".card");
 
 cards.forEach(card => {
-
-let texto =
-card.dataset.texto.toLowerCase();
-
-if(texto.includes(busca)){
-card.style.display = "block";
-}else{
-card.style.display = "none";
-}
-
+    let texto = card.dataset.texto.toLowerCase();
+    card.style.display = texto.includes(busca) ? "block" : "none";
 });
-
 }
-
-</script>
-
-<script>
 
 function confirmarExclusao(event, url, produto){
 
@@ -251,43 +207,52 @@ function confirmarExclusao(event, url, produto){
     Swal.fire({
         icon: 'warning',
         title: 'Excluir produto?',
-        html: `
-            <b>${produto}</b><br><br>
-            Esta ação removerá o produto do estoque.<br>
-            <span style="color:red;font-weight:bold;">
-            Esta ação não poderá ser desfeita.
-            </span>
-        `,
+        html: `<b>${produto}</b><br><br>Esta ação não pode ser desfeita.`,
         showCancelButton: true,
-        confirmButtonText: '🗑️ Sim, excluir',
+        confirmButtonText: 'Sim, excluir',
         cancelButtonText: 'Cancelar',
         confirmButtonColor: '#dc3545'
     }).then((result) => {
-
         if(result.isConfirmed){
             window.location.href = url;
         }
-
     });
 
 }
 
-</script>    
+</script>
 
+<!-- ✔️ ALERTA DE EXCLUSÃO -->
 {% if request.args.get('excluido') %}
-
 <script>
-
 Swal.fire({
     icon: 'success',
     title: 'Produto excluído!',
-    text: 'O produto foi removido do estoque com sucesso.',
+    text: 'Removido com sucesso.',
     confirmButtonText: 'OK'
 });
-
 </script>
-
 {% endif %}
-    
+
+<!-- ✔️ ALERTA DE EDIÇÃO -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, msg in messages %}
+
+      {% if category == 'success' %}
+      <script>
+      Swal.fire({
+          icon: 'success',
+          title: 'Sucesso!',
+          text: "{{ msg }}",
+          confirmButtonText: 'OK'
+      });
+      </script>
+      {% endif %}
+
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 </body>
 </html>
