@@ -5,6 +5,7 @@
 <title>Inventário</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>    
 
 <style>
 
@@ -202,10 +203,10 @@ data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.en
 </a>
 
 <a href="/excluir/{{ item.produto.id }}"
-   onclick="return confirm('Deseja realmente excluir este produto?')">
+   onclick="confirmarExclusao(event, '/excluir/{{ item.produto.id }}', '{{ item.produto.nome }}')">
     <button class="btn del">🗑️ Excluir</button>
 </a>
-
+    
 </div>
 
 </div>
@@ -241,5 +242,37 @@ card.style.display = "none";
 
 </script>
 
+<script>
+
+function confirmarExclusao(event, url, produto){
+
+    event.preventDefault();
+
+    Swal.fire({
+        icon: 'warning',
+        title: 'Excluir produto?',
+        html: `
+            <b>${produto}</b><br><br>
+            Esta ação removerá o produto do estoque.<br>
+            <span style="color:red;font-weight:bold;">
+            Esta ação não poderá ser desfeita.
+            </span>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '🗑️ Sim, excluir',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545'
+    }).then((result) => {
+
+        if(result.isConfirmed){
+            window.location.href = url;
+        }
+
+    });
+
+}
+
+</script>    
+    
 </body>
 </html>
