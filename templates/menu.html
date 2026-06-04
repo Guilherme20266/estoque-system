@@ -129,14 +129,15 @@ Controle de produtos e endereços
 </button>
 </a>
 
+{% if perfil in ["admin", "operador", "separacao"] %}
+
 <a href="/inventario">
 <button class="btn inventario">
 📦 Inventário
 </button>
 </a>
 
-{% if perfil == "admin" or perfil == "operador" %}
-
+{% if perfil in ["admin", "operador"] %}
 <a href="/historico">
 <button class="btn historico">
 📜 Histórico
