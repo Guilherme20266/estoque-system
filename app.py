@@ -272,18 +272,22 @@ def editar(id):
         codigo_antigo = produto.codigo
         validade_antiga = produto.validade
 
-        produto.nome = request.form['nome']
-        produto.codigo = request.form['codigo']
-        produto.validade = request.form['validade']
+        novo_nome = request.form['nome']
+        novo_codigo = request.form['codigo']
+        nova_validade = request.form['validade']
+
+        produto.nome = novo_nome
+        produto.codigo = novo_codigo
+        produto.validade = nova_validade
 
         historico = Historico(
             data=datetime.now().strftime("%d/%m/%Y %H:%M"),
             usuario=session.get('usuario'),
             acao="EDITAR",
-            produto=produto.nome,
+            produto=novo_nome,
             quantidade=produto.quantidade,
-            origem=f"Antes: {nome_antigo} | {codigo_antigo} | {validade_antiga}",
-            destino=f"Depois: {produto.nome} | {produto.codigo} | {produto.validade}"
+            origem=f"{nome_antigo} | {codigo_antigo} | {validade_antiga}",
+            destino=f"{novo_nome} | {novo_codigo} | {nova_validade}"
         )
 
         db.session.add(historico)
@@ -294,7 +298,6 @@ def editar(id):
         return redirect('/inventario')
 
     return render_template('editar.html', produto=produto)
-
 # ==========================
 # MOVIMENTAÇÃO
 # ==========================
