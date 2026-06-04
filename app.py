@@ -272,6 +272,8 @@ def editar(id):
 
         db.session.commit()
 
+        flash("Produto editado com sucesso!", "success")
+
         return redirect('/inventario')
 
     return render_template('editar.html', produto=produto)
