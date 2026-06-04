@@ -273,6 +273,21 @@ function confirmarExclusao(event, url, produto){
 }
 
 </script>    
+
+{% if request.args.get('excluido') %}
+
+<script>
+
+Swal.fire({
+    icon: 'success',
+    title: 'Produto excluído!',
+    text: 'O produto foi removido do estoque com sucesso.',
+    confirmButtonText: 'OK'
+});
+
+</script>
+
+{% endif %}
     
 </body>
 </html>
