@@ -5,6 +5,7 @@
 <title>Movimentaão</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
 
@@ -189,5 +190,41 @@ Confirmar Movimentação
 
 </div>
 
+{% if request.args.get('sucesso') == 'entrada' %}
+
+<script>
+Swal.fire({
+    icon:'success',
+    title:'Entrada realizada!',
+    text:'Quantidade adicionada ao estoque com sucesso.'
+});
+</script>
+
+{% endif %}
+
+{% if request.args.get('sucesso') == 'saida' %}
+
+<script>
+Swal.fire({
+    icon:'success',
+    title:'Saída realizada!',
+    text:'Quantidade retirada do estoque com sucesso.'
+});
+</script>
+
+{% endif %}
+
+{% if request.args.get('sucesso') == 'zerado' %}
+
+<script>
+Swal.fire({
+    icon:'warning',
+    title:'Produto removido!',
+    text:'O estoque chegou a zero e o produto foi excluído automaticamente.'
+});
+</script>
+
+{% endif %}
+    
 </body>
 </html>
