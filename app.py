@@ -21,6 +21,7 @@ class Produto(db.Model):
     nome = db.Column(db.String(200), nullable=False)
 
     quantidade = db.Column(db.Integer, default=0)
+    detalhe = db.Column(db.String(50))
 
     validade = db.Column(db.String(20))
 
@@ -43,6 +44,7 @@ class Historico(db.Model):
     acao = db.Column(db.String(50))
     produto = db.Column(db.String(200))
     quantidade = db.Column(db.Integer)
+    detalhe = db.Column(db.String(50))
 
     origem = db.Column(db.String(20))
     destino = db.Column(db.String(20))
