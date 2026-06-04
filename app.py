@@ -254,7 +254,7 @@ def inventario():
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
 
-    if not admin():
+    if not admin_ou_separação():
         return redirect('/menu')
 
     produto = Produto.query.get_or_404(id)
