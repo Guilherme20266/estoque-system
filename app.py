@@ -99,7 +99,9 @@ PERMISSOES = {
     "separacao": [
         "inventario",
         "cadastrar",
+        "editar",
         "movimentar",
+        "transferir",
         "consulta"
     ],
 
