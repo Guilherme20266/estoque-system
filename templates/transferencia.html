@@ -66,6 +66,19 @@ button{
     line-height:1.8;
 }
 
+/* 🔎 busca */
+.search{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    margin-bottom:15px;
+}
+
+.hidden{
+    display:none;
+}
+
 </style>
 
 </head>
@@ -82,13 +95,26 @@ button{
 </button>
 </a>
 
+<!-- 🔎 BUSCA -->
+<input
+type="text"
+class="search"
+id="buscar"
+placeholder="Pesquisar por nome, código ou endereço..."
+onkeyup="filtrar()"
+>
+
+<div id="lista">
+
 {% for produto in produtos %}
 
-<div class="card">
+<div class="card item">
 
-<b>{{ produto.nome }}</b>
+<b class="texto">
+{{ produto.nome }}
+</b>
 
-<div class="info">
+<div class="info texto">
 
 🏷️ Código: {{ produto.codigo }}
 
@@ -128,6 +154,31 @@ Transferir
 {% endfor %}
 
 </div>
+
+</div>
+
+<script>
+
+function filtrar() {
+
+    let input = document.getElementById("buscar");
+    let filtro = input.value.toLowerCase();
+
+    let itens = document.getElementsByClassName("item");
+
+    for (let i = 0; i < itens.length; i++) {
+
+        let texto = itens[i].innerText.toLowerCase();
+
+        if (texto.includes(filtro)) {
+            itens[i].style.display = "";
+        } else {
+            itens[i].style.display = "none";
+        }
+    }
+}
+
+</script>
 
 </body>
 </html>
