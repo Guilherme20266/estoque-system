@@ -11,9 +11,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # ==========================
-# MODELOS
+# MODELS
 # ==========================
-
 class Produto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     codigo = db.Column(db.String(50))
@@ -41,43 +40,55 @@ class Usuario(db.Model):
     perfil = db.Column(db.String(20), nullable=False)
 
 # ==========================
-# PERMISSÕES
+# PERMISSÕES (CORRIGIDO)
 # ==========================
-
 def logado():
     return session.get('usuario') is not None
 
 
+def perfil():
+    return session.get('perfil')
+
+
 def is_admin():
-    return session.get('perfil') == 'admin'
+    return perfil() == 'admin'
 
 
 def is_operador():
-    return session.get('perfil') == 'operador'
+    return perfil() == 'operador'
 
 
 def is_separacao():
-    return session.get('perfil') == 'separacao'
+    return perfil() == 'separacao'
+
+
+def is_consulta():
+    return perfil() == 'consulta'
 
 
 def pode_consultar():
-    return session.get('perfil') in ['admin', 'operador', 'separacao']
+    return perfil() in ['admin', 'operador', 'separacao', 'consulta']
 
 
-def pode_separar():
-    return session.get('perfil') in ['admin', 'operador', 'separacao']
+def pode_cadastrar():
+    return perfil() in ['admin', 'separacao']
 
 
 def pode_inventario():
-    return session.get('perfil') in ['admin', 'operador']
+    return perfil() in ['admin', 'operador', 'separacao']
 
 
 def pode_editar():
-    return is_admin()
+    return perfil() in ['admin', 'operador']
 
-# ==========================
-# STATUS
-# ==========================
+
+def pode_movimentar():
+    return perfil() in ['admin', 'operador', 'separacao']
+
+
+def pode_transferir():
+    return perfil() in ['admin', 'operador']
+
 
 def calcular_status(validade):
     try:
@@ -89,7 +100,7 @@ def calcular_status(validade):
         if meses <= 4:
             return "URGENTE", 1
         elif meses <= 7:
-            return "ATENCAO", 2
+            return "ATENÇÃO", 2
         return "OK", 3
 
     except:
@@ -98,7 +109,6 @@ def calcular_status(validade):
 # ==========================
 # LOGIN
 # ==========================
-
 @app.route('/')
 def login():
     if logado():
@@ -108,7 +118,6 @@ def login():
 
 @app.route('/entrar', methods=['POST'])
 def entrar():
-
     user = Usuario.query.filter_by(
         usuario=request.form['usuario'],
         senha=request.form['senha']
@@ -123,6 +132,14 @@ def entrar():
     return redirect('/menu')
 
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
+# ==========================
+# MENU (CONTROLADO POR PERFIL)
+# ==========================
 @app.route('/menu')
 def menu():
     if not logado():
@@ -130,24 +147,43 @@ def menu():
 
     return render_template(
         'menu.html',
-        usuario=session['usuario'],
-        perfil=session['perfil']
+        perfil=perfil(),
+        usuario=session.get('usuario')
     )
 
+# ==========================
+# INVENTÁRIO
+# ==========================
+@app.route('/inventario')
+def inventario():
+    if not logado():
+        return redirect('/')
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect('/')
+    if not pode_inventario():
+        return redirect('/menu')
+
+    produtos = Produto.query.all()
+
+    lista = []
+    for p in produtos:
+        status, prioridade = calcular_status(p.validade)
+
+        lista.append({
+            "produto": p,
+            "status": status,
+            "prioridade": prioridade
+        })
+
+    lista.sort(key=lambda x: x["prioridade"])
+
+    return render_template('inventario.html', lista=lista)
 
 # ==========================
 # CADASTRO
 # ==========================
-
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
-
-    if not pode_separar() and not is_admin():
+    if not pode_cadastrar():
         return redirect('/menu')
 
     if request.method == 'POST':
@@ -166,17 +202,6 @@ def cadastrar():
         )
 
         db.session.add(produto)
-
-        db.session.add(Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-            usuario=session['usuario'],
-            acao="CADASTRO",
-            produto=produto.nome,
-            quantidade=produto.quantidade,
-            origem="-",
-            destino=endereco
-        ))
-
         db.session.commit()
 
         return redirect('/cadastrar?sucesso=1')
@@ -184,22 +209,92 @@ def cadastrar():
     return render_template('cadastrar.html')
 
 # ==========================
-# INVENTÁRIO
+# EDITAR
 # ==========================
-
-@app.route('/inventario')
-def inventario():
-
-    if not logado():
-        return redirect('/')
-
-    if not pode_inventario():
+@app.route('/editar/<int:id>', methods=['GET', 'POST'])
+def editar(id):
+    if not pode_editar():
         return redirect('/menu')
+
+    produto = Produto.query.get_or_404(id)
+
+    if request.method == 'POST':
+        produto.nome = request.form['nome']
+        produto.codigo = request.form['codigo']
+        produto.validade = request.form['validade']
+
+        db.session.commit()
+        return redirect('/inventario')
+
+    return render_template('editar.html', produto=produto)
+
+# ==========================
+# MOVIMENTAÇÃO
+# ==========================
+@app.route('/movimentacao', methods=['POST'])
+def movimentacao():
+    if not pode_movimentar():
+        return redirect('/menu')
+
+    produto = Produto.query.get(request.form['produto_id'])
+    acao = request.form['acao']
+    qtd = int(request.form['quantidade'])
+
+    if not produto:
+        return redirect('/inventario')
+
+    if acao == "entrada":
+        produto.quantidade += qtd
+
+    if acao == "saida":
+        produto.quantidade -= qtd
+
+        if produto.quantidade <= 0:
+            db.session.delete(produto)
+
+    db.session.commit()
+    return redirect('/inventario')
+
+# ==========================
+# TRANSFERÊNCIA
+# ==========================
+@app.route('/transferencia', methods=['POST'])
+def transferencia():
+    if not pode_transferir():
+        return redirect('/menu')
+
+    produto = Produto.query.get(request.form['produto_id'])
+    novo = request.form['novo_endereco']
+
+    if Produto.query.filter_by(endereco=novo).first():
+        return "Endereço ocupado"
+
+    produto.endereco = novo
+    db.session.commit()
+
+    return redirect('/inventario')
+
+# ==========================
+# CONSULTA
+# ==========================
+@app.route('/consulta')
+def consulta():
+    if not pode_consultar():
+        return redirect('/menu')
+
+    busca = request.args.get('busca', '')
 
     produtos = Produto.query.all()
 
-    lista = []
+    if busca:
+        produtos = [
+            p for p in produtos
+            if busca.lower() in p.nome.lower()
+            or busca.lower() in p.codigo.lower()
+            or busca.lower() in p.endereco.lower()
+        ]
 
+    lista = []
     for p in produtos:
         status, prioridade = calcular_status(p.validade)
         lista.append({
@@ -210,181 +305,41 @@ def inventario():
 
     lista.sort(key=lambda x: x["prioridade"])
 
-    return render_template('inventario.html', lista=lista)
-
-# ==========================
-# SEPARAR
-# ==========================
-
-@app.route('/separar')
-def separar():
-
-    if not pode_separar():
-        return redirect('/menu')
-
-    return render_template('separar.html')
-
-# ==========================
-# MOVIMENTAÇÃO
-# ==========================
-
-@app.route('/movimentacao', methods=['GET', 'POST'])
-def movimentacao():
-
-    if not pode_separar() and not is_admin():
-        return redirect('/menu')
-
-    produtos = Produto.query.all()
-
-    if request.method == 'POST':
-
-        produto = Produto.query.get(request.form['produto_id'])
-        qtd = int(request.form['quantidade'])
-
-        if request.form['acao'] == "entrada":
-            produto.quantidade += qtd
-        else:
-            produto.quantidade -= qtd
-            if produto.quantidade <= 0:
-                db.session.delete(produto)
-
-        db.session.add(Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-            usuario=session['usuario'],
-            acao=request.form['acao'].upper(),
-            produto=produto.nome,
-            quantidade=qtd,
-            origem=produto.endereco,
-            destino=produto.endereco
-        ))
-
-        db.session.commit()
-
-        return redirect('/movimentacao')
-
-    return render_template('movimentacao.html', produtos=produtos)
-
-# ==========================
-# TRANSFERÊNCIA
-# ==========================
-
-@app.route('/transferencia', methods=['GET', 'POST'])
-def transferencia():
-
-    if not pode_separar() and not is_admin():
-        return redirect('/menu')
-
-    produtos = Produto.query.all()
-
-    if request.method == 'POST':
-
-        produto = Produto.query.get(request.form['produto_id'])
-        novo = request.form['novo_endereco']
-
-        if Produto.query.filter_by(endereco=novo).first():
-            return "Endereço ocupado"
-
-        antigo = produto.endereco
-        produto.endereco = novo
-
-        db.session.add(Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-            usuario=session['usuario'],
-            acao="TRANSFERENCIA",
-            produto=produto.nome,
-            quantidade=produto.quantidade,
-            origem=antigo,
-            destino=novo
-        ))
-
-        db.session.commit()
-
-        return redirect('/inventario')
-
-    return render_template('transferencia.html', produtos=produtos)
-
-# ==========================
-# CONSULTA + HISTÓRICO
-# ==========================
-
-@app.route('/consulta')
-def consulta():
-
-    if not logado():
-        return redirect('/')
-
-    produtos = Produto.query.all()
-
-    lista = []
-
-    for p in produtos:
-        status, prioridade = calcular_status(p.validade)
-        lista.append({
-            "produto": p,
-            "status": status,
-            "prioridade": prioridade
-        })
-
     return render_template('consulta.html', lista=lista)
-
-
-@app.route('/historico')
-def historico():
-
-    if not pode_consultar():
-        return redirect('/menu')
-
-    registros = Historico.query.order_by(Historico.id.desc()).all()
-
-    return render_template('historico.html', registros=registros)
-
-# ==========================
-# EDITAR
-# ==========================
-
-@app.route('/editar/<int:id>', methods=['GET', 'POST'])
-def editar(id):
-
-    if not is_admin():
-        return redirect('/menu')
-
-    produto = Produto.query.get_or_404(id)
-
-    if request.method == 'POST':
-        produto.nome = request.form['nome']
-        produto.codigo = request.form['codigo']
-        produto.validade = request.form['validade']
-        db.session.commit()
-        return redirect('/inventario')
-
-    return render_template('editar.html', produto=produto)
 
 # ==========================
 # ADMIN
 # ==========================
-
 @app.route('/administracao')
 def administracao():
-
     if not is_admin():
         return redirect('/menu')
 
     usuarios = Usuario.query.all()
 
-    return render_template('administracao.html', usuarios=usuarios)
+    return render_template(
+        'administracao.html',
+        usuarios=usuarios
+    )
 
+# ==========================
+# CRIAR USUÁRIO
+# ==========================
 @app.route('/criar-usuario', methods=['POST'])
 def criar_usuario():
-
     if not is_admin():
         return redirect('/menu')
 
-    db.session.add(Usuario(
+    if Usuario.query.filter_by(usuario=request.form['usuario']).first():
+        return redirect('/administracao')
+
+    novo = Usuario(
         usuario=request.form['usuario'],
         senha=request.form['senha'],
         perfil=request.form['perfil']
-    ))
+    )
 
+    db.session.add(novo)
     db.session.commit()
 
     return redirect('/administracao')
@@ -392,7 +347,6 @@ def criar_usuario():
 # ==========================
 # INIT DB
 # ==========================
-
 with app.app_context():
     db.create_all()
 
@@ -404,9 +358,6 @@ with app.app_context():
         ))
         db.session.commit()
 
-# ==========================
-# RUN
-# ==========================
 
 if __name__ == '__main__':
     app.run()
