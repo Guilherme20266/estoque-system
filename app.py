@@ -482,9 +482,7 @@ def consulta():
             p for p in produtos
 
             if busca.lower() in p.nome.lower()
-
             or busca.lower() in p.codigo.lower()
-
             or busca.lower() in p.endereco.lower()
 
         ]
@@ -493,9 +491,7 @@ def consulta():
 
     for produto in produtos:
 
-        status, prioridade = calcular_status(
-            produto.validade
-        )
+        status, prioridade = calcular_status(produto.validade)
 
         lista.append({
             "produto": produto,
@@ -511,6 +507,60 @@ def consulta():
         busca=busca
     )
 
+
+# ==========================
+# EXPORTAR EXCEL - CONSULTA
+# ==========================
+@app.route('/exportar-consulta')
+def exportar_consulta():
+
+    if not logado():
+        return redirect('/')
+
+    busca = request.args.get('busca', '')
+
+    produtos = Produto.query.all()
+
+    if busca:
+
+        produtos = [
+
+            p for p in produtos
+
+            if busca.lower() in p.nome.lower()
+            or busca.lower() in p.codigo.lower()
+            or busca.lower() in p.endereco.lower()
+
+        ]
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Consulta"
+
+    ws.append(["Nome", "Código", "Quantidade", "Validade", "Endereço"])
+
+    for p in produtos:
+        ws.append([
+            p.nome,
+            p.codigo,
+            p.quantidade,
+            p.validade,
+            p.endereco
+        ])
+
+    file_path = "/tmp/consulta.xlsx"
+    wb.save(file_path)
+
+    with open(file_path, "rb") as f:
+        file_data = f.read()
+
+    return Response(
+        file_data,
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={
+            "Content-Disposition": "attachment; filename=consulta.xlsx"
+        }
+    )
 
 @app.route('/excluir/<int:id>')
 def excluir(id):
