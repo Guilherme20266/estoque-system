@@ -1,228 +1,397 @@
-<!DOCTYPE html>
-<html>
-<head>
-
-<title>Administração</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-
-body{
-    font-family:Arial;
-    background:#f4f4f4;
-    margin:0;
-    padding:15px;
-}
-
-.container{
-    max-width:700px;
-    margin:auto;
-}
-
-.topo{
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    margin-bottom:15px;
-    text-align:center;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.card{
-    background:white;
-    padding:15px;
-    border-radius:12px;
-    margin-bottom:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.info{
-    font-size:18px;
-    margin:10px 0;
-}
-
-input,select{
-    width:100%;
-    padding:12px;
-    border:1px solid #ccc;
-    border-radius:8px;
-    margin-top:10px;
-    box-sizing:border-box;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    color:white;
-    margin-top:10px;
-    font-size:15px;
-}
-
-.menu{
-    background:#6c757d;
-}
-
-.criar{
-    background:#28a745;
-}
-
-.excluir{
-    background:#dc3545;
-}
+from flask import Flask, render_template, request, redirect, session
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
-.limpar{
-    background:#dc3545;
-}
+app = Flask(__name__)
+app.secret_key = "estoque_super_secreto_2026"
 
-.usuario{
-    border-left:5px solid #007bff;
-}
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://automatico:yC0t7wVgQ2ozXUMfhtdUT8l4FZue9HW3@dpg-d8fpjbv7f7vs73ejl8sg-a.oregon-postgres.render.com/estoque_zd9a"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-h2{
-    margin:0;
-}
+db = SQLAlchemy(app)
 
-small{
-    color:#666;
-}
+# ==========================
+# MODELOS
+# ==========================
 
-</style>
+class Produto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    codigo = db.Column(db.String(50))
+    nome = db.Column(db.String(200), nullable=False)
+    quantidade = db.Column(db.Integer, default=0)
+    validade = db.Column(db.String(20))
+    endereco = db.Column(db.String(20), unique=True, nullable=False)
 
-</head>
 
-<body>
+class Historico(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    data = db.Column(db.String(30))
+    usuario = db.Column(db.String(100))
+    acao = db.Column(db.String(50))
+    produto = db.Column(db.String(200))
+    quantidade = db.Column(db.Integer)
+    origem = db.Column(db.String(20))
+    destino = db.Column(db.String(20))
 
-<div class="container">
 
-<div class="topo">
+class Usuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    usuario = db.Column(db.String(100), unique=True, nullable=False)
+    senha = db.Column(db.String(100), nullable=False)
+    perfil = db.Column(db.String(20), nullable=False)
 
-<h2>⚙️ Administração</h2>
+# ==========================
+# PERMISSÕES (ESTÁVEL)
+# ==========================
 
-</div>
+def logado():
+    return session.get('usuario') is not None
 
-<a href="/menu">
-<button class="menu">
-🏠 Voltar ao Menu
-</button>
-</a>
 
-<div class="card">
+def perfil():
+    return session.get('perfil')
 
-<div class="info">
-📦 Produtos cadastrados:
-<b>{{ total_produtos }}</b>
-</div>
 
-<div class="info">
-📍 Endereços ocupados:
-<b>{{ total_enderecos }}</b>
-</div>
+def is_admin():
+    return perfil() == 'admin'
 
-<div class="info">
-📜 Movimentações:
-<b>{{ total_historico }}</b>
-</div>
 
-</div>
+def is_operador():
+    return perfil() == 'operador'
 
-<div class="card">
 
-<h3>👥 Criar Usuário</h3>
+def is_separacao():
+    return perfil() == 'separacao'
 
-<form action="/criar-usuario" method="POST">
 
-<input
-type="text"
-name="usuario"
-placeholder="Usuário"
-required
->
+def is_consulta():
+    return perfil() == 'consulta'
 
-<input
-type="password"
-name="senha"
-placeholder="Senha"
-required
->
 
-<select name="perfil">
+def pode_consultar():
+    return perfil() in ['admin', 'operador', 'separacao', 'consulta']
 
-<option value="admin">
-Administrador
-</option>
 
-<option value="Separação">
-Separação
-</option>
+def pode_cadastrar():
+    return perfil() in ['admin', 'separacao']
 
-<option value="consulta">
-Consulta
-</option>
 
-</select>
+def pode_inventario():
+    return perfil() in ['admin', 'operador', 'separacao']
 
-<button class="criar" type="submit">
-➕ Criar Usuário
-</button>
 
-</form>
+def pode_editar():
+    return perfil() in ['admin', 'operador']
 
-</div>
 
-<div class="card">
+def pode_transferir():
+    return perfil() in ['admin', 'operador']
 
-<h3>👥 Usuários Cadastrados</h3>
 
-{% for user in usuarios %}
+def pode_movimentar():
+    return perfil() in ['admin', 'operador', 'separacao']
 
-<div class="card usuario">
 
-<b>{{ user.usuario }}</b>
+# ==========================
+# STATUS
+# ==========================
 
-<br>
+def calcular_status(validade):
+    try:
+        hoje = datetime.today()
+        data = datetime.strptime(validade, "%d/%m/%Y")
 
-<small>
-Perfil: {{ user.perfil }}
-</small>
+        meses = (data.year - hoje.year) * 12 + data.month - hoje.month
 
-{% if user.usuario != 'admin' %}
+        if meses <= 4:
+            return "URGENTE", 1
+        elif meses <= 7:
+            return "ATENCAO", 2
+        return "OK", 3
 
-<a href="/excluir-usuario/{{ user.id }}"
-onclick="return confirm('Excluir usuário?')">
+    except:
+        return "SEM_DATA", 4
 
-<button class="excluir">
-🗑️ Excluir Usuário
-</button>
+# ==========================
+# LOGIN
+# ==========================
 
-</a>
+@app.route('/')
+def login():
+    if logado():
+        return redirect('/menu')
+    return render_template('login.html')
 
-{% endif %}
 
-</div>
+@app.route('/entrar', methods=['POST'])
+def entrar():
 
-{% endfor %}
+    user = Usuario.query.filter_by(
+        usuario=request.form['usuario'],
+        senha=request.form['senha']
+    ).first()
 
-</div>
+    if not user:
+        return redirect('/')
 
-<div class="card">
+    session['usuario'] = user.usuario
+    session['perfil'] = user.perfil
 
-<h3>⚠️ Ferramentas</h3>
+    return redirect('/menu')
 
-<a href="/limpar-historico"
-onclick="return confirm('Deseja apagar todo histórico?')">
 
-<button class="limpar">
-🗑️ Limpar Histórico
-</button>
+@app.route('/menu')
+def menu():
+    if not logado():
+        return redirect('/')
 
-</a>
+    return render_template(
+        'menu.html',
+        usuario=session['usuario'],
+        perfil=session['perfil']
+    )
 
-</div>
 
-</div>
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
 
-</body>
-</html>
+# ==========================
+# INVENTÁRIO (IMPORTANTE)
+# ==========================
+
+@app.route('/inventario')
+def inventario():
+    if not logado():
+        return redirect('/')
+
+    if not pode_inventario():
+        return redirect('/menu')
+
+    produtos = Produto.query.all()
+
+    lista = []
+    for p in produtos:
+        status, prioridade = calcular_status(p.validade)
+        lista.append({
+            "produto": p,
+            "status": status,
+            "prioridade": prioridade
+        })
+
+    lista.sort(key=lambda x: x["prioridade"])
+
+    return render_template('inventario.html', lista=lista)
+
+# ==========================
+# CADASTRO
+# ==========================
+
+@app.route('/cadastrar', methods=['GET', 'POST'])
+def cadastrar():
+
+    if not pode_cadastrar():
+        return redirect('/menu')
+
+    if request.method == 'POST':
+
+        endereco = f"{request.form['rua']}-{request.form['coluna']}-{request.form['nivel']}"
+
+        if Produto.query.filter_by(endereco=endereco).first():
+            return redirect('/cadastrar?erro=endereco')
+
+        db.session.add(Produto(
+            codigo=request.form['codigo'],
+            nome=request.form['nome'],
+            quantidade=int(request.form['quantidade']),
+            validade=request.form['validade'],
+            endereco=endereco
+        ))
+
+        db.session.commit()
+
+        return redirect('/cadastrar?sucesso=1')
+
+    return render_template('cadastrar.html')
+
+# ==========================
+# EDITAR
+# ==========================
+
+@app.route('/editar/<int:id>', methods=['GET', 'POST'])
+def editar(id):
+
+    if not pode_editar():
+        return redirect('/menu')
+
+    produto = Produto.query.get_or_404(id)
+
+    if request.method == 'POST':
+        produto.nome = request.form['nome']
+        produto.codigo = request.form['codigo']
+        produto.validade = request.form['validade']
+        db.session.commit()
+        return redirect('/inventario')
+
+    return render_template('editar.html', produto=produto)
+
+# ==========================
+# MOVIMENTAÇÃO
+# ==========================
+
+@app.route('/movimentacao', methods=['POST'])
+def movimentacao():
+
+    if not pode_movimentar():
+        return redirect('/menu')
+
+    produto = Produto.query.get(request.form['produto_id'])
+    qtd = int(request.form['quantidade'])
+
+    if request.form['acao'] == "entrada":
+        produto.quantidade += qtd
+    else:
+        produto.quantidade -= qtd
+        if produto.quantidade <= 0:
+            db.session.delete(produto)
+
+    db.session.commit()
+    return redirect('/inventario')
+
+# ==========================
+# TRANSFERÊNCIA
+# ==========================
+
+@app.route('/transferencia', methods=['POST'])
+def transferencia():
+
+    if not pode_transferir():
+        return redirect('/menu')
+
+    produto = Produto.query.get(request.form['produto_id'])
+    novo = request.form['novo_endereco']
+
+    if Produto.query.filter_by(endereco=novo).first():
+        return "Endereço ocupado"
+
+    produto.endereco = novo
+    db.session.commit()
+
+    return redirect('/inventario')
+
+# ==========================
+# CONSULTA
+# ==========================
+
+@app.route('/consulta')
+def consulta():
+
+    if not pode_consultar():
+        return redirect('/menu')
+
+    produtos = Produto.query.all()
+
+    lista = []
+    for p in produtos:
+        status, prioridade = calcular_status(p.validade)
+        lista.append({
+            "produto": p,
+            "status": status,
+            "prioridade": prioridade
+        })
+
+    return render_template('consulta.html', lista=lista)
+
+# ==========================
+# HISTÓRICO (CORRIGIDO)
+# ==========================
+
+@app.route('/historico')
+def historico():
+
+    if not pode_consultar():
+        return redirect('/menu')
+
+    registros = Historico.query.order_by(Historico.id.desc()).all()
+
+    return render_template('historico.html', registros=registros)
+
+# ==========================
+# ADMIN (CORRIGIDO COMPLETO)
+# ==========================
+
+@app.route('/administracao')
+def administracao():
+
+    if not is_admin():
+        return redirect('/menu')
+
+    produtos = Produto.query.all()
+    usuarios = Usuario.query.all()
+    historicos = Historico.query.order_by(Historico.id.desc()).limit(50).all()
+
+    return render_template(
+        'administracao.html',
+        produtos=produtos,
+        usuarios=usuarios,
+        historicos=historicos
+    )
+
+# ==========================
+# USUÁRIO
+# ==========================
+
+@app.route('/criar-usuario', methods=['POST'])
+def criar_usuario():
+
+    if not is_admin():
+        return redirect('/menu')
+
+    if Usuario.query.filter_by(usuario=request.form['usuario']).first():
+        return redirect('/administracao')
+
+    db.session.add(Usuario(
+        usuario=request.form['usuario'],
+        senha=request.form['senha'],
+        perfil=request.form['perfil']
+    ))
+
+    db.session.commit()
+
+    return redirect('/administracao')
+
+
+@app.route('/excluir-usuario/<int:id>')
+def excluir_usuario(id):
+
+    if not is_admin():
+        return redirect('/menu')
+
+    usuario = Usuario.query.get_or_404(id)
+
+    if usuario.usuario == 'admin':
+        return redirect('/administracao')
+
+    db.session.delete(usuario)
+    db.session.commit()
+
+    return redirect('/administracao')
+
+# ==========================
+# INIT
+# ==========================
+
+with app.app_context():
+    db.create_all()
+
+    if not Usuario.query.filter_by(usuario='admin').first():
+        db.session.add(Usuario(
+            usuario='admin',
+            senha='10080810',
+            perfil='admin'
+        ))
+        db.session.commit()
+
+if __name__ == '__main__':
+    app.run()
