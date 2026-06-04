@@ -42,8 +42,7 @@ class Historico(db.Model):
 
     acao = db.Column(db.String(50))
     produto = db.Column(db.String(200))
-    quantidade = db.Column(db.String(50))
-    detalhe = db.Column(db.String(50))
+    quantidade = db.Column(db.Integer)
 
     origem = db.Column(db.String(20))
     destino = db.Column(db.String(20))
@@ -374,6 +373,7 @@ def movimentacao():
         produtos=produtos,
         busca=busca
     )
+
 # ==========================
 # TRANSFERÊNCIA
 # ==========================
