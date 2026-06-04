@@ -612,10 +612,6 @@ with app.app_context():
 
     db.create_all()
 
-    # 🔥 LIMPAR TODOS OS USUÁRIOS MENOS O ADMIN
-    Usuario.query.filter(Usuario.usuario != 'admin').delete()
-    db.session.commit()
-
     admin_user = Usuario.query.filter_by(usuario='admin').first()
 
     if not admin_user:
