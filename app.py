@@ -305,73 +305,74 @@ def movimentacao():
 
     if request.method == 'POST':
 
-    produto_id = request.form['produto_id']
+        produto_id = request.form['produto_id']
 
-    acao = request.form['acao']
+        acao = request.form['acao']
 
-    quantidade = int(
-        request.form['quantidade']
-    )
-
-    produto = Produto.query.get(
-        produto_id
-    )
-
-    if not produto:
-        return redirect('/movimentacao')
-
-    if acao == "entrada":
-
-        produto.quantidade += quantidade
-
-        historico = Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-            usuario=session.get('usuario'),
-            acao="ENTRADA",
-            produto=produto.nome,
-            quantidade=quantidade,
-            origem=produto.endereco,
-            destino=produto.endereco
+        quantidade = int(
+            request.form['quantidade']
         )
 
-        db.session.add(historico)
-
-        db.session.commit()
-
-        return redirect('/movimentacao?sucesso=entrada')
-
-    if acao == "saida":
-
-        produto.quantidade -= quantidade
-
-        historico = Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-            usuario=session.get('usuario'),
-            acao="SAIDA",
-            produto=produto.nome,
-            quantidade=quantidade,
-            origem=produto.endereco,
-            destino="-"
+        produto = Produto.query.get(
+            produto_id
         )
 
-        db.session.add(historico)
+        if not produto:
+            return redirect('/movimentacao')
 
-        if produto.quantidade <= 0:
+        if acao == "entrada":
 
-            db.session.delete(produto)
+            produto.quantidade += quantidade
+
+            historico = Historico(
+                data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+                usuario=session.get('usuario'),
+                acao="ENTRADA",
+                produto=produto.nome,
+                quantidade=quantidade,
+                origem=produto.endereco,
+                destino=produto.endereco
+            )
+
+            db.session.add(historico)
+
             db.session.commit()
 
-            return redirect('/movimentacao?sucesso=zerado')
+            return redirect('/movimentacao?sucesso=entrada')
 
-        db.session.commit()
+        if acao == "saida":
 
-        return redirect('/movimentacao?sucesso=saida')
+            produto.quantidade -= quantidade
 
-return render_template(
-    'movimentacao.html',
-    produtos=produtos,
-    busca=busca
-)
+            historico = Historico(
+                data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+                usuario=session.get('usuario'),
+                acao="SAIDA",
+                produto=produto.nome,
+                quantidade=quantidade,
+                origem=produto.endereco,
+                destino="-"
+            )
+
+            db.session.add(historico)
+
+            if produto.quantidade <= 0:
+
+                db.session.delete(produto)
+
+                db.session.commit()
+
+                return redirect('/movimentacao?sucesso=zerado')
+
+            db.session.commit()
+
+            return redirect('/movimentacao?sucesso=saida')
+
+    return render_template(
+        'movimentacao.html',
+        produtos=produtos,
+        busca=busca
+    )
 
 # ==========================
 # TRANSFERÊNCIA
