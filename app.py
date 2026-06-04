@@ -108,6 +108,7 @@ def login():
 
 @app.route('/entrar', methods=['POST'])
 def entrar():
+
     user = Usuario.query.filter_by(
         usuario=request.form['usuario'],
         senha=request.form['senha']
@@ -129,8 +130,8 @@ def menu():
 
     return render_template(
         'menu.html',
-        usuario=session.get('usuario'),
-        perfil=session.get('perfil')
+        usuario=session['usuario'],
+        perfil=session['perfil']
     )
 
 
@@ -212,7 +213,7 @@ def inventario():
     return render_template('inventario.html', lista=lista)
 
 # ==========================
-# SEPARAÇÃO (FUNÇÃO BASE)
+# SEPARAR
 # ==========================
 
 @app.route('/separar')
@@ -242,7 +243,6 @@ def movimentacao():
 
         if request.form['acao'] == "entrada":
             produto.quantidade += qtd
-
         else:
             produto.quantidade -= qtd
             if produto.quantidade <= 0:
@@ -265,7 +265,46 @@ def movimentacao():
     return render_template('movimentacao.html', produtos=produtos)
 
 # ==========================
-# CONSULTA
+# TRANSFERÊNCIA
+# ==========================
+
+@app.route('/transferencia', methods=['GET', 'POST'])
+def transferencia():
+
+    if not pode_separar() and not is_admin():
+        return redirect('/menu')
+
+    produtos = Produto.query.all()
+
+    if request.method == 'POST':
+
+        produto = Produto.query.get(request.form['produto_id'])
+        novo = request.form['novo_endereco']
+
+        if Produto.query.filter_by(endereco=novo).first():
+            return "Endereço ocupado"
+
+        antigo = produto.endereco
+        produto.endereco = novo
+
+        db.session.add(Historico(
+            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+            usuario=session['usuario'],
+            acao="TRANSFERENCIA",
+            produto=produto.nome,
+            quantidade=produto.quantidade,
+            origem=antigo,
+            destino=novo
+        ))
+
+        db.session.commit()
+
+        return redirect('/inventario')
+
+    return render_template('transferencia.html', produtos=produtos)
+
+# ==========================
+# CONSULTA + HISTÓRICO
 # ==========================
 
 @app.route('/consulta')
@@ -286,13 +325,8 @@ def consulta():
             "prioridade": prioridade
         })
 
-    lista.sort(key=lambda x: x["prioridade"])
-
     return render_template('consulta.html', lista=lista)
 
-# ==========================
-# HISTÓRICO
-# ==========================
 
 @app.route('/historico')
 def historico():
@@ -305,6 +339,27 @@ def historico():
     return render_template('historico.html', registros=registros)
 
 # ==========================
+# EDITAR
+# ==========================
+
+@app.route('/editar/<int:id>', methods=['GET', 'POST'])
+def editar(id):
+
+    if not is_admin():
+        return redirect('/menu')
+
+    produto = Produto.query.get_or_404(id)
+
+    if request.method == 'POST':
+        produto.nome = request.form['nome']
+        produto.codigo = request.form['codigo']
+        produto.validade = request.form['validade']
+        db.session.commit()
+        return redirect('/inventario')
+
+    return render_template('editar.html', produto=produto)
+
+# ==========================
 # ADMIN
 # ==========================
 
@@ -314,7 +369,25 @@ def administracao():
     if not is_admin():
         return redirect('/menu')
 
-    return render_template('administracao.html')
+    usuarios = Usuario.query.all()
+
+    return render_template('administracao.html', usuarios=usuarios)
+
+@app.route('/criar-usuario', methods=['POST'])
+def criar_usuario():
+
+    if not is_admin():
+        return redirect('/menu')
+
+    db.session.add(Usuario(
+        usuario=request.form['usuario'],
+        senha=request.form['senha'],
+        perfil=request.form['perfil']
+    ))
+
+    db.session.commit()
+
+    return redirect('/administracao')
 
 # ==========================
 # INIT DB
