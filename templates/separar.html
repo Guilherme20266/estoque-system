@@ -1,1 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Separação</title>
+</head>
+<body>
 
+<h2>📦 Separação de Endereço</h2>
+
+<form method="POST">
+    <input name="endereco" placeholder="Digite o endereço">
+    <button>Buscar</button>
+</form>
+
+<hr>
+
+{% if mensagem == "tem_produto" %}
+
+<p>✔ Produto encontrado</p>
+<p>{{ produto.nome }}</p>
+<p>{{ produto.quantidade }}</p>
+
+{% elif mensagem == "vazio" %}
+
+<p>⚠ Endereço vazio</p>
+<a href="/cadastrar">Cadastrar produto</a>
+
+{% endif %}
+
+</body>
+</html>
