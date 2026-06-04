@@ -612,18 +612,34 @@ with app.app_context():
 
     db.create_all()
 
+    # ==========================
+    # ADMIN (garante sempre existir)
+    # ==========================
     admin_user = Usuario.query.filter_by(usuario='admin').first()
 
     if not admin_user:
-
-        novo_admin = Usuario(
+        db.session.add(Usuario(
             usuario='admin',
             senha='10080810',
             perfil='admin'
-        )
-
-        db.session.add(novo_admin)
+        ))
         db.session.commit()
+
+    # ==========================
+    # USUÁRIOS PADRÃO (SE NÃO EXISTIREM)
+    # ==========================
+    def criar_usuario(usuario, senha, perfil):
+        existe = Usuario.query.filter_by(usuario=usuario).first()
+        if not existe:
+            db.session.add(Usuario(
+                usuario=usuario,
+                senha=senha,
+                perfil=perfil
+            ))
+            db.session.commit()
+
+    criar_usuario("operador", "1234", "operador")
+    criar_usuario("separacao", "1234", "separacao")
 
 
 if __name__ == '__main__':
