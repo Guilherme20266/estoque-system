@@ -210,9 +210,12 @@ def logout():
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
 
-    if not operador_ou_admin():
-        return redirect('/menu')
-
+    if session.get('perfil') not in [
+    'admin',
+    'separacao'
+]:
+    return redirect('/menu')
+    
     if request.method == 'POST':
 
         endereco = (
@@ -260,8 +263,12 @@ def cadastrar():
 @app.route('/inventario')
 def inventario():
 
-    if not pode("inventario"):
-        return redirect("/menu")
+    if session.get('perfil') not in [
+    'admin',
+    'operador',
+    'separacao'
+]:
+    return redirect('/menu')
     
     produtos = Produto.query.all()
 
@@ -292,8 +299,11 @@ def inventario():
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
 
-    if not pode("editar"):
-        return redirect("/menu")
+    if session.get('perfil') not in [
+    'admin',
+    'operador'
+]:
+    return redirect('/menu')
 
     produto = Produto.query.get_or_404(id)
 
@@ -315,8 +325,12 @@ def editar(id):
 @app.route('/movimentacao', methods=['GET', 'POST'])
 def movimentacao():
 
-    if not pode("movimentar"):
-        return redirect("/menu")
+    if session.get('perfil') not in [
+    'admin',
+    'operador',
+    'separacao'
+]:
+    return redirect('/menu')
 
     busca = request.args.get("busca", "")
 
@@ -406,8 +420,11 @@ def movimentacao():
 @app.route('/transferencia', methods=['GET', 'POST'])
 def transferencia():
 
-    if not operador_ou_admin():
-        return redirect('/menu')
+    if session.get('perfil') not in [
+    'admin',
+    'operador'
+]:
+    return redirect('/menu')
 
     produtos = Produto.query.all()
 
@@ -460,8 +477,11 @@ def transferencia():
 @app.route('/historico')
 def historico():
 
-    if not operador_ou_admin():
-        return redirect('/menu')
+    if session.get('perfil') not in [
+    'admin',
+    'operador'
+]:
+    return redirect('/menu')
 
     busca = request.args.get('busca', '')
 
