@@ -1,5 +1,3 @@
-v4.0.1 - Build 2026.06
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,80 +10,78 @@ v4.0.1 - Build 2026.06
 
 body{
     font-family:Arial;
-    background:#f4f4f4;
     margin:0;
-    padding:15px;
+    padding:0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg, #0f172a, #1e293b);
 }
 
+/* container */
 .box{
-    max-width:550px;
-    margin:auto;
+    width:90%;
+    max-width:520px;
 }
 
+/* topo */
 .topo{
-    background:white;
-    border-radius:15px;
-    padding:20px;
+    background:rgba(255,255,255,0.95);
+    border-radius:16px;
+    padding:25px;
     text-align:center;
-    margin-bottom:15px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
+    margin-bottom:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    backdrop-filter:blur(10px);
 }
 
 h1{
     margin:0;
-    font-size:24px;
+    font-size:22px;
+    color:#111827;
 }
 
 .sub{
-    color:#666;
-    margin-top:5px;
+    color:#6b7280;
+    margin-top:6px;
+    font-size:13px;
 }
 
 .usuario{
-    margin-top:10px;
-    font-size:14px;
-    color:#555;
+    margin-top:12px;
+    font-size:13px;
+    color:#374151;
 }
 
+/* botões */
 .btn{
     width:100%;
-    padding:16px;
+    padding:15px;
     margin-bottom:12px;
     border:none;
     border-radius:12px;
     color:white;
-    font-size:17px;
+    font-size:15px;
     font-weight:bold;
     cursor:pointer;
+    transition:0.2s;
+    box-shadow:0 6px 15px rgba(0,0,0,0.15);
 }
 
-.cadastro{
-    background:#28a745;
+.btn:hover{
+    transform:translateY(-2px);
+    opacity:0.95;
 }
 
-.inventario{
-    background:#007bff;
-}
-
-.movimentacao{
-    background:#fd7e14;
-}
-
-.transferencia{
-    background:#6f42c1;
-}
-
-.historico{
-    background:#343a40;
-}
-
-.admin{
-    background:#dc3545;
-}
-
-.logout{
-    background:#6c757d;
-}
+/* cores modernas */
+.cadastro{ background:linear-gradient(90deg,#22c55e,#16a34a); }
+.inventario{ background:linear-gradient(90deg,#3b82f6,#1d4ed8); }
+.movimentacao{ background:linear-gradient(90deg,#f97316,#ea580c); }
+.transferencia{ background:linear-gradient(90deg,#a855f7,#7c3aed); }
+.historico{ background:linear-gradient(90deg,#374151,#111827); }
+.admin{ background:linear-gradient(90deg,#ef4444,#b91c1c); }
+.logout{ background:linear-gradient(90deg,#6b7280,#4b5563); }
 
 a{
     text-decoration:none;
@@ -104,7 +100,7 @@ a{
 <h1>📦 CONTROLE DE ESTOQUE</h1>
 
 <div class="sub">
-© 2026 | All rights reserved | Dev. @GS
+© 2026 | Sistema de Gestão
 </div>
 
 <div class="usuario">
@@ -114,55 +110,35 @@ a{
 </div>
 
 {% if perfil in ["admin", "operador", "separacao"] %}
-
 <a href="/cadastrar">
-<button class="btn cadastro">
-➕ Cadastrar Produto
-</button>
+<button class="btn cadastro">➕ Cadastrar Produto</button>
 </a>
-
 {% endif %}
 
 <a href="/consulta">
-<button class="btn inventario">
-🔎 Consulta
-</button>
+<button class="btn inventario">🔎 Consulta</button>
 </a>
 
 {% if perfil in ["admin", "operador", "separacao"] %}
-
 <a href="/inventario">
-<button class="btn inventario">
-📦 Inventário
-</button>
+<button class="btn inventario">📦 Inventário</button>
 </a>
-
 {% endif %}
-    
-{% if perfil in ["admin", "operador"] %}
-    
-<a href="/historico">
-<button class="btn historico">
-📜 Histórico
-</button>
-</a>
 
+{% if perfil in ["admin", "operador"] %}
+<a href="/historico">
+<button class="btn historico">📜 Histórico</button>
+</a>
 {% endif %}
 
 {% if perfil == "admin" %}
-
 <a href="/administracao">
-<button class="btn admin">
-⚙️ Administração
-</button>
+<button class="btn admin">⚙️ Administração</button>
 </a>
-
 {% endif %}
 
 <a href="/logout">
-<button class="btn logout">
-🚪 Sair
-</button>
+<button class="btn logout">🚪 Sair</button>
 </a>
 
 </div>
