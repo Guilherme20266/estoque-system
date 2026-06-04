@@ -210,7 +210,7 @@ def logout():
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
 
-    if session.get('perfil') not in [
+if session.get('perfil') not in [
     'admin',
     'separacao'
 ]:
@@ -515,8 +515,8 @@ if session.get('perfil') not in [
 @app.route('/consulta')
 def consulta():
 
-    if not logado():
-        return redirect('/')
+if not logado():
+    return redirect('/')
 
     busca = request.args.get('busca', '')
 
