@@ -217,6 +217,37 @@ def cadastrar():
     return render_template('cadastrar.html')
 
 # ==========================
+# separaraoo
+# ==========================
+@app.route('/separar', methods=['GET', 'POST'])
+def separar():
+
+    if session.get('perfil') not in ['admin', 'operador', 'separacao']:
+        return redirect('/menu')
+
+    produto = None
+    endereco = ""
+    mensagem = ""
+
+    if request.method == 'POST':
+
+        endereco = request.form['endereco']
+
+        produto = Produto.query.filter_by(endereco=endereco).first()
+
+        if produto:
+            mensagem = "tem_produto"
+        else:
+            mensagem = "vazio"
+
+    return render_template(
+        'separar.html',
+        produto=produto,
+        endereco=endereco,
+        mensagem=mensagem
+    )
+
+# ==========================
 # INVENTÁRIO
 # ==========================
 @app.route('/inventario')
