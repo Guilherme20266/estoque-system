@@ -480,13 +480,10 @@ def consulta():
     if busca:
 
         produtos = [
-
             p for p in produtos
-
             if busca.lower() in p.nome.lower()
             or busca.lower() in p.codigo.lower()
             or busca.lower() in p.endereco.lower()
-
         ]
 
     lista = []
@@ -503,12 +500,29 @@ def consulta():
 
     lista.sort(key=lambda x: x["prioridade"])
 
+    # ==========================
+    # HISTÓRICO DE CONSULTA
+    # ==========================
+    if busca and len(produtos) > 0:
+
+        historico = Historico(
+            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+            usuario=session.get('usuario'),
+            acao="CONSULTA",
+            produto=busca,
+            quantidade=len(produtos),
+            origem="-",
+            destino="-"
+        )
+
+        db.session.add(historico)
+        db.session.commit()
+
     return render_template(
         'consulta.html',
         lista=lista,
         busca=busca
     )
-
 
 # ==========================
 # EXPORTAR EXCEL - CONSULTA
