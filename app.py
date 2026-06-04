@@ -398,11 +398,10 @@ def transferencia():
         ).first()
 
         if existe:
-            flash("Endereço já está ocupado")
+            flash("Endereço já está ocupado", "error")
             return redirect('/transferencia')
-            
-        endereco_antigo = produto.endereco
 
+        endereco_antigo = produto.endereco
         produto.endereco = novo_endereco
 
         historico = Historico(
@@ -418,7 +417,7 @@ def transferencia():
         db.session.add(historico)
         db.session.commit()
 
-        flash(f"Transferência concluída! Novo endereço: {novo_endereco}")
+        flash(f"Transferência concluída! Novo endereço: {novo_endereco}", "success")
 
         return redirect('/transferencia')
 
@@ -426,7 +425,6 @@ def transferencia():
         'transferencia.html',
         produtos=produtos
     )
-
 # ==========================
 # HISTÓRICO
 # ==========================
