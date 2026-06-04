@@ -398,8 +398,9 @@ def transferencia():
         ).first()
 
         if existe:
-            return "Endereço ocupado"
-
+            flash("Endereço já está ocupado")
+            return redirect('/transferencia')
+            
         endereco_antigo = produto.endereco
 
         produto.endereco = novo_endereco
