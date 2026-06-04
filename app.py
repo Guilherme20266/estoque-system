@@ -509,7 +509,7 @@ def excluir(id):
     historico = Historico(
         data=datetime.now().strftime("%d/%m/%Y %H:%M"),
         usuario=session.get('usuario'),
-        acao="EXCLUSAO",
+        acao="EXCLUIR",
         produto=produto.nome,
         quantidade=produto.quantidade,
         origem=produto.endereco,
