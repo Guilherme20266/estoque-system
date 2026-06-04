@@ -222,7 +222,7 @@ def cadastrar():
 @app.route('/inventario')
 def inventario():
 
-    if not logado():
+    if not operador_ou_admin():
         return redirect('/')
 
     produtos = Produto.query.all()
