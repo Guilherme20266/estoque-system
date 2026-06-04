@@ -127,6 +127,16 @@ Controle de produtos e endereços
 </button>
 </a>
 
+{% if perfil == "admin" or perfil == "operador" or perfil == "separacao" %}
+
+<a href="/separar">
+<button class="btn movimentacao">
+📦 Separar
+</button>
+</a>
+
+{% endif %}
+
 <a href="/inventario">
 <button class="btn inventario">
 📦 Inventário
