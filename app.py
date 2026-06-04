@@ -526,7 +526,7 @@ def excluir(id):
     db.session.delete(produto)
     db.session.commit()
 
-    return redirect('/inventario')
+    return redirect('/inventario?excluido=1')
 # ==========================
 # ADMINISTRAÇÃO
 # ==========================
