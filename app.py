@@ -268,10 +268,25 @@ def editar(id):
 
     if request.method == 'POST':
 
+        nome_antigo = produto.nome
+        codigo_antigo = produto.codigo
+        validade_antiga = produto.validade
+
         produto.nome = request.form['nome']
         produto.codigo = request.form['codigo']
         produto.validade = request.form['validade']
 
+        historico = Historico(
+            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+            usuario=session.get('usuario'),
+            acao="EDITAR",
+            produto=produto.nome,
+            quantidade=produto.quantidade,
+            origem=f"Antes: {nome_antigo} | {codigo_antigo} | {validade_antiga}",
+            destino=f"Depois: {produto.nome} | {produto.codigo} | {produto.validade}"
+        )
+
+        db.session.add(historico)
         db.session.commit()
 
         flash("Produto editado com sucesso!", "success")
