@@ -46,8 +46,8 @@ class Historico(db.Model):
     produto = db.Column(db.String(200))
     quantidade = db.Column(db.Integer)
 
-    origem = db.Column(db.String(20))
-    destino = db.Column(db.String(20))
+    origem = db.Column(db.String(255))
+    destino = db.Column(db.String(255))
 
     # ==========================
 # USUÁRIOS
