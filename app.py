@@ -391,9 +391,7 @@ def transferencia():
             request.form['produto_id']
         )
 
-        novo_endereco = request.form[
-            'novo_endereco'
-        ]
+        novo_endereco = request.form['novo_endereco']
 
         existe = Produto.query.filter_by(
             endereco=novo_endereco
@@ -417,16 +415,16 @@ def transferencia():
         )
 
         db.session.add(historico)
-
         db.session.commit()
 
-        return redirect('/inventario')
+        flash(f"Transferência concluída! Novo endereço: {novo_endereco}")
+
+        return redirect('/transferencia')
 
     return render_template(
         'transferencia.html',
         produtos=produtos
     )
-
 
 # ==========================
 # HISTÓRICO
