@@ -263,7 +263,7 @@ def cadastrar():
 @app.route('/inventario')
 def inventario():
 
-    if session.get('perfil') not in [
+if session.get('perfil') not in [
     'admin',
     'operador',
     'separacao'
@@ -299,7 +299,7 @@ def inventario():
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
 
-    if session.get('perfil') not in [
+if session.get('perfil') not in [
     'admin',
     'operador'
 ]:
@@ -325,7 +325,7 @@ def editar(id):
 @app.route('/movimentacao', methods=['GET', 'POST'])
 def movimentacao():
 
-    if session.get('perfil') not in [
+if session.get('perfil') not in [
     'admin',
     'operador',
     'separacao'
@@ -420,7 +420,7 @@ def movimentacao():
 @app.route('/transferencia', methods=['GET', 'POST'])
 def transferencia():
 
-    if session.get('perfil') not in [
+if session.get('perfil') not in [
     'admin',
     'operador'
 ]:
@@ -477,7 +477,7 @@ def transferencia():
 @app.route('/historico')
 def historico():
 
-    if session.get('perfil') not in [
+if session.get('perfil') not in [
     'admin',
     'operador'
 ]:
