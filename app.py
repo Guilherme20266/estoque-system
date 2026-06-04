@@ -321,46 +321,52 @@ def movimentacao():
             return redirect('/movimentacao')
 
         if acao == "entrada":
-            return redirect('/movimentacao?sucesso=entrada')
 
-            produto.quantidade += quantidade
+    produto.quantidade += quantidade
 
-            historico = Historico(
-                data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-                usuario=session.get('usuario'),
-                acao="ENTRADA",
-                produto=produto.nome,
-                quantidade=quantidade,
-                origem=produto.endereco,
-                destino=produto.endereco
-            )
+    historico = Historico(
+        data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+        usuario=session.get('usuario'),
+        acao="ENTRADA",
+        produto=produto.nome,
+        quantidade=quantidade,
+        origem=produto.endereco,
+        destino=produto.endereco
+    )
 
-            db.session.add(historico)
+    db.session.add(historico)
 
-        if acao == "saida":
-            return redirect('/movimentacao?sucesso=saida')
+    db.session.commit()
 
-            produto.quantidade -= quantidade
+    return redirect('/movimentacao?sucesso=entrada')
 
-            historico = Historico(
-                data=datetime.now().strftime("%d/%m/%Y %H:%M"),
-                usuario=session.get('usuario'),
-                acao="SAIDA",
-                produto=produto.nome,
-                quantidade=quantidade,
-                origem=produto.endereco,
-                destino="-"
-            )
 
-            db.session.add(historico)
+if acao == "saida":
 
-            if produto.quantidade <= 0:
+    produto.quantidade -= quantidade
 
-                db.session.delete(produto)
+    historico = Historico(
+        data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+        usuario=session.get('usuario'),
+        acao="SAIDA",
+        produto=produto.nome,
+        quantidade=quantidade,
+        origem=produto.endereco,
+        destino="-"
+    )
 
+    db.session.add(historico)
+
+    if produto.quantidade <= 0:
+
+        db.session.delete(produto)
         db.session.commit()
 
         return redirect('/movimentacao?sucesso=zerado')
+
+    db.session.commit()
+
+    return redirect('/movimentacao?sucesso=saida')
 
     return render_template(
         'movimentacao.html',
