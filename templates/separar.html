@@ -1,31 +1,193 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Separação</title>
+
+<title>Movimentação</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+    margin:0;
+    padding:15px;
+}
+
+.box{
+    max-width:600px;
+    margin:auto;
+}
+
+h2{
+    text-align:center;
+}
+
+.menu{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#6c757d;
+    color:white;
+    margin-bottom:15px;
+    font-size:15px;
+}
+
+.busca{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    margin-bottom:15px;
+    box-sizing:border-box;
+}
+
+.card{
+    background:white;
+    padding:14px;
+    border-radius:12px;
+    margin-bottom:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.nome{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.info{
+    color:#555;
+    line-height:1.8;
+}
+
+select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:8px;
+}
+
+input[type=number]{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#007bff;
+    color:white;
+    margin-top:10px;
+    font-size:15px;
+}
+
+</style>
+
 </head>
+
 <body>
 
-<h2>📦 Separação de Endereço</h2>
+<div class="box">
 
-<form method="POST">
-    <input name="endereco" placeholder="Digite o endereço">
-    <button>Buscar</button>
+<h2>🔄 Movimentação</h2>
+
+<a href="/">
+<button class="menu">
+🏠 Voltar ao Menu
+</button>
+</a>
+
+<form method="GET">
+
+<input
+class="busca"
+type="text"
+name="busca"
+placeholder="Buscar nome, código ou endereço..."
+value="{{ busca }}"
+onkeyup="this.form.submit()"
+>
+
 </form>
 
-<hr>
+{% for produto in produtos %}
 
-{% if mensagem == "tem_produto" %}
+<div class="card">
 
-<p>✔ Produto encontrado</p>
-<p>{{ produto.nome }}</p>
-<p>{{ produto.quantidade }}</p>
+<div class="nome">
+{{ produto.nome }}
+</div>
 
-{% elif mensagem == "vazio" %}
+<div class="info">
 
-<p>⚠ Endereço vazio</p>
-<a href="/cadastrar">Cadastrar produto</a>
+🏷️ Código:
+{{ produto.codigo }}
 
-{% endif %}
+<br>
+
+📦 Quantidade:
+{{ produto.quantidade }}
+
+<br>
+
+📅 Validade:
+{{ produto.validade }}
+
+<br>
+
+📍 Endereço:
+{{ produto.endereco }}
+
+</div>
+
+<form method="POST">
+
+<input
+type="hidden"
+name="produto_id"
+value="{{ produto.id }}"
+>
+
+<select name="acao">
+
+<option value="entrada">
+📥 Entrada
+</option>
+
+<option value="saida">
+📤 Saída
+</option>
+
+</select>
+
+<input
+type="number"
+name="quantidade"
+min="1"
+required
+placeholder="Quantidade"
+>
+
+<button type="submit">
+Confirmar Movimentação
+</button>
+
+</form>
+
+</div>
+
+{% endfor %}
+
+</div>
 
 </body>
 </html>
