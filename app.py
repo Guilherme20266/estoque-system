@@ -72,20 +72,55 @@ class Usuario(db.Model):
 
 
 # ==========================
-# FUNÇÕES
+# PERMISSÕES SIMPLES
 # ==========================
 
+PERMISSOES = {
+    "admin": [
+        "inventario",
+        "cadastrar",
+        "editar",
+        "excluir",
+        "movimentar",
+        "transferir",
+        "consulta",
+        "historico",
+        "admin"
+    ],
+
+    "operador": [
+        "inventario",
+        "movimentar",
+        "transferir",
+        "editar",
+        "excluir"
+    ],
+
+    "separacao": [
+        "inventario",
+        "cadastrar",
+        "movimentar",
+        "consulta"
+    ],
+
+    "consulta": [
+        "consulta"
+    ]
+}
+
+
 def logado():
-    return session.get('usuario')
+    return session.get('usuario') is not None
 
 
-def admin():
-    return session.get('perfil') == 'admin'
+def perfil():
+    return session.get('perfil', '')
 
 
-def operador_ou_admin():
-    return session.get('perfil') in ['admin', 'operador']
-
+def pode(acao):
+    p = perfil()
+    return p in PERMISSOES and acao in PERMISSOES[p]
+    
 def calcular_status(validade):
 
     try:
@@ -222,9 +257,9 @@ def cadastrar():
 @app.route('/inventario')
 def inventario():
 
-    if not logado():
-        return redirect('/')
-
+    if not pode("inventario"):
+        return redirect("/menu")
+    
     produtos = Produto.query.all()
 
     lista = []
@@ -254,8 +289,8 @@ def inventario():
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
 
-    if not admin():
-        return redirect('/menu')
+    if not pode("editar"):
+        return redirect("/menu")
 
     produto = Produto.query.get_or_404(id)
 
@@ -277,8 +312,8 @@ def editar(id):
 @app.route('/movimentacao', methods=['GET', 'POST'])
 def movimentacao():
 
-    if not operador_ou_admin():
-        return redirect('/menu')
+    if not pode("movimentar"):
+        return redirect("/menu")
 
     busca = request.args.get("busca", "")
 
