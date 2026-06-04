@@ -19,7 +19,6 @@ body{
     background:linear-gradient(135deg, #0f172a, #1e293b);
 }
 
-/* container */
 .box{
     width:90%;
     max-width:520px;
@@ -66,7 +65,8 @@ h1{
     font-weight:bold;
     cursor:pointer;
     transition:0.2s;
-    box-shadow:0 6px 15px rgba(0,0,0,0.15);
+    box-shadow:0 10px 25px rgba(0,0,0,0.25);
+    border:1px solid rgba(255,255,255,0.08);
 }
 
 .btn:hover{
@@ -74,14 +74,38 @@ h1{
     opacity:0.95;
 }
 
-/* cores modernas */
-.cadastro{ background:linear-gradient(90deg,#22c55e,#16a34a); }
-.inventario{ background:linear-gradient(90deg,#3b82f6,#1d4ed8); }
-.movimentacao{ background:linear-gradient(90deg,#f97316,#ea580c); }
-.transferencia{ background:linear-gradient(90deg,#a855f7,#7c3aed); }
-.historico{ background:linear-gradient(90deg,#374151,#111827); }
-.admin{ background:linear-gradient(90deg,#ef4444,#b91c1c); }
-.logout{ background:linear-gradient(90deg,#6b7280,#4b5563); }
+.btn:active{
+    transform:scale(0.98);
+}
+
+/* 🔥 DEGRADÊ DESCENDO */
+.cadastro{
+    background:linear-gradient(to bottom,#22c55e,#15803d);
+}
+
+.inventario{
+    background:linear-gradient(to bottom,#3b82f6,#1e3a8a);
+}
+
+.movimentacao{
+    background:linear-gradient(to bottom,#f97316,#c2410c);
+}
+
+.transferencia{
+    background:linear-gradient(to bottom,#a855f7,#6d28d9);
+}
+
+.historico{
+    background:linear-gradient(to bottom,#374151,#111827);
+}
+
+.admin{
+    background:linear-gradient(to bottom,#ef4444,#7f1d1d);
+}
+
+.logout{
+    background:linear-gradient(to bottom,#6b7280,#111827);
+}
 
 a{
     text-decoration:none;
