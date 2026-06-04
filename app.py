@@ -72,58 +72,20 @@ class Usuario(db.Model):
 
 
 # ==========================
-# PERMISSÕES SIMPLES
+# FUNÇÕES
 # ==========================
 
-PERMISSOES = {
-    "admin": [
-        "inventario",
-        "cadastrar",
-        "editar",
-        "excluir",
-        "movimentar",
-        "transferir",
-        "consulta",
-        "historico",
-        "admin"
-    ],
-
-    "operador": [
-        "cadastrar",
-        "inventario",
-        "movimentar",
-        "transferir",
-        "editar",
-        "excluir"
-    ],
-
-    "separacao": [
-        "inventario",
-        "cadastrar",
-        "editar",
-        "movimentar",
-        "transferir",
-        "consulta"
-    ],
-
-    "consulta": [
-        "consulta"
-    ]
-}
-
-
 def logado():
-    return session.get('usuario') is not None
+    return session.get('usuario')
 
 
-def perfil():
-    return session.get('perfil', '')
+def admin():
+    return session.get('perfil') == 'admin'
 
 
-def pode(acao):
-    p = perfil()
-    return p in PERMISSOES and acao in PERMISSOES[p]
-    
+def operador_ou_admin():
+    return session.get('perfil') in ['admin', 'operador']
+
 def calcular_status(validade):
 
     try:
@@ -210,12 +172,9 @@ def logout():
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
 
-if session.get('perfil') not in [
-    'admin',
-    'separacao'
-]:
-    return redirect('/menu')
-    
+    if not operador_ou_admin_ou_separacao():
+        return redirect('/menu')
+
     if request.method == 'POST':
 
         endereco = (
@@ -263,13 +222,9 @@ if session.get('perfil') not in [
 @app.route('/inventario')
 def inventario():
 
-if session.get('perfil') not in [
-    'admin',
-    'operador',
-    'separacao'
-]:
-    return redirect('/menu')
-    
+    if not operador_ou_admin_ou_separacao():
+        return redirect('/')
+
     produtos = Produto.query.all()
 
     lista = []
@@ -299,11 +254,8 @@ if session.get('perfil') not in [
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
 
-if session.get('perfil') not in [
-    'admin',
-    'operador'
-]:
-    return redirect('/menu')
+    if not operador_ou_admin_ou_separacao():
+        return redirect('/menu')
 
     produto = Produto.query.get_or_404(id)
 
@@ -325,12 +277,8 @@ if session.get('perfil') not in [
 @app.route('/movimentacao', methods=['GET', 'POST'])
 def movimentacao():
 
-if session.get('perfil') not in [
-    'admin',
-    'operador',
-    'separacao'
-]:
-    return redirect('/menu')
+    if not operador_ou_admin_ou_separacao():
+        return redirect('/menu')
 
     busca = request.args.get("busca", "")
 
@@ -420,11 +368,8 @@ if session.get('perfil') not in [
 @app.route('/transferencia', methods=['GET', 'POST'])
 def transferencia():
 
-if session.get('perfil') not in [
-    'admin',
-    'operador'
-]:
-    return redirect('/menu')
+    if not operador_ou_admin_ou_separacao():
+        return redirect('/menu')
 
     produtos = Produto.query.all()
 
@@ -477,11 +422,8 @@ if session.get('perfil') not in [
 @app.route('/historico')
 def historico():
 
-if session.get('perfil') not in [
-    'admin',
-    'operador'
-]:
-    return redirect('/menu')
+    if not operador_ou_admin():
+        return redirect('/menu')
 
     busca = request.args.get('busca', '')
 
@@ -515,8 +457,8 @@ if session.get('perfil') not in [
 @app.route('/consulta')
 def consulta():
 
-if not logado():
-    return redirect('/')
+    if not logado():
+        return redirect('/')
 
     busca = request.args.get('busca', '')
 
