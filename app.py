@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash, Response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from openpyxl import Workbook
 from io import BytesIO
 
@@ -347,7 +348,7 @@ def movimentacao():
             produto.quantidade += quantidade
 
             historico = Historico(
-                data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+                data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
                 usuario=session.get('usuario'),
                 acao="ENTRADA",
                 produto=produto.nome,
