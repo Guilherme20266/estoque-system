@@ -207,7 +207,7 @@ def cadastrar():
         db.session.add(produto)
 
         historico = Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+            data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
             usuario=session.get('usuario'),
             acao="CADASTRO",
             produto=produto.nome,
@@ -282,7 +282,7 @@ def editar(id):
         produto.validade = nova_validade
 
         historico = Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+            data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
             usuario=session.get('usuario'),
             acao="EDITAR",
             produto=novo_nome,
@@ -368,7 +368,7 @@ def movimentacao():
             produto.quantidade -= quantidade
 
             historico = Historico(
-                data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+                data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
                 usuario=session.get('usuario'),
                 acao="SAIDA",
                 produto=produto.nome,
@@ -428,7 +428,7 @@ def transferencia():
         produto.endereco = novo_endereco
 
         historico = Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+            data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
             usuario=session.get('usuario'),
             acao="TRANSFERENCIA",
             produto=produto.nome,
@@ -525,7 +525,7 @@ def consulta():
     if busca and len(produtos) > 0:
 
         historico = Historico(
-            data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+            data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
             usuario=session.get('usuario'),
             acao="CONSULTA",
             produto=busca,
@@ -597,7 +597,7 @@ def excluir(id):
     produto = Produto.query.get_or_404(id)
 
     historico = Historico(
-        data=datetime.now().strftime("%d/%m/%Y %H:%M"),
+        data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
         usuario=session.get('usuario'),
         acao="EXCLUSAO",
         produto=produto.nome,
