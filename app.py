@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for, flash, Response
+from flask import Flask, render_template, request, redirect, session, url_for, flash, Response, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -13,6 +13,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://automatico:yC0t7wVgQ2ozXUM
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+# =========================
+# PWA - SERVICE WORKER
+# =========================
+@app.route("/sw.js")
+def sw():
+    return send_from_directory("static", "sw.js", mimetype="application/javascript")
 
 # ==========================
 # PRODUTOS
