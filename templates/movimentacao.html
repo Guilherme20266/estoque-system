@@ -4,6 +4,7 @@
 
 {% block head %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
 {% endblock %}
 
 {% block style %}
@@ -24,8 +25,7 @@ h2{
     text-align:center;
 }
 
-/* 🔙 BOTÃO VOLTAR */
-.voltar{
+.voltar,.menu{
     width:100%;
     padding:12px;
     border:none;
@@ -37,26 +37,29 @@ h2{
     cursor:pointer;
 }
 
-/* manter seu menu */
-.menu{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    background:#6c757d;
-    color:white;
+.busca-area{
+    display:flex;
+    gap:8px;
     margin-bottom:15px;
-    font-size:15px;
-    cursor:pointer;
 }
 
 .busca{
-    width:100%;
+    flex:1;
     padding:12px;
     border-radius:8px;
     border:1px solid #ccc;
-    margin-bottom:15px;
     box-sizing:border-box;
+}
+
+.cam-btn{
+    width:55px;
+    min-width:55px;
+    border:none;
+    border-radius:8px;
+    background:#28a745;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
 }
 
 .card{
@@ -78,14 +81,7 @@ h2{
     line-height:1.8;
 }
 
-select{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border-radius:8px;
-}
-
-input[type=number]{
+select,input[type=number]{
     width:100%;
     padding:12px;
     margin-top:10px;
@@ -108,6 +104,11 @@ button{
 
 a{ text-decoration:none; }
 
+#reader{
+    display:none;
+    margin-bottom:15px;
+}
+
 {% endblock %}
 
 {% block content %}
@@ -116,7 +117,6 @@ a{ text-decoration:none; }
 
 <h2>🔄 Movimentação</h2>
 
-<!-- 🔙 BOTÃO VOLTAR -->
 <button onclick="history.back()" class="voltar">
 ⬅️ Voltar
 </button>
@@ -125,18 +125,26 @@ a{ text-decoration:none; }
 <button class="menu">🏠 Voltar ao Menu</button>
 </a>
 
-<form method="GET">
+<!-- 🔥 BUSCA + CÂMERA -->
+<div class="busca-area">
 
+<form method="GET" style="flex:1;margin:0;">
 <input
 class="busca"
 type="text"
+id="busca"
 name="busca"
 placeholder="Buscar nome, código ou endereço..."
 value="{{ busca }}"
 onkeyup="this.form.submit()"
 >
-
 </form>
+
+<button class="cam-btn" type="button" onclick="abrirCamera()">📷</button>
+
+</div>
+
+<div id="reader"></div>
 
 {% for produto in produtos %}
 
@@ -175,6 +183,42 @@ onkeyup="this.form.submit()"
 {% endfor %}
 
 </div>
+
+<script>
+
+let scanner;
+
+function abrirCamera(){
+
+document.getElementById("reader").style.display = "block";
+
+scanner = new Html5Qrcode("reader");
+
+scanner.start(
+    { facingMode: "environment" },
+    {
+        fps: 10,
+        qrbox: {
+            width: 300,
+            height: 120
+        }
+    },
+    (codigo) => {
+
+        document.getElementById("busca").value = codigo;
+
+        scanner.stop().then(() => {
+            document.getElementById("reader").style.display = "none";
+        });
+
+        document.querySelector("form").submit();
+
+    }
+);
+
+}
+
+</script>
 
 {% if request.args.get('sucesso') == 'entrada' %}
 <script>
