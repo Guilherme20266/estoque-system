@@ -13,31 +13,40 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Estoque">
 
-<link rel="icon" type="image/png" href="/static/icon-192.png?v=2">
+<link rel="icon" href="/static/icon-192.png?v=2">
 <link rel="apple-touch-icon" href="/static/icon-192.png">
-
-{% block head %}{% endblock %}
 
 <style>
 
-/* 🔥 RESET LEVE (não muda seu layout) */
-body{
-    margin:0;
+/* ===== TEMA CLARO (PADRÃO) ===== */
+:root {
+    --bg: #f4f4f4;
+    --card: #ffffff;
+    --text: #111827;
 }
 
-/* 🌙 DARK MODE (ativado via JS) */
+/* ===== TEMA ESCURO ===== */
 body.dark {
-    filter: invert(1) hue-rotate(180deg);
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f1f5f9;
 }
 
-/* evita inverter imagens/icon */
-body.dark img,
-body.dark video,
-body.dark iframe {
-    filter: invert(1) hue-rotate(180deg);
+/* aplica no sistema sem quebrar layout */
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
 }
 
-/* BOTÃO TOGGLE */
+/* ajuda nos cards padrão */
+.card, .box, .topo {
+    background: var(--card);
+    color: var(--text);
+}
+
+/* botão tema */
 #themeToggle {
     position: fixed;
     top: 10px;
@@ -49,18 +58,16 @@ body.dark iframe {
     cursor: pointer;
     background: white;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    font-size: 14px;
 }
 
-{% block style %}{% endblock %}
-
 </style>
+
+{% block head %}{% endblock %}
 
 </head>
 
 <body>
 
-<!-- 🌙 BOTÃO DARK/LIGHT -->
 <button id="themeToggle">🌙</button>
 
 {% block content %}{% endblock %}
@@ -68,15 +75,16 @@ body.dark iframe {
 {% block script %}{% endblock %}
 
 <script>
+
 const btn = document.getElementById("themeToggle");
 
-// carregar preferência
+// carregar tema salvo
 if(localStorage.getItem("theme") === "dark"){
     document.body.classList.add("dark");
     btn.innerHTML = "☀️";
 }
 
-btn.addEventListener("click", function(){
+btn.onclick = function(){
 
     document.body.classList.toggle("dark");
 
@@ -88,7 +96,8 @@ btn.addEventListener("click", function(){
         btn.innerHTML = "🌙";
     }
 
-});
+}
+
 </script>
 
 </body>
