@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -12,9 +12,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-
 # ==========================
-# REDIRECT
+# REDIRECT INICIAL
 # ==========================
 @app.route('/')
 def index():
@@ -67,7 +66,6 @@ def operador():
 
 
 def calcular_status(validade):
-
     try:
         hoje = datetime.today()
         data = datetime.strptime(validade, "%d/%m/%Y")
@@ -75,18 +73,17 @@ def calcular_status(validade):
         meses = (data.year - hoje.year) * 12 + (data.month - hoje.month)
 
         if meses <= 4:
-            return "URGENTE", 3
+            return "URGENTE", 1
         elif meses <= 7:
             return "ATENCAO", 2
         else:
-            return "OK", 1
-
+            return "OK", 3
     except:
-        return "SEM_DATA", 0
+        return "SEM_DATA", 4
 
 
 # ==========================
-# LOGIN
+# LOGIN / LOGOUT / MENU
 # ==========================
 @app.route('/login')
 def login():
@@ -121,12 +118,13 @@ def menu():
         return redirect('/login')
 
     return render_template('menu.html',
-                           usuario=session.get('usuario'),
-                           perfil=session.get('perfil'))
+        usuario=session.get('usuario'),
+        perfil=session.get('perfil')
+    )
 
 
 # ==========================
-# CADASTRO
+# CADASTRAR
 # ==========================
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
@@ -137,10 +135,11 @@ def cadastrar():
 
         endereco = f"{request.form['rua']}-{request.form['coluna']}-{request.form['nivel']}"
 
-        if Produto.query.filter_by(endereco=endereco).first():
+        existe = Produto.query.filter_by(endereco=endereco).first()
+        if existe:
             return redirect('/cadastrar?erro=endereco')
 
-        produto = Produto(
+        p = Produto(
             codigo=request.form['codigo'],
             nome=request.form['nome'],
             quantidade=int(request.form['quantidade']),
@@ -148,14 +147,14 @@ def cadastrar():
             endereco=endereco
         )
 
-        db.session.add(produto)
+        db.session.add(p)
 
         db.session.add(Historico(
             data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
             usuario=session.get('usuario'),
             acao="CADASTRO",
-            produto=produto.nome,
-            quantidade=produto.quantidade,
+            produto=p.nome,
+            quantidade=p.quantidade,
             origem="-",
             destino=endereco
         ))
@@ -168,11 +167,10 @@ def cadastrar():
 
 
 # ==========================
-# CONSULTA (CORRIGIDA)
+# CONSULTA (URGENTES NO TOPO)
 # ==========================
 @app.route('/consulta')
 def consulta():
-
     if not logado():
         return redirect('/login')
 
@@ -189,19 +187,11 @@ def consulta():
         ]
 
     lista = []
-
     for p in produtos:
-
         status, prioridade = calcular_status(p.validade)
+        lista.append({"produto": p, "status": status, "prioridade": prioridade})
 
-        lista.append({
-            "produto": p,
-            "status": status,
-            "prioridade": prioridade
-        })
-
-    # 🔥 CORREÇÃO FINAL (URGENTE NO TOPO)
-    lista.sort(key=lambda x: x["prioridade"], reverse=True)
+    lista.sort(key=lambda x: x["prioridade"])
 
     return render_template('consulta.html', lista=lista, busca=busca)
 
@@ -211,19 +201,11 @@ def consulta():
 # ==========================
 @app.route('/inventario')
 def inventario():
-
     if not logado():
         return redirect('/login')
 
     produtos = Produto.query.all()
-
-    lista = []
-
-    for p in produtos:
-        status, prioridade = calcular_status(p.validade)
-        lista.append({"produto": p, "status": status, "prioridade": prioridade})
-
-    lista.sort(key=lambda x: x["prioridade"], reverse=True)
+    lista = [{"produto": p, "status": "OK", "prioridade": 1} for p in produtos]
 
     return render_template('inventario.html', lista=lista)
 
@@ -233,16 +215,14 @@ def inventario():
 # ==========================
 @app.route('/historico')
 def historico():
-
-    if not operador():
-        return redirect('/menu')
+    if not logado():
+        return redirect('/login')
 
     busca = request.args.get('busca', '')
 
     registros = Historico.query.order_by(Historico.id.desc()).all()
 
     lista = []
-
     for r in registros:
 
         if busca:
@@ -257,11 +237,64 @@ def historico():
 
 
 # ==========================
+# MOVIMENTAÇÃO (VOLTOU)
+# ==========================
+@app.route('/movimentacao', methods=['GET', 'POST'])
+def movimentacao():
+    if not operador():
+        return redirect('/menu')
+
+    busca = request.args.get("busca", "")
+    produtos = Produto.query.all()
+
+    if busca:
+        produtos = [
+            p for p in produtos
+            if busca.lower() in (p.nome or "").lower()
+            or busca.lower() in (p.codigo or "").lower()
+            or busca.lower() in (p.endereco or "").lower()
+        ]
+
+    if request.method == 'POST':
+
+        produto = Produto.query.get(request.form['produto_id'])
+        acao = request.form['acao']
+        quantidade = int(request.form['quantidade'])
+
+        if not produto:
+            return redirect('/movimentacao')
+
+        if acao == "entrada":
+            produto.quantidade += quantidade
+
+        if acao == "saida":
+            produto.quantidade -= quantidade
+
+        db.session.add(Historico(
+            data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
+            usuario=session.get('usuario'),
+            acao=acao.upper(),
+            produto=produto.nome,
+            quantidade=quantidade,
+            origem=produto.endereco,
+            destino=produto.endereco
+        ))
+
+        if produto.quantidade <= 0:
+            db.session.delete(produto)
+
+        db.session.commit()
+
+        return redirect('/movimentacao')
+
+    return render_template('movimentacao.html', produtos=produtos, busca=busca)
+
+
+# ==========================
 # ADMIN
 # ==========================
 @app.route('/administracao')
 def administracao():
-
     if not admin():
         return redirect('/menu')
 
@@ -279,7 +312,6 @@ def administracao():
 # ==========================
 @app.route('/ranking-usuarios')
 def ranking_usuarios():
-
     if not operador():
         return redirect('/menu')
 
