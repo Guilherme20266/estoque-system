@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Menu{% endblock %}
@@ -19,6 +20,7 @@ body{
     max-width:520px;
 }
 
+/* topo estilo login */
 .topo{
     background:rgba(255,255,255,0.95);
     border-radius:16px;
@@ -28,6 +30,7 @@ body{
     box-shadow:0 10px 30px rgba(0,0,0,0.25);
 }
 
+/* logo */
 .logo{
     display:block;
     width:80px;
@@ -54,6 +57,7 @@ h1{
     color:#374151;
 }
 
+/* botões */
 .btn{
     width:100%;
     padding:15px;
@@ -72,10 +76,12 @@ h1{
     transform:translateY(-2px);
 }
 
+/* azul padrão */
 .padrao{
     background:linear-gradient(90deg,#3b82f6,#2563eb);
 }
 
+/* vermelho */
 .admin{
     background:linear-gradient(90deg,#ef4444,#dc2626);
 }
@@ -112,46 +118,46 @@ a{
 
     {% if perfil in ["admin", "operador", "separacao"] %}
     <a href="/cadastrar">
-        <button class="btn padrao">➕ Cadastrar Produto</button>
+        <button class="btn padrao">
+            ➕ Cadastrar Produto
+        </button>
     </a>
     {% endif %}
 
     <a href="/consulta">
-        <button class="btn padrao">🔎 Consulta</button>
+        <button class="btn padrao">
+            🔎 Consulta
+        </button>
     </a>
 
     {% if perfil in ["admin", "operador", "separacao"] %}
     <a href="/inventario">
-        <button class="btn padrao">📦 Inventário</button>
-    </a>
-    {% endif %}
-
-    {% if perfil in ["admin", "operador", "separacao"] %}
-    <a href="/movimentacao">
-        <button class="btn padrao">🔄 Movimentação</button>
+        <button class="btn padrao">
+            📦 Inventário
+        </button>
     </a>
     {% endif %}
 
     {% if perfil in ["admin", "operador"] %}
     <a href="/historico">
-        <button class="btn padrao">📜 Histórico</button>
-    </a>
-    {% endif %}
-
-    {% if perfil in ["admin", "operador"] %}
-    <a href="/ranking-usuarios">
-        <button class="btn padrao">🏆 Ranking</button>
+        <button class="btn padrao">
+            📜 Histórico
+        </button>
     </a>
     {% endif %}
 
     {% if perfil == "admin" %}
     <a href="/administracao">
-        <button class="btn admin">⚙️ Administração</button>
+        <button class="btn admin">
+            ⚙️ Administração
+        </button>
     </a>
     {% endif %}
 
     <a href="/logout">
-        <button class="btn logout">🚪 Sair</button>
+        <button class="btn logout">
+            🚪 Sair
+        </button>
     </a>
 
 </div>
