@@ -4,96 +4,93 @@
 
 {% block style %}
 
-body {
-font-family: Arial, sans-serif;
-margin: 0;
-min-height: 100vh;
-display: flex;
-justify-content: center;
-align-items: center;
-background: linear-gradient(135deg, #0f172a, #1e293b);
+body{
+    font-family:Arial,sans-serif;
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
 }
 
-.box {
-width: 90%;
-max-width: 520px;
+.box{
+    width:90%;
+    max-width:520px;
 }
 
-/* topo com efeito vidro */
-.topo {
-background: rgba(255,255,255,0.12);
-backdrop-filter: blur(14px);
--webkit-backdrop-filter: blur(14px);
-border: 1px solid rgba(255,255,255,0.18);
-border-radius: 16px;
-padding: 20px;
-text-align: center;
-margin-bottom: 18px;
-box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+/* topo estilo login */
+.topo{
+    background:rgba(255,255,255,0.95);
+    border-radius:16px;
+    padding:20px;
+    text-align:center;
+    margin-bottom:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
 }
 
 /* logo */
 .logo{
-display:block;
-width:80px;
-height:80px;
-margin:0 auto 15px auto;
-border-radius:18px;
+    display:block;
+    width:80px;
+    height:80px;
+    margin:0 auto 15px auto;
+    border-radius:18px;
 }
 
-h1 {
-margin: 0;
-font-size: 22px;
-color: #ffffff;
+h1{
+    margin:0;
+    font-size:22px;
+    color:#111827;
 }
 
-.sub {
-color: rgba(255,255,255,0.75);
-margin-top: 6px;
-font-size: 13px;
+.sub{
+    color:#6b7280;
+    margin-top:6px;
+    font-size:13px;
 }
 
-.usuario {
-margin-top: 10px;
-font-size: 13px;
-color: rgba(255,255,255,0.85);
+.usuario{
+    margin-top:10px;
+    font-size:13px;
+    color:#374151;
 }
 
 /* botões */
-.btn {
-width: 100%;
-padding: 15px;
-margin-bottom: 12px;
-border: none;
-border-radius: 12px;
-color: white;
-font-size: 15px;
-font-weight: bold;
-cursor: pointer;
-transition: 0.2s ease;
-box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+.btn{
+    width:100%;
+    padding:15px;
+    margin-bottom:12px;
+    border:none;
+    border-radius:12px;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+    box-shadow:0 6px 15px rgba(0,0,0,.3);
 }
 
-.btn:hover {
-transform: translateY(-2px);
+.btn:hover{
+    transform:translateY(-2px);
 }
 
-/* padrão azul */
-.padrao {
-background: linear-gradient(90deg, #3b82f6, #2563eb);
+/* azul padrão */
+.padrao{
+    background:linear-gradient(90deg,#3b82f6,#2563eb);
 }
 
 /* vermelho */
-.admin {
-background: linear-gradient(90deg, #ef4444, #dc2626);
+.admin{
+    background:linear-gradient(90deg,#ef4444,#dc2626);
 }
 
-.logout {
-background: linear-gradient(90deg, #ef4444, #dc2626);
+.logout{
+    background:linear-gradient(90deg,#ef4444,#dc2626);
 }
 
-a {
-text-decoration: none;
+a{
+    text-decoration:none;
 }
 
 {% endblock %}
@@ -102,37 +99,65 @@ text-decoration: none;
 
 <div class="box">
 
-<div class="topo">
+    <div class="topo">
 
-```
-<img src="/static/icon-192.png" class="logo">
+        <img src="/static/icon-192.png" class="logo">
 
-<h1>CONTROLE DE ESTOQUE</h1>
+        <h1>CONTROLE DE ESTOQUE</h1>
 
-<div class="sub">Sistema de Gestão</div>
+        <div class="sub">
+            Sistema de Gestão
+        </div>
 
-<div class="usuario">
-    👤 {{ usuario }} | {{ perfil }}
-</div>
-```
+        <div class="usuario">
+            👤 {{ usuario }} | {{ perfil }}
+        </div>
 
-</div>
+    </div>
 
-{% if perfil in ["admin", "operador", "separacao"] %} <a href="/cadastrar"><button class="btn padrao">➕ Cadastrar Produto</button></a>
-{% endif %}
+    {% if perfil in ["admin", "operador", "separacao"] %}
+    <a href="/cadastrar">
+        <button class="btn padrao">
+            ➕ Cadastrar Produto
+        </button>
+    </a>
+    {% endif %}
 
-<a href="/consulta"><button class="btn padrao">🔎 Consulta</button></a>
+    <a href="/consulta">
+        <button class="btn padrao">
+            🔎 Consulta
+        </button>
+    </a>
 
-{% if perfil in ["admin", "operador", "separacao"] %} <a href="/inventario"><button class="btn padrao">📦 Inventário</button></a>
-{% endif %}
+    {% if perfil in ["admin", "operador", "separacao"] %}
+    <a href="/inventario">
+        <button class="btn padrao">
+            📦 Inventário
+        </button>
+    </a>
+    {% endif %}
 
-{% if perfil in ["admin", "operador"] %} <a href="/historico"><button class="btn padrao">📜 Histórico</button></a>
-{% endif %}
+    {% if perfil in ["admin", "operador"] %}
+    <a href="/historico">
+        <button class="btn padrao">
+            📜 Histórico
+        </button>
+    </a>
+    {% endif %}
 
-{% if perfil == "admin" %} <a href="/administracao"><button class="btn admin">⚙️ Administração</button></a>
-{% endif %}
+    {% if perfil == "admin" %}
+    <a href="/administracao">
+        <button class="btn admin">
+            ⚙️ Administração
+        </button>
+    </a>
+    {% endif %}
 
-<a href="/logout"><button class="btn logout">🚪 Sair</button></a>
+    <a href="/logout">
+        <button class="btn logout">
+            🚪 Sair
+        </button>
+    </a>
 
 </div>
 
