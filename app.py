@@ -157,10 +157,12 @@ def cadastrar():
 # ==========================
 @app.route('/consulta')
 def consulta():
+
     if not logado():
-        return redirect('/login')
+        return redirect('/')
 
     busca = request.args.get('busca', '')
+
     produtos = Produto.query.all()
 
     if busca:
@@ -171,9 +173,26 @@ def consulta():
             or busca.lower() in (p.endereco or "").lower()
         ]
 
-    lista = [{"produto": p, "status": "OK", "prioridade": 1} for p in produtos]
+    lista = []
 
-    return render_template('consulta.html', lista=lista, busca=busca)
+    for p in produtos:
+
+        status, prioridade = calcular_status(p.validade)
+
+        lista.append({
+            "produto": p,
+            "status": status,
+            "prioridade": prioridade
+        })
+
+    # 🔥 ISSO AQUI é o que faz "URGENTE subir"
+    lista.sort(key=lambda x: x["prioridade"])
+
+    return render_template(
+        'consulta.html',
+        lista=lista,
+        busca=busca
+    )
 
 
 # ==========================
