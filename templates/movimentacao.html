@@ -1,13 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-<title>Movimentação</title>
+{% block title %}Movimentação{% endblock %}
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+{% block head %}
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<style>
+{% endblock %}
+
+{% block style %}
 
 body{
     font-family:Arial;
@@ -34,6 +35,7 @@ h2{
     color:white;
     margin-bottom:15px;
     font-size:15px;
+    cursor:pointer;
 }
 
 .busca{
@@ -89,22 +91,21 @@ button{
     color:white;
     margin-top:10px;
     font-size:15px;
+    cursor:pointer;
 }
 
-</style>
+a{ text-decoration:none; }
 
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
 
 <div class="box">
 
 <h2>🔄 Movimentação</h2>
 
-<a href="/">
-<button class="menu">
-🏠 Voltar ao Menu
-</button>
+<a href="/menu">
+<button class="menu">🏠 Voltar ao Menu</button>
 </a>
 
 <form method="GET">
@@ -130,57 +131,25 @@ onkeyup="this.form.submit()"
 
 <div class="info">
 
-🏷️ Código:
-{{ produto.codigo }}
-
-<br>
-
-📦 Quantidade:
-{{ produto.quantidade }}
-
-<br>
-
-📅 Validade:
-{{ produto.validade }}
-
-<br>
-
-📍 Endereço:
-{{ produto.endereco }}
+🏷️ Código: {{ produto.codigo }}<br>
+📦 Quantidade: {{ produto.quantidade }}<br>
+📅 Validade: {{ produto.validade }}<br>
+📍 Endereço: {{ produto.endereco }}
 
 </div>
 
 <form method="POST">
 
-<input
-type="hidden"
-name="produto_id"
-value="{{ produto.id }}"
->
+<input type="hidden" name="produto_id" value="{{ produto.id }}">
 
 <select name="acao">
-
-<option value="entrada">
-📥 Entrada
-</option>
-
-<option value="saida">
-📤 Saída
-</option>
-
+<option value="entrada">📥 Entrada</option>
+<option value="saida">📤 Saída</option>
 </select>
 
-<input
-type="number"
-name="quantidade"
-min="1"
-required
-placeholder="Quantidade"
->
+<input type="number" name="quantidade" min="1" required placeholder="Quantidade">
 
-<button type="submit">
-Confirmar Movimentação
-</button>
+<button type="submit">Confirmar Movimentação</button>
 
 </form>
 
@@ -191,7 +160,6 @@ Confirmar Movimentação
 </div>
 
 {% if request.args.get('sucesso') == 'entrada' %}
-
 <script>
 Swal.fire({
     icon:'success',
@@ -199,11 +167,9 @@ Swal.fire({
     text:'Quantidade adicionada ao estoque com sucesso.'
 });
 </script>
-
 {% endif %}
 
 {% if request.args.get('sucesso') == 'saida' %}
-
 <script>
 Swal.fire({
     icon:'success',
@@ -211,11 +177,9 @@ Swal.fire({
     text:'Quantidade retirada do estoque com sucesso.'
 });
 </script>
-
 {% endif %}
 
 {% if request.args.get('sucesso') == 'zerado' %}
-
 <script>
 Swal.fire({
     icon:'warning',
@@ -223,8 +187,6 @@ Swal.fire({
     text:'O estoque chegou a zero e o produto foi excluído automaticamente.'
 });
 </script>
-
 {% endif %}
-    
-</body>
-</html>
+
+{% endblock %}
