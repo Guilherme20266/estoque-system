@@ -1,13 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-<title>Inventário</title>
+{% block title %}Inventário{% endblock %}
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>    
+{% block head %}
 
-<style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% endblock %}
+
+{% block style %}
 
 body{
     font-family:Arial;
@@ -34,6 +35,7 @@ h2{
     color:white;
     font-size:15px;
     margin-bottom:10px;
+    cursor:pointer;
 }
 
 .busca{
@@ -103,11 +105,11 @@ h2{
 .edit{ background:#ffc107; color:#000; }
 .del{ background:#dc3545; }
 
-</style>
+a{ text-decoration:none; }
 
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
 
 <div class="box">
 
@@ -222,7 +224,6 @@ function confirmarExclusao(event, url, produto){
 
 </script>
 
-<!-- ✔️ ALERTA DE EXCLUSÃO -->
 {% if request.args.get('excluido') %}
 <script>
 Swal.fire({
@@ -234,7 +235,6 @@ Swal.fire({
 </script>
 {% endif %}
 
-<!-- ✔️ ALERTA DE EDIÇÃO -->
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     {% for category, msg in messages %}
@@ -254,5 +254,4 @@ Swal.fire({
   {% endif %}
 {% endwith %}
 
-</body>
-</html>
+{% endblock %}
