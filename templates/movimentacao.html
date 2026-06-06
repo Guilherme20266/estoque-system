@@ -24,8 +24,7 @@ h2{
     text-align:center;
 }
 
-/* 🔙 BOTÃO VOLTAR */
-.voltar{
+.voltar, .menu{
     width:100%;
     padding:12px;
     border:none;
@@ -34,19 +33,6 @@ h2{
     color:white;
     font-size:15px;
     margin-bottom:10px;
-    cursor:pointer;
-}
-
-/* manter seu menu */
-.menu{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    background:#6c757d;
-    color:white;
-    margin-bottom:15px;
-    font-size:15px;
     cursor:pointer;
 }
 
@@ -94,7 +80,7 @@ input[type=number]{
     box-sizing:border-box;
 }
 
-button{
+button.action{
     width:100%;
     padding:12px;
     border:none;
@@ -116,7 +102,6 @@ a{ text-decoration:none; }
 
 <h2>🔄 Movimentação</h2>
 
-<!-- 🔙 BOTÃO VOLTAR -->
 <button onclick="history.back()" class="voltar">
 ⬅️ Voltar
 </button>
@@ -147,26 +132,29 @@ onkeyup="this.form.submit()"
 </div>
 
 <div class="info">
-
 🏷️ Código: {{ produto.codigo }}<br>
 📦 Quantidade: {{ produto.quantidade }}<br>
 📅 Validade: {{ produto.validade }}<br>
 📍 Endereço: {{ produto.endereco }}
-
 </div>
 
 <form method="POST">
 
 <input type="hidden" name="produto_id" value="{{ produto.id }}">
 
-<select name="acao">
+<!-- 🔥 IMPORTANTE: isso vai pro ranking -->
+<input type="hidden" name="usuario" value="{{ usuario }}">
+
+<select name="acao" required>
 <option value="entrada">📥 Entrada</option>
 <option value="saida">📤 Saída</option>
 </select>
 
 <input type="number" name="quantidade" min="1" required placeholder="Quantidade">
 
-<button type="submit">Confirmar Movimentação</button>
+<button type="submit" class="action">
+Confirmar Movimentação
+</button>
 
 </form>
 
