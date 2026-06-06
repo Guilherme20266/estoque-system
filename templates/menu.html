@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Ataca-Tudo{% endblock %}
+{% block title %}Menu{% endblock %}
 
 {% block style %}
 
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(circle, #3D3393 0%, #0F0C29 100%);
+    background: linear-gradient(135deg, #0f172a, #1e293b);
 }
 
 .box {
@@ -20,35 +19,35 @@ body {
     max-width: 520px;
 }
 
+/* topo estilo login */
 .topo {
-    background: rgba(255, 255, 255, 0.15); 
+    background: rgba(255,255,255,0.95);
     border-radius: 16px;
-    padding: 25px;
+    padding: 20px;
     text-align: center;
     margin-bottom: 18px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
 h1 {
     margin: 0;
     font-size: 22px;
-    color: #fff;
+    color: #111827;
 }
 
 .sub {
-    color: rgba(255,255,255,0.7);
+    color: #6b7280;
     margin-top: 6px;
     font-size: 13px;
 }
 
 .usuario {
-    margin-top: 12px;
+    margin-top: 10px;
     font-size: 13px;
-    color: rgba(255,255,255,0.85);
+    color: #374151;
 }
 
+/* botões estilo login */
 .btn {
     width: 100%;
     padding: 15px;
@@ -64,22 +63,20 @@ h1 {
 }
 
 .btn:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
 }
 
-.btn:active {
-    transform: translateY(-1px);
+/* cores estilo login */
+.cadastro { background: linear-gradient(90deg, #2563eb, #1d4ed8); }
+.consulta { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.inventario { background: linear-gradient(90deg, #06b6d4, #0891b2); }
+.historico { background: linear-gradient(90deg, #6366f1, #4f46e5); }
+.admin { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
+.logout { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+a {
+    text-decoration: none;
 }
-
-/* cores */
-.cadastro { background: linear-gradient(to bottom, #2ECC71, #27AE60); }
-.consulta { background: linear-gradient(to bottom, #3498DB, #2980B9); }
-.inventario { background: linear-gradient(to bottom, #F1C40F, #F39C12); }
-.historico { background: linear-gradient(to bottom, #95A5A6, #7F8C8D); }
-.admin { background: linear-gradient(to bottom, #E74C3C, #C0392B); }
-.logout { background: linear-gradient(to bottom, #34495E, #2C3E50); }
-
-a { text-decoration: none; }
 
 {% endblock %}
 
@@ -89,41 +86,29 @@ a { text-decoration: none; }
 
 <div class="topo">
     <h1>📦 CONTROLE DE ESTOQUE</h1>
-    <div class="sub">© 2026 | Sistema de Gestão</div>
+    <div class="sub">Sistema de Gestão</div>
     <div class="usuario">👤 {{ usuario }} | {{ perfil }}</div>
 </div>
 
 {% if perfil in ["admin", "operador", "separacao"] %}
-<a href="/cadastrar">
-    <button class="btn cadastro">➕ Cadastrar Produto</button>
-</a>
+<a href="/cadastrar"><button class="btn cadastro">➕ Cadastrar Produto</button></a>
 {% endif %}
 
-<a href="/consulta">
-    <button class="btn consulta">🔎 Consulta</button>
-</a>
+<a href="/consulta"><button class="btn consulta">🔎 Consulta</button></a>
 
 {% if perfil in ["admin", "operador", "separacao"] %}
-<a href="/inventario">
-    <button class="btn inventario">📦 Inventário</button>
-</a>
+<a href="/inventario"><button class="btn inventario">📦 Inventário</button></a>
 {% endif %}
 
 {% if perfil in ["admin", "operador"] %}
-<a href="/historico">
-    <button class="btn historico">📜 Histórico</button>
-</a>
+<a href="/historico"><button class="btn historico">📜 Histórico</button></a>
 {% endif %}
 
 {% if perfil == "admin" %}
-<a href="/administracao">
-    <button class="btn admin">⚙️ Administração</button>
-</a>
+<a href="/administracao"><button class="btn admin">⚙️ Administração</button></a>
 {% endif %}
 
-<a href="/logout">
-    <button class="btn logout">🚪 Sair</button>
-</a>
+<a href="/logout"><button class="btn logout">🚪 Sair</button></a>
 
 </div>
 
