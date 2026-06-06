@@ -1,1 +1,49 @@
+{% extends "base.html" %}
 
+{% block title %}Ranking{% endblock %}
+
+{% block style %}
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+    padding:15px;
+}
+
+.box{
+    max-width:600px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    margin-bottom:10px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+{% endblock %}
+
+{% block content %}
+
+<div class="box">
+
+<h2>🏆 Ranking de Usuários</h2>
+
+<a href="/menu">
+<button style="width:100%;padding:12px;margin-bottom:10px;border:none;border-radius:8px;background:#6c757d;color:white;">
+Voltar
+</button>
+</a>
+
+{% for u, total in dados %}
+
+<div class="card">
+<b>{{ u }}</b><br>
+📦 Saídas: {{ total }}
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}
