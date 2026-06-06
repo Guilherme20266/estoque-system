@@ -47,7 +47,7 @@ h1 {
     color: #374151;
 }
 
-/* botões estilo login */
+/* botões */
 .btn {
     width: 100%;
     padding: 15px;
@@ -66,13 +66,19 @@ h1 {
     transform: translateY(-2px);
 }
 
-/* cores estilo login */
-.cadastro { background: linear-gradient(90deg, #2563eb, #1d4ed8); }
-.consulta { background: linear-gradient(90deg, #3b82f6, #2563eb); }
-.inventario { background: linear-gradient(90deg, #06b6d4, #0891b2); }
-.historico { background: linear-gradient(90deg, #6366f1, #4f46e5); }
-.admin { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
-.logout { background: linear-gradient(90deg, #ef4444, #dc2626); }
+/* 🔵 PADRÃO AZUL (todos iguais ao consulta) */
+.padrao {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+/* 🔴 AÇÕES IMPORTANTES */
+.admin {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.logout {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+}
 
 a {
     text-decoration: none;
@@ -91,17 +97,17 @@ a {
 </div>
 
 {% if perfil in ["admin", "operador", "separacao"] %}
-<a href="/cadastrar"><button class="btn cadastro">➕ Cadastrar Produto</button></a>
+<a href="/cadastrar"><button class="btn padrao">➕ Cadastrar Produto</button></a>
 {% endif %}
 
-<a href="/consulta"><button class="btn consulta">🔎 Consulta</button></a>
+<a href="/consulta"><button class="btn padrao">🔎 Consulta</button></a>
 
 {% if perfil in ["admin", "operador", "separacao"] %}
-<a href="/inventario"><button class="btn inventario">📦 Inventário</button></a>
+<a href="/inventario"><button class="btn padrao">📦 Inventário</button></a>
 {% endif %}
 
 {% if perfil in ["admin", "operador"] %}
-<a href="/historico"><button class="btn historico">📜 Histórico</button></a>
+<a href="/historico"><button class="btn padrao">📜 Histórico</button></a>
 {% endif %}
 
 {% if perfil == "admin" %}
