@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-<title>Editar Produto</title>
+{% block title %}Editar Produto{% endblock %}
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
+{% block style %}
 
 body{
     font-family:Arial;
@@ -36,9 +32,13 @@ button{
     padding:12px;
     border:none;
     border-radius:8px;
-    background:#28a745;
     color:white;
     font-size:16px;
+    cursor:pointer;
+}
+
+.salvar{
+    background:#28a745;
 }
 
 .voltar{
@@ -46,11 +46,11 @@ button{
     margin-top:10px;
 }
 
-</style>
+a{ text-decoration:none; }
 
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
 
 <div class="box">
 
@@ -64,7 +64,7 @@ button{
 
 <input type="text" name="validade" value="{{ produto.validade }}" placeholder="dd/mm/aaaa">
 
-<button type="submit">
+<button class="salvar" type="submit">
 💾 Salvar Alterações
 </button>
 
@@ -78,5 +78,4 @@ button{
 
 </div>
 
-</body>
-</html>
+{% endblock %}
