@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return redirect('/menu')
+    return redirect('/login')
 
 app.secret_key = "estoque_super_secreto_2026"
 
