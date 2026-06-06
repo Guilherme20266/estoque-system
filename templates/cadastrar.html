@@ -185,11 +185,15 @@ document.getElementById("reader").style.display = "block";
 
 scanner = new Html5Qrcode("reader");
 
+javascript
 scanner.start(
 { facingMode: "environment" },
 {
 fps: 10,
-qrbox: 250
+qrbox: {
+    width: 300,
+    height: 120
+}
 },
 (codigo) => {
 
