@@ -2,6 +2,12 @@
 
 {% block title %}Cadastrar{% endblock %}
 
+{% block head %}
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+{% endblock %}
+
 {% block style %}
 
 body{
@@ -39,6 +45,11 @@ font-size:16px;
 cursor:pointer;
 }
 
+.scan{
+background:#28a745;
+margin-bottom:12px;
+}
+
 .alert{
 padding:12px;
 border-radius:8px;
@@ -50,6 +61,12 @@ color:white;
 
 .sucesso{ background:#28a745; }
 .erro{ background:#dc3545; }
+
+#reader{
+margin-bottom:15px;
+border-radius:10px;
+overflow:hidden;
+}
 
 @media (max-width: 768px){
 body{ padding:10px; }
@@ -83,14 +100,16 @@ cursor:pointer;
 <div class="box">
 
 {% if request.args.get('sucesso') %}
+
 <div class="alert sucesso">
-    ✅ Produto cadastrado com sucesso!
+✅ Produto cadastrado com sucesso!
 </div>
 {% endif %}
 
 {% if request.args.get('erro') == 'endereco' %}
+
 <div class="alert erro">
-    ❌ Esse endereço já está ocupado!
+❌ Esse endereço já está ocupado!
 </div>
 {% endif %}
 
@@ -100,7 +119,13 @@ cursor:pointer;
 
 <input name="nome" placeholder="Nome" required>
 
-<input name="codigo" placeholder="Código">
+<input id="codigo" name="codigo" placeholder="Código">
+
+<button type="button" class="scan" onclick="abrirCamera()">
+📷 Ler Código de Barras
+</button>
+
+<div id="reader" style="display:none;"></div>
 
 <input type="number" name="quantidade" placeholder="Quantidade" required>
 
@@ -145,5 +170,40 @@ cursor:pointer;
 </form>
 
 </div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+let scanner;
+
+function abrirCamera(){
+
+document.getElementById("reader").style.display = "block";
+
+scanner = new Html5Qrcode("reader");
+
+scanner.start(
+{ facingMode: "environment" },
+{
+fps: 10,
+qrbox: 250
+},
+(codigo) => {
+
+document.getElementById("codigo").value = codigo;
+
+scanner.stop();
+
+document.getElementById("reader").style.display = "none";
+
+}
+);
+
+}
+
+</script>
 
 {% endblock %}
