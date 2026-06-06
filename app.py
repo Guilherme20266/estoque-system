@@ -62,30 +62,8 @@ def operador_ou_admin_ou_separacao():
 def operador_ou_admin():
     return session.get('perfil') in ['admin', 'operador']
 
-def calcular_status(validade):
-    try:
-        hoje = datetime.today()
-
-        data_validade = datetime.strptime(validade, "%d/%m/%Y")
-
-        meses = (
-            (data_validade.year - hoje.year) * 12
-            + data_validade.month
-            - hoje.month
-        )
-
-        if meses <= 4:
-            return "URGENTE", 1
-        elif meses <= 7:
-            return "ATENCAO", 2
-        else:
-            return "OK", 3
-
-    except:
-        return "SEM_DATA", 4
-
 # ==========================
-# MOVIMENTAÇÃO (CORRIGIDA)
+# MOVIMENTAÇÃO
 # ==========================
 @app.route('/movimentacao', methods=['GET', 'POST'])
 def movimentacao():
@@ -110,13 +88,16 @@ def movimentacao():
         acao = request.form['acao']
         quantidade = int(request.form['quantidade'])
 
-        usuario = session.get('usuario')  # 🔥 IMPORTANTE PRO RANKING
+        usuario = session.get('usuario')
 
         produto = Produto.query.get(produto_id)
 
         if not produto:
             return redirect('/movimentacao')
 
+        # ==========================
+        # ENTRADA
+        # ==========================
         if acao == "entrada":
 
             produto.quantidade += quantidade
@@ -136,6 +117,9 @@ def movimentacao():
 
             return redirect('/movimentacao?sucesso=entrada')
 
+        # ==========================
+        # SAÍDA (IMPORTANTE PRO RANKING)
+        # ==========================
         if acao == "saida":
 
             produto.quantidade -= quantidade
@@ -168,9 +152,30 @@ def movimentacao():
     )
 
 # ==========================
-# ADMIN CONTINUA IGUAL (não mexi no resto)
+# 🏆 RANKING DE USUÁRIOS (NOVO)
 # ==========================
+@app.route('/ranking-usuarios')
+def ranking_usuarios():
 
+    if not operador_ou_admin():
+        return redirect('/menu')
+
+    dados = db.session.query(
+        Historico.usuario,
+        db.func.sum(Historico.quantidade).label('total')
+    ).filter(
+        Historico.acao == "SAIDA"
+    ).group_by(
+        Historico.usuario
+    ).order_by(
+        db.desc('total')
+    ).all()
+
+    return render_template('ranking.html', dados=dados)
+
+# ==========================
+# INIT
+# ==========================
 with app.app_context():
     db.create_all()
 
