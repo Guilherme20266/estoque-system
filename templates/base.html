@@ -16,34 +16,20 @@
 <link rel="icon" href="/static/icon-192.png?v=2">
 <link rel="apple-touch-icon" href="/static/icon-192.png">
 
+{% block head %}{% endblock %}
+
 <style>
 
-/* ===== TEMA CLARO (PADRÃO) ===== */
-:root {
-    --bg: #f4f4f4;
-    --card: #ffffff;
-    --text: #111827;
-}
-
-/* ===== TEMA ESCURO ===== */
-body.dark {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --text: #f1f5f9;
-}
-
-/* aplica no sistema sem quebrar layout */
+/* ===== FUNDO GLOBAL SÓ (não mexe no resto) ===== */
 body {
     margin: 0;
-    background: var(--bg);
-    color: var(--text);
+    background: #f4f4f4;
     transition: 0.3s;
 }
 
-/* ajuda nos cards padrão */
-.card, .box, .topo {
-    background: var(--card);
-    color: var(--text);
+/* ===== DARK MODE SIMPLES (SEM ESTRAGAR CORES) ===== */
+body.dark {
+    background: #0f172a;
 }
 
 /* botão tema */
@@ -58,11 +44,12 @@ body {
     cursor: pointer;
     background: white;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-size: 14px;
 }
 
-</style>
+{% block style %}{% endblock %}
 
-{% block head %}{% endblock %}
+</style>
 
 </head>
 
@@ -78,7 +65,7 @@ body {
 
 const btn = document.getElementById("themeToggle");
 
-// carregar tema salvo
+// carregar preferência
 if(localStorage.getItem("theme") === "dark"){
     document.body.classList.add("dark");
     btn.innerHTML = "☀️";
