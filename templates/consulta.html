@@ -2,6 +2,12 @@
 
 {% block title %}Consulta{% endblock %}
 
+{% block head %}
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+{% endblock %}
+
 {% block style %}
 
 body{
@@ -31,13 +37,32 @@ margin-bottom:10px;
 cursor:pointer;
 }
 
+.busca-box{
+display:flex;
+gap:8px;
+margin-bottom:10px;
+}
+
 .busca{
-width:100%;
+flex:1;
 padding:12px;
 border-radius:8px;
 border:1px solid #ccc;
-margin-bottom:10px;
 box-sizing:border-box;
+}
+
+.scan-icon{
+width:55px;
+min-width:55px;
+border:none;
+border-radius:8px;
+background:#28a745;
+color:white;
+font-size:22px;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .export{
@@ -76,7 +101,16 @@ animation:piscar 1s infinite;
 100%{opacity:1;}
 }
 
-a{ text-decoration:none; }
+#reader{
+display:none;
+margin-bottom:15px;
+border-radius:10px;
+overflow:hidden;
+}
+
+a{
+text-decoration:none;
+}
 
 {% endblock %}
 
@@ -90,17 +124,32 @@ a{ text-decoration:none; }
 <button class="menu">🏠 Voltar ao Menu</button>
 </a>
 
-<form method="GET">
+<form method="GET" id="formBusca">
+
+<div class="busca-box">
 
 <input
 type="text"
 name="busca"
+id="busca"
 class="busca"
 placeholder="Nome, código ou endereço..."
 value="{{ busca }}"
 >
 
+<button
+type="button"
+class="scan-icon"
+onclick="abrirCamera()"
+>
+📷
+</button>
+
+</div>
+
 </form>
+
+<div id="reader"></div>
 
 <a href="/exportar-consulta?busca={{ busca }}">
 <button class="export">📊 Exportar Excel</button>
@@ -145,5 +194,44 @@ ok
 {% endfor %}
 
 </div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+let scanner;
+
+function abrirCamera(){
+
+document.getElementById("reader").style.display = "block";
+
+scanner = new Html5Qrcode("reader");
+
+scanner.start(
+{ facingMode: "environment" },
+{
+fps: 10,
+qrbox: {
+width: 300,
+height: 120
+}
+},
+(codigo)=>{
+
+document.getElementById("busca").value = codigo;
+
+scanner.stop().then(() => {
+document.getElementById("reader").style.display = "none";
+document.getElementById("formBusca").submit();
+});
+
+}
+);
+
+}
+
+</script>
 
 {% endblock %}
