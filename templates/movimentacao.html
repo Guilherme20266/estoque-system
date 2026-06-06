@@ -3,9 +3,7 @@
 {% block title %}Movimentação{% endblock %}
 
 {% block head %}
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 {% endblock %}
 
 {% block style %}
@@ -26,6 +24,20 @@ h2{
     text-align:center;
 }
 
+/* 🔙 BOTÃO VOLTAR */
+.voltar{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#6c757d;
+    color:white;
+    font-size:15px;
+    margin-bottom:10px;
+    cursor:pointer;
+}
+
+/* manter seu menu */
 .menu{
     width:100%;
     padding:12px;
@@ -103,6 +115,11 @@ a{ text-decoration:none; }
 <div class="box">
 
 <h2>🔄 Movimentação</h2>
+
+<!-- 🔙 BOTÃO VOLTAR -->
+<button onclick="history.back()" class="voltar">
+⬅️ Voltar
+</button>
 
 <a href="/menu">
 <button class="menu">🏠 Voltar ao Menu</button>
