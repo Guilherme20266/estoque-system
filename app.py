@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for, flash, Response
+from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -6,10 +6,6 @@ from openpyxl import Workbook
 from io import BytesIO
 
 app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return redirect('/login')
 
 app.secret_key = "estoque_super_secreto_2026"
 
@@ -19,7 +15,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # ==========================
-# PRODUTOS
+# MODELOS
 # ==========================
 class Produto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,9 +25,7 @@ class Produto(db.Model):
     validade = db.Column(db.String(20))
     endereco = db.Column(db.String(20), unique=True, nullable=False)
 
-# ==========================
-# HISTÓRICO
-# ==========================
+
 class Historico(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(30))
@@ -42,9 +36,7 @@ class Historico(db.Model):
     origem = db.Column(db.String(255))
     destino = db.Column(db.String(255))
 
-# ==========================
-# USUÁRIOS
-# ==========================
+
 class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario = db.Column(db.String(100), unique=True, nullable=False)
@@ -60,14 +52,62 @@ def logado():
 def admin():
     return session.get('perfil') == 'admin'
 
-def operador_ou_admin_ou_separacao():
-    return session.get('perfil') in ['admin', 'operador', 'separacao']
-
 def operador_ou_admin():
     return session.get('perfil') in ['admin', 'operador']
 
+def operador_ou_admin_ou_separacao():
+    return session.get('perfil') in ['admin', 'operador', 'separacao']
+
 # ==========================
-# MOVIMENTAÇÃO
+# LOGIN / MENU
+# ==========================
+@app.route('/')
+def home():
+    if logado():
+        return redirect('/menu')
+    return redirect('/login')
+
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
+@app.route('/entrar', methods=['POST'])
+def entrar():
+    usuario = request.form['usuario']
+    senha = request.form['senha']
+
+    user = Usuario.query.filter_by(usuario=usuario, senha=senha).first()
+
+    if not user:
+        return redirect('/login')
+
+    session['usuario'] = user.usuario
+    session['perfil'] = user.perfil
+
+    return redirect('/menu')
+
+
+@app.route('/menu')
+def menu():
+    if not logado():
+        return redirect('/login')
+
+    return render_template(
+        'menu.html',
+        usuario=session.get('usuario'),
+        perfil=session.get('perfil')
+    )
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/login')
+
+# ==========================
+# MOVIMENTAÇÃO (SEU ORIGINAL OK)
 # ==========================
 @app.route('/movimentacao', methods=['GET', 'POST'])
 def movimentacao():
@@ -99,67 +139,38 @@ def movimentacao():
         if not produto:
             return redirect('/movimentacao')
 
-        # ==========================
-        # ENTRADA
-        # ==========================
         if acao == "entrada":
-
             produto.quantidade += quantidade
 
-            historico = Historico(
-                data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
-                usuario=usuario,
-                acao="ENTRADA",
-                produto=produto.nome,
-                quantidade=quantidade,
-                origem=produto.endereco,
-                destino=produto.endereco
-            )
-
-            db.session.add(historico)
-            db.session.commit()
-
-            return redirect('/movimentacao?sucesso=entrada')
-
-        # ==========================
-        # SAÍDA (IMPORTANTE PRO RANKING)
-        # ==========================
         if acao == "saida":
-
             produto.quantidade -= quantidade
 
-            historico = Historico(
-                data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
-                usuario=usuario,
-                acao="SAIDA",
-                produto=produto.nome,
-                quantidade=quantidade,
-                origem=produto.endereco,
-                destino="-"
-            )
+        historico = Historico(
+            data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
+            usuario=usuario,
+            acao=acao.upper(),
+            produto=produto.nome,
+            quantidade=quantidade,
+            origem=produto.endereco,
+            destino=produto.endereco if acao == "entrada" else "-"
+        )
 
-            db.session.add(historico)
+        db.session.add(historico)
 
-            if produto.quantidade <= 0:
-                db.session.delete(produto)
-                db.session.commit()
-                return redirect('/movimentacao?sucesso=zerado')
+        if produto.quantidade <= 0:
+            db.session.delete(produto)
 
-            db.session.commit()
+        db.session.commit()
 
-            return redirect('/movimentacao?sucesso=saida')
+        return redirect('/movimentacao')
 
-    return render_template(
-        'movimentacao.html',
-        produtos=produtos,
-        busca=busca
-    )
+    return render_template('movimentacao.html', produtos=produtos, busca=busca)
 
 # ==========================
-# 🏆 RANKING DE USUÁRIOS (NOVO)
+# RANKING (OK)
 # ==========================
 @app.route('/ranking-usuarios')
-def ranking_usuarios():
+def ranking():
 
     if not operador_ou_admin():
         return redirect('/menu')
@@ -186,13 +197,11 @@ with app.app_context():
     admin_user = Usuario.query.filter_by(usuario='admin').first()
 
     if not admin_user:
-        novo_admin = Usuario(
+        db.session.add(Usuario(
             usuario='admin',
             senha='10080810',
             perfil='admin'
-        )
-
-        db.session.add(novo_admin)
+        ))
         db.session.commit()
 
 if __name__ == '__main__':
