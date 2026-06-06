@@ -126,21 +126,25 @@ a{ text-decoration:none; }
 </a>
 
 <!-- 🔥 BUSCA + CÂMERA -->
+<!-- 🔥 BUSCA + CÂMERA (AJUSTADO) -->
 <div class="busca-area">
 
-<form method="GET" style="flex:1;margin:0;">
-<input
-class="busca"
-type="text"
-id="busca"
-name="busca"
-placeholder="Buscar nome, código ou endereço..."
-value="{{ busca }}"
-onkeyup="this.form.submit()"
->
-</form>
+    <div style="flex:1;">
+        <input
+            class="busca"
+            type="text"
+            id="busca"
+            name="busca"
+            placeholder="Buscar nome, código ou endereço..."
+            value="{{ busca }}"
+            onkeyup="this.form.submit()"
+            style="width:100%;"
+        >
+    </div>
 
-<button class="cam-btn" type="button" onclick="abrirCamera()">📷</button>
+    <button class="cam-btn" type="button" onclick="abrirCamera()">
+        📷
+    </button>
 
 </div>
 
