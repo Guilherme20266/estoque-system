@@ -12,54 +12,27 @@
 <link rel="icon" href="/static/icon-192.png?v=2">
 <link rel="apple-touch-icon" href="/static/icon-192.png">
 
+{% block head %}{% endblock %}
+
 <style>
 
-/* ===== TEMA CLARO ===== */
-:root {
-    --bg: #f4f4f4;
-    --card: #ffffff;
-    --text: #111827;
-    --border: #e5e5e5;
-}
-
-/* ===== TEMA ESCURO ===== */
-body.dark {
-    --bg: #0b0f19;
-    --card: #111827;
-    --text: #f1f5f9;
-    --border: #1f2937;
-}
-
-/* ===== APLICA GLOBAL ===== */
+/* 🔥 NÃO MEXE EM MAIS NADA */
 body {
     margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    transition: 0.3s;
-    font-family: Arial, sans-serif;
+    transition: background 0.3s ease;
 }
 
-/* ===== ELEMENTOS QUE VOCÊ USA NOS HTMLS ===== */
-.box,
-.card,
-.topo {
-    background: var(--card);
-    color: var(--text);
+/* 🌙 SÓ FUNDO MESMO */
+body.dark {
+    background: #0f172a !important;
 }
 
-/* inputs */
-input, select {
-    background: var(--card);
-    color: var(--text);
-    border: 1px solid var(--border);
+/* ☀️ CLARO (default) */
+body {
+    background: #f4f4f4;
 }
 
-/* botões NÃO mexe nas cores originais */
-button {
-    color: inherit;
-}
-
-/* botão tema */
+/* botão do tema */
 #themeToggle {
     position: fixed;
     top: 10px;
@@ -69,13 +42,11 @@ button {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    background: #ffffff;
+    background: #fff;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 </style>
-
-{% block head %}{% endblock %}
 
 </head>
 
@@ -91,14 +62,12 @@ button {
 
 const btn = document.getElementById("themeToggle");
 
-// carregar tema salvo
 if(localStorage.getItem("theme") === "dark"){
     document.body.classList.add("dark");
     btn.innerHTML = "☀️";
 }
 
-btn.onclick = function(){
-
+btn.onclick = () => {
     document.body.classList.toggle("dark");
 
     if(document.body.classList.contains("dark")){
@@ -108,8 +77,7 @@ btn.onclick = function(){
         localStorage.setItem("theme","light");
         btn.innerHTML = "🌙";
     }
-
-}
+};
 
 </script>
 
