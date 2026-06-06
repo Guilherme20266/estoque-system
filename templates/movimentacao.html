@@ -35,39 +35,41 @@ h2{text-align:center;}
     cursor:pointer;
 }
 
-/* 🔥 BUSCA ALINHADA */
+/* 🔥 PADRÃO IGUAL CONSULTA */
 .busca-area{
     display:flex;
     gap:8px;
-    margin-bottom:15px;
-    align-items:center;
+    margin-bottom:10px;
 }
 
-/* 🔥 MESMA ALTURA DO BOTÃO */
 .busca{
     flex:1;
-    height:44px;
-    padding:0 12px;
+    padding:12px;
     border-radius:8px;
     border:1px solid #ccc;
     box-sizing:border-box;
-    font-size:15px;
 }
 
 .cam-btn{
-    width:44px;
-    height:44px;
-    min-width:44px;
+    width:55px;
+    min-width:55px;
     border:none;
     border-radius:8px;
     background:#28a745;
     color:white;
-    font-size:18px;
+    font-size:20px;
     cursor:pointer;
 
     display:flex;
     align-items:center;
     justify-content:center;
+}
+
+#reader{
+    display:none;
+    margin-bottom:15px;
+    border-radius:10px;
+    overflow:hidden;
 }
 
 .card{
@@ -102,11 +104,6 @@ button{
     cursor:pointer;
 }
 
-#reader{
-    display:none;
-    margin-bottom:15px;
-}
-
 a{text-decoration:none;}
 
 {% endblock %}
@@ -123,7 +120,7 @@ a{text-decoration:none;}
 <button class="menu">🏠 Voltar ao Menu</button>
 </a>
 
-<!-- 🔥 BUSCA + CÂMERA -->
+<!-- 🔥 BUSCA + CÂMERA (IGUAL CONSULTA) -->
 <div class="busca-area">
 
     <input
