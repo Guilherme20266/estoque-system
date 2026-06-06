@@ -199,55 +199,48 @@ def historico():
     if not operador():
         return redirect('/menu')
 
+    busca = request.args.get('busca', '')
+
     registros = Historico.query.order_by(Historico.id.desc()).all()
 
-    return render_template('historico.html', registros=registros)
+    lista = []
 
+    for r in registros:
 
-# ==========================
-# MOVIMENTAÇÃO
-# ==========================
-@app.route('/movimentacao', methods=['GET', 'POST'])
-def movimentacao():
-    if not operador():
-        return redirect('/menu')
+        produto = Produto.query.filter_by(nome=r.produto).first()
 
-    busca = request.args.get('busca', '')
-    produtos = Produto.query.all()
+        status = "OK"
 
-    if busca:
-        produtos = [p for p in produtos if busca.lower() in p.nome.lower()]
+        if produto and produto.validade:
+            try:
+                data = datetime.strptime(produto.validade, "%d/%m/%Y")
+                hoje = datetime.today()
 
-    if request.method == 'POST':
+                meses = (data.year - hoje.year) * 12 + (data.month - hoje.month)
 
-        produto = Produto.query.get(request.form['produto_id'])
-        acao = request.form['acao']
-        qtd = int(request.form['quantidade'])
+                if meses <= 4:
+                    status = "URGENTE"
+                elif meses <= 7:
+                    status = "ATENCAO"
+                else:
+                    status = "OK"
 
-        if acao == "entrada":
-            produto.quantidade += qtd
+            except:
+                status = "SEM_DATA"
 
-        elif acao == "saida":
-            produto.quantidade -= qtd
+        # filtro de busca (opcional)
+        if busca:
+            if busca.lower() not in (r.usuario or '').lower() and \
+               busca.lower() not in (r.produto or '').lower() and \
+               busca.lower() not in (r.data or '').lower():
+                continue
 
-        db.session.add(Historico(
-            data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
-            usuario=session.get('usuario'),
-            acao=acao.upper(),
-            produto=produto.nome,
-            quantidade=qtd,
-            origem=produto.endereco,
-            destino=produto.endereco
-        ))
+        lista.append({
+            "registro": r,
+            "status": status
+        })
 
-        if produto.quantidade <= 0:
-            db.session.delete(produto)
-
-        db.session.commit()
-        return redirect('/movimentacao')
-
-    return render_template('movimentacao.html', produtos=produtos, busca=busca)
-
+    return render_template('historico.html', lista=lista, busca=busca)
 
 # ==========================
 # ADMIN
