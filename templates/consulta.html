@@ -1,3 +1,4 @@
+```html
 {% extends "base.html" %}
 
 {% block title %}Consulta{% endblock %}
@@ -135,6 +136,7 @@ id="busca"
 class="busca"
 placeholder="Nome, código ou endereço..."
 value="{{ busca }}"
+autocomplete="off"
 >
 
 <button
@@ -232,6 +234,19 @@ document.getElementById("formBusca").submit();
 
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+
+setTimeout(function(){
+
+if(document.activeElement){
+document.activeElement.blur();
+}
+
+}, 100);
+
+});
+
 </script>
 
 {% endblock %}
+```
