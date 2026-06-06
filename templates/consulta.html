@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-<title>Consulta</title>
+{% block title %}Consulta{% endblock %}
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
+{% block style %}
 
 body{
 font-family:Arial;
@@ -32,6 +28,7 @@ border-radius:8px;
 background:#6c757d;
 color:white;
 margin-bottom:10px;
+cursor:pointer;
 }
 
 .busca{
@@ -79,21 +76,20 @@ animation:piscar 1s infinite;
 100%{opacity:1;}
 }
 
-</style>
+a{ text-decoration:none; }
 
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
 
 <div class="box">
 
 <h2>🔎 Consulta</h2>
 
-<a href="/">
+<a href="/menu">
 <button class="menu">🏠 Voltar ao Menu</button>
 </a>
 
-<!-- BUSCA -->
 <form method="GET">
 
 <input
@@ -106,11 +102,8 @@ value="{{ busca }}"
 
 </form>
 
-<!-- BOTÃO EXPORTAR -->
 <a href="/exportar-consulta?busca={{ busca }}">
-    <button class="export">
-        📊 Exportar Excel
-    </button>
+<button class="export">📊 Exportar Excel</button>
 </a>
 
 {% for item in lista %}
@@ -126,9 +119,7 @@ ok
 ">
 
 {% if item.status == 'URGENTE' %}
-<div class="piscando">
-🚨 URGENTE
-</div>
+<div class="piscando">🚨 URGENTE</div>
 {% endif %}
 
 <b>{{ item.produto.nome }}</b>
@@ -155,5 +146,4 @@ ok
 
 </div>
 
-</body>
-</html>
+{% endblock %}
