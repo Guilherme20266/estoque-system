@@ -45,9 +45,26 @@ font-size:16px;
 cursor:pointer;
 }
 
-.scan{
-background:#28a745;
+.codigo-box{
+display:flex;
+gap:8px;
 margin-bottom:12px;
+}
+
+.codigo-box input{
+flex:1;
+margin-bottom:0;
+}
+
+.scan-icon{
+width:55px;
+min-width:55px;
+padding:0;
+background:#28a745;
+font-size:22px;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .alert{
@@ -119,11 +136,26 @@ cursor:pointer;
 
 <input name="nome" placeholder="Nome" required>
 
-<input id="codigo" name="codigo" placeholder="Código">
+<div class="codigo-box">
 
-<button type="button" class="scan" onclick="abrirCamera()">
-📷 Ler Código de Barras
-</button>
+<input
+id="codigo"
+name="codigo"
+placeholder="Código"
+
+>
+
+<button
+type="button"
+class="scan-icon"
+onclick="abrirCamera(); return false;"
+title="Ler código de barras"
+
+>
+
+📷 </button>
+
+</div>
 
 <div id="reader" style="display:none;"></div>
 
@@ -185,14 +217,13 @@ document.getElementById("reader").style.display = "block";
 
 scanner = new Html5Qrcode("reader");
 
-javascript
 scanner.start(
 { facingMode: "environment" },
 {
 fps: 10,
 qrbox: {
-    width: 300,
-    height: 120
+width: 300,
+height: 120
 }
 },
 (codigo) => {
