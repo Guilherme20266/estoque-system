@@ -185,7 +185,7 @@ def consulta():
             "prioridade": prioridade
         })
 
-    # 🔥 ISSO AQUI é o que faz "URGENTE subir"
+    # 🔥 ISSO AQUI faz os URGENTES irem pro topo
     lista.sort(key=lambda x: x["prioridade"])
 
     return render_template(
