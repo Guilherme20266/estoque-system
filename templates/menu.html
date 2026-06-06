@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-<title>Ataca-Tudo</title>
+{% block title %}Ataca-Tudo{% endblock %}
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
+{% block style %}
 
 body {
     font-family: Arial, sans-serif;
@@ -16,7 +12,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* 🌌 NOVO FUNDO DEGRADÊ RADIAL PROFUNDO */
     background: radial-gradient(circle, #3D3393 0%, #0F0C29 100%);
 }
 
@@ -25,28 +20,25 @@ body {
     max-width: 520px;
 }
 
-/* 🧊 TOPO COM EFEITO DE VIDRO TRANSPARENTE (GLASSMORPHISM) */
 .topo {
     background: rgba(255, 255, 255, 0.15); 
     border-radius: 16px;
     padding: 25px;
     text-align: center;
     margin-bottom: 18px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
     backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 h1 {
     margin: 0;
     font-size: 22px;
-    color: #FFFFFF; /* Texto branco para dar contraste no vidro */
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    color: #fff;
 }
 
 .sub {
-    color: rgba(255, 255, 255, 0.7); /* Branco suave */
+    color: rgba(255,255,255,0.7);
     margin-top: 6px;
     font-size: 13px;
 }
@@ -54,10 +46,9 @@ h1 {
 .usuario {
     margin-top: 12px;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.85); /* Branco suave */
+    color: rgba(255,255,255,0.85);
 }
 
-/* 🚀 BOTÕES COM RELEVO E NOVOS DEGRADÊS */
 .btn {
     width: 100%;
     padding: 15px;
@@ -69,61 +60,30 @@ h1 {
     font-weight: bold;
     cursor: pointer;
     transition: 0.2s ease;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 
 .btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-    filter: brightness(1.1); /* Dá um brilho leve ao passar o mouse */
 }
 
 .btn:active {
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* 🎨 NOVAS CORES EM DEGRADÊ ATUALIZADAS */
+/* cores */
+.cadastro { background: linear-gradient(to bottom, #2ECC71, #27AE60); }
+.consulta { background: linear-gradient(to bottom, #3498DB, #2980B9); }
+.inventario { background: linear-gradient(to bottom, #F1C40F, #F39C12); }
+.historico { background: linear-gradient(to bottom, #95A5A6, #7F8C8D); }
+.admin { background: linear-gradient(to bottom, #E74C3C, #C0392B); }
+.logout { background: linear-gradient(to bottom, #34495E, #2C3E50); }
 
-/* Cadastrar Produto (Verde) */
-.cadastro {
-    background: linear-gradient(to bottom, #2ECC71, #27AE60);
-}
+a { text-decoration: none; }
 
-/* Consulta e Inventário (Azul e Amarelo conforme a paleta original) */
-.consulta {
-    background: linear-gradient(to bottom, #3498DB, #2980B9);
-}
+{% endblock %}
 
-.inventario {
-    background: linear-gradient(to bottom, #F1C40F, #F39C12);
-}
-
-/* Histórico (Cinza Concreto) */
-.historico {
-    background: linear-gradient(to bottom, #95A5A6, #7F8C8D);
-}
-
-/* Administração (Vermelho) */
-.admin {
-    background: linear-gradient(to bottom, #E74C3C, #C0392B);
-}
-
-/* Sair (Asfalto Escuro) */
-.logout {
-    background: linear-gradient(to bottom, #34495E, #2C3E50);
-}
-
-a {
-    text-decoration: none;
-}
-
-</style>
-
-</head>
-
-<body>
+{% block content %}
 
 <div class="box">
 
@@ -167,5 +127,4 @@ a {
 
 </div>
 
-</body>
-</html>
+{% endblock %}
