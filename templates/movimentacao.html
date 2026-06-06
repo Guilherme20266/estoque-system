@@ -9,8 +9,6 @@
 
 {% block style %}
 
-/* (seu CSS mantido igual) */
-
 body{
     font-family:Arial;
     background:#f4f4f4;
@@ -37,29 +35,39 @@ h2{text-align:center;}
     cursor:pointer;
 }
 
+/* 🔥 BUSCA ALINHADA */
 .busca-area{
     display:flex;
     gap:8px;
     margin-bottom:15px;
+    align-items:center;
 }
 
+/* 🔥 MESMA ALTURA DO BOTÃO */
 .busca{
     flex:1;
-    padding:12px;
+    height:44px;
+    padding:0 12px;
     border-radius:8px;
     border:1px solid #ccc;
     box-sizing:border-box;
+    font-size:15px;
 }
 
 .cam-btn{
-    width:55px;
-    min-width:55px;
+    width:44px;
+    height:44px;
+    min-width:44px;
     border:none;
     border-radius:8px;
     background:#28a745;
     color:white;
-    font-size:20px;
+    font-size:18px;
     cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .card{
@@ -173,7 +181,6 @@ a{text-decoration:none;}
 
 let scanner;
 
-// 🔥 CAMERA
 function abrirCamera(){
 
 document.getElementById("reader").style.display = "block";
@@ -182,7 +189,10 @@ scanner = new Html5Qrcode("reader");
 
 scanner.start(
     { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 300, height: 120 } },
+    {
+        fps: 10,
+        qrbox: { width: 300, height: 120 }
+    },
     (codigo) => {
 
         document.getElementById("busca").value = codigo;
@@ -191,14 +201,13 @@ scanner.start(
             document.getElementById("reader").style.display = "none";
         });
 
-        filtrar(); // NÃO submit
+        filtrar();
 
     }
 );
 
 }
 
-// 🔥 FILTRO CORRETO (SEM RELOAD)
 function filtrar(){
     let busca = document.getElementById("busca").value.toLowerCase();
     let cards = document.querySelectorAll(".card");
