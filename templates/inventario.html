@@ -235,7 +235,13 @@ scanner = new Html5Qrcode("reader");
 
 scanner.start(
     { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
+    {
+        fps: 10,
+        qrbox: {
+            width: 300,
+            height: 120
+        }
+    },
     (codigo) => {
 
         document.getElementById("busca").value = codigo;
