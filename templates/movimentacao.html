@@ -9,6 +9,8 @@
 
 {% block style %}
 
+/* (seu CSS mantido igual) */
+
 body{
     font-family:Arial;
     background:#f4f4f4;
@@ -21,9 +23,7 @@ body{
     margin:auto;
 }
 
-h2{
-    text-align:center;
-}
+h2{text-align:center;}
 
 .voltar,.menu{
     width:100%;
@@ -44,7 +44,7 @@ h2{
 }
 
 .busca{
-    width:100%;
+    flex:1;
     padding:12px;
     border-radius:8px;
     border:1px solid #ccc;
@@ -70,16 +70,8 @@ h2{
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.nome{
-    font-size:18px;
-    font-weight:bold;
-    margin-bottom:8px;
-}
-
-.info{
-    color:#555;
-    line-height:1.8;
-}
+.nome{font-size:18px;font-weight:bold;margin-bottom:8px;}
+.info{color:#555;line-height:1.8;}
 
 select,input[type=number]{
     width:100%;
@@ -102,12 +94,12 @@ button{
     cursor:pointer;
 }
 
-a{ text-decoration:none; }
-
 #reader{
     display:none;
     margin-bottom:15px;
 }
+
+a{text-decoration:none;}
 
 {% endblock %}
 
@@ -117,30 +109,23 @@ a{ text-decoration:none; }
 
 <h2>🔄 Movimentação</h2>
 
-<button onclick="history.back()" class="voltar">
-⬅️ Voltar
-</button>
+<button onclick="history.back()" class="voltar">⬅️ Voltar</button>
 
 <a href="/menu">
 <button class="menu">🏠 Voltar ao Menu</button>
 </a>
 
 <!-- 🔥 BUSCA + CÂMERA -->
-<!-- 🔥 BUSCA + CÂMERA (AJUSTADO) -->
 <div class="busca-area">
 
-    <div style="flex:1;">
-        <input
-            class="busca"
-            type="text"
-            id="busca"
-            name="busca"
-            placeholder="Buscar nome, código ou endereço..."
-            value="{{ busca }}"
-            onkeyup="this.form.submit()"
-            style="width:100%;"
-        >
-    </div>
+    <input
+        class="busca"
+        type="text"
+        id="busca"
+        placeholder="Buscar nome, código ou endereço..."
+        value="{{ busca }}"
+        oninput="filtrar()"
+    >
 
     <button class="cam-btn" type="button" onclick="abrirCamera()">
         📷
@@ -154,17 +139,13 @@ a{ text-decoration:none; }
 
 <div class="card">
 
-<div class="nome">
-{{ produto.nome }}
-</div>
+<div class="nome">{{ produto.nome }}</div>
 
 <div class="info">
-
 🏷️ Código: {{ produto.codigo }}<br>
 📦 Quantidade: {{ produto.quantidade }}<br>
 📅 Validade: {{ produto.validade }}<br>
 📍 Endereço: {{ produto.endereco }}
-
 </div>
 
 <form method="POST">
@@ -176,9 +157,9 @@ a{ text-decoration:none; }
 <option value="saida">📤 Saída</option>
 </select>
 
-<input type="number" name="quantidade" min="1" required placeholder="Quantidade">
+<input type="number" name="quantidade" min="1" required>
 
-<button type="submit">Confirmar Movimentação</button>
+<button type="submit">Confirmar</button>
 
 </form>
 
@@ -192,6 +173,7 @@ a{ text-decoration:none; }
 
 let scanner;
 
+// 🔥 CAMERA
 function abrirCamera(){
 
 document.getElementById("reader").style.display = "block";
@@ -200,13 +182,7 @@ scanner = new Html5Qrcode("reader");
 
 scanner.start(
     { facingMode: "environment" },
-    {
-        fps: 10,
-        qrbox: {
-            width: 300,
-            height: 120
-        }
-    },
+    { fps: 10, qrbox: { width: 300, height: 120 } },
     (codigo) => {
 
         document.getElementById("busca").value = codigo;
@@ -215,43 +191,24 @@ scanner.start(
             document.getElementById("reader").style.display = "none";
         });
 
-        document.querySelector("form").submit();
+        filtrar(); // NÃO submit
 
     }
 );
 
 }
 
-</script>
+// 🔥 FILTRO CORRETO (SEM RELOAD)
+function filtrar(){
+    let busca = document.getElementById("busca").value.toLowerCase();
+    let cards = document.querySelectorAll(".card");
 
-{% if request.args.get('sucesso') == 'entrada' %}
-<script>
-Swal.fire({
-    icon:'success',
-    title:'Entrada realizada!',
-    text:'Quantidade adicionada ao estoque com sucesso.'
-});
-</script>
-{% endif %}
+    cards.forEach(card => {
+        let texto = card.innerText.toLowerCase();
+        card.style.display = texto.includes(busca) ? "block" : "none";
+    });
+}
 
-{% if request.args.get('sucesso') == 'saida' %}
-<script>
-Swal.fire({
-    icon:'success',
-    title:'Saída realizada!',
-    text:'Quantidade retirada do estoque com sucesso.'
-});
 </script>
-{% endif %}
-
-{% if request.args.get('sucesso') == 'zerado' %}
-<script>
-Swal.fire({
-    icon:'warning',
-    title:'Produto removido!',
-    text:'O estoque chegou a zero e o produto foi excluído automaticamente.'
-});
-</script>
-{% endif %}
 
 {% endblock %}
