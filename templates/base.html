@@ -19,16 +19,77 @@
 {% block head %}{% endblock %}
 
 <style>
+
+/* 🔥 RESET LEVE (não muda seu layout) */
+body{
+    margin:0;
+}
+
+/* 🌙 DARK MODE (ativado via JS) */
+body.dark {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* evita inverter imagens/icon */
+body.dark img,
+body.dark video,
+body.dark iframe {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* BOTÃO TOGGLE */
+#themeToggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-size: 14px;
+}
+
 {% block style %}{% endblock %}
+
 </style>
 
 </head>
 
 <body>
 
+<!-- 🌙 BOTÃO DARK/LIGHT -->
+<button id="themeToggle">🌙</button>
+
 {% block content %}{% endblock %}
 
 {% block script %}{% endblock %}
+
+<script>
+const btn = document.getElementById("themeToggle");
+
+// carregar preferência
+if(localStorage.getItem("theme") === "dark"){
+    document.body.classList.add("dark");
+    btn.innerHTML = "☀️";
+}
+
+btn.addEventListener("click", function(){
+
+    document.body.classList.toggle("dark");
+
+    if(document.body.classList.contains("dark")){
+        localStorage.setItem("theme","dark");
+        btn.innerHTML = "☀️";
+    } else {
+        localStorage.setItem("theme","light");
+        btn.innerHTML = "🌙";
+    }
+
+});
+</script>
 
 </body>
 </html>
