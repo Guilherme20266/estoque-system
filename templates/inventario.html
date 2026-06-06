@@ -3,16 +3,19 @@
 {% block title %}Inventário{% endblock %}
 
 {% block head %}
-<script src="https://unpkg.com/html5-qrcode"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 {% endblock %}
 
 {% block style %}
 
+/* tudo igual */
 body{
     font-family:Arial;
     background:#f4f4f4;
-    margin:0;
     padding:15px;
+    margin:0;
 }
 
 .box{
@@ -24,55 +27,84 @@ h2{
     text-align:center;
 }
 
-.menu{
+.menu-btn{
     width:100%;
     padding:12px;
     border:none;
     border-radius:8px;
     background:#6c757d;
     color:white;
+    font-size:15px;
     margin-bottom:10px;
     cursor:pointer;
 }
 
-.busca-box{
-    display:flex;
-    gap:8px;
-    margin-bottom:10px;
-}
-
 .busca{
-    flex:1;
+    width:100%;
     padding:12px;
-    border-radius:8px;
     border:1px solid #ccc;
-}
-
-.scan-icon{
-    width:55px;
-    border:none;
     border-radius:8px;
-    background:#28a745;
-    color:white;
-    font-size:20px;
+    margin-bottom:15px;
+    box-sizing:border-box;
 }
 
 .card{
     background:white;
     padding:14px;
+    margin-bottom:12px;
     border-radius:12px;
-    margin-bottom:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
 
-#reader{
-    display:none;
-    margin-bottom:10px;
+.urgente{ border-left:8px solid #dc3545; }
+.atencao{ border-left:8px solid #ffc107; }
+.ok{ border-left:8px solid #28a745; }
+
+.status{
+    font-weight:bold;
+    margin-bottom:8px;
 }
 
-.urgente{ border-left:6px solid red; }
-.atencao{ border-left:6px solid orange; }
-.ok{ border-left:6px solid green; }
+.piscando{
+    color:#dc3545;
+    font-weight:bold;
+    animation:piscar 1s infinite;
+}
+
+@keyframes piscar{
+    0%{opacity:1;}
+    50%{opacity:0;}
+    100%{opacity:1;}
+}
+
+.nome{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.info{
+    color:#555;
+    line-height:1.7;
+}
+
+.botoes{ margin-top:12px; }
+
+.btn{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    margin-top:6px;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.mov{ background:#007bff; }
+.transf{ background:#28a745; }
+.edit{ background:#ffc107; color:#000; }
+.del{ background:#dc3545; }
 
 a{ text-decoration:none; }
 
@@ -85,26 +117,81 @@ a{ text-decoration:none; }
 <h2>📦 Inventário</h2>
 
 <a href="/menu">
-<button class="menu">🏠 Voltar</button>
+    <button class="menu-btn">🏠 Menu</button>
 </a>
 
-<div class="busca-box">
+<!-- 🔥 BOTÃO CÂMERA ADICIONADO -->
+<button class="menu-btn" style="background:#28a745" onclick="abrirCamera()">
+📷 Ler Código
+</button>
 
-<input type="text" id="busca" class="busca" placeholder="Buscar produto...">
+<input
+type="text"
+id="busca"
+class="busca"
+placeholder="Buscar produto, código ou endereço..."
+onkeyup="filtrar()"
+>
 
-<button class="scan-icon" onclick="abrirCamera()">📷</button>
-
-</div>
-
-<div id="reader"></div>
+<!-- câmera -->
+<div id="reader" style="display:none;margin-bottom:15px;"></div>
 
 {% for item in lista %}
 
-<div class="card">
+<div class="card
+{% if item.status == 'URGENTE' %}urgente
+{% elif item.status == 'ATENCAO' %}atencao
+{% else %}ok{% endif %}"
+data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.endereco }}"
+>
 
-<b>{{ item.produto.nome }}</b><br>
-📦 {{ item.produto.quantidade }}<br>
-📍 {{ item.produto.endereco }}
+<div class="status">
+
+{% if item.status == 'URGENTE' %}
+<span class="piscando">🚨 URGENTE</span>
+
+{% elif item.status == 'ATENCAO' %}
+🟡 ATENÇÃO
+
+{% else %}
+🟢 OK
+{% endif %}
+
+</div>
+
+<div class="nome">
+{{ item.produto.nome }}
+</div>
+
+<div class="info">
+
+🏷️ Código: {{ item.produto.codigo }}<br>
+📦 Quantidade: {{ item.produto.quantidade }}<br>
+📅 Validade: {{ item.produto.validade }}<br>
+📍 Endereço: {{ item.produto.endereco }}
+
+</div>
+
+<div class="botoes">
+
+<a href="/movimentacao">
+<button class="btn mov">🔄 Movimentação</button>
+</a>
+
+<a href="/transferencia">
+<button class="btn transf">📍 Transferir</button>
+</a>
+
+<a href="/editar/{{ item.produto.id }}">
+<button class="btn edit">✏️ Editar Produto</button>
+</a>
+
+<a href="/excluir/{{ item.produto.id }}"
+   onclick="confirmarExclusao(event, '/excluir/{{ item.produto.id }}', '{{ item.produto.nome }}')">
+    <button class="btn del">🗑️ Excluir</button>
+</a>
+
+</div>
 
 </div>
 
@@ -112,14 +199,11 @@ a{ text-decoration:none; }
 
 </div>
 
-{% endblock %}
-
-{% block script %}
-
 <script>
 
 let scanner;
 
+// 🔥 CÂMERA
 function abrirCamera(){
 
 document.getElementById("reader").style.display = "block";
@@ -128,17 +212,14 @@ scanner = new Html5Qrcode("reader");
 
 scanner.start(
     { facingMode: "environment" },
-    {
-        fps: 10,
-        qrbox: 250
-    },
+    { fps: 10, qrbox: 250 },
     (codigo) => {
 
         document.getElementById("busca").value = codigo;
+        filtrar();
 
         scanner.stop().then(() => {
             document.getElementById("reader").style.display = "none";
-            filtrar();
         });
 
     }
@@ -146,20 +227,68 @@ scanner.start(
 
 }
 
+// FILTRO
 function filtrar(){
-
-let termo = document.getElementById("busca").value.toLowerCase();
+let busca = document.getElementById("busca").value.toLowerCase();
 let cards = document.querySelectorAll(".card");
 
-cards.forEach(c => {
-    let texto = c.innerText.toLowerCase();
-    c.style.display = texto.includes(termo) ? "block" : "none";
+cards.forEach(card => {
+    let texto = card.dataset.texto.toLowerCase();
+    card.style.display = texto.includes(busca) ? "block" : "none";
 });
+}
+
+// EXCLUIR
+function confirmarExclusao(event, url, produto){
+
+    event.preventDefault();
+
+    Swal.fire({
+        icon: 'warning',
+        title: 'Excluir produto?',
+        html: `<b>${produto}</b><br><br>Esta ação não pode ser desfeita.`,
+        showCancelButton: true,
+        confirmButtonText: 'Sim, excluir',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545'
+    }).then((result) => {
+        if(result.isConfirmed){
+            window.location.href = url;
+        }
+    });
 
 }
 
-document.getElementById("busca").addEventListener("input", filtrar);
-
 </script>
+
+{% if request.args.get('excluido') %}
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Produto excluído!',
+    text: 'Removido com sucesso.',
+    confirmButtonText: 'OK'
+});
+</script>
+{% endif %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, msg in messages %}
+
+      {% if category == 'success' %}
+      <script>
+      Swal.fire({
+          icon: 'success',
+          title: 'Sucesso!',
+          text: "{{ msg }}",
+          confirmButtonText: 'OK'
+      });
+      </script>
+      {% endif %}
+
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 
 {% endblock %}
