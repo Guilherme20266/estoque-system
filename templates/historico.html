@@ -81,32 +81,24 @@ a{ text-decoration:none; }
 
 {% for item in registros %}
 
-{% for item in lista %}
-
-<div class="card
-{% if item.status == 'URGENTE' %}urgente
-{% elif item.status == 'ATENCAO' %}atencao
-{% else %}ok{% endif %}
-">
+<div class="card">
 
 <div class="info">
 
-{% if item.status == 'URGENTE' %}
-<div style="color:red;font-weight:bold;">🚨 URGENTE</div>
-{% elif item.status == 'ATENCAO' %}
-<div style="color:orange;font-weight:bold;">⚠️ ATENÇÃO</div>
-{% endif %}
-
-🕒 {{ item.registro.data }}<br>
-👤 Usuário: {{ item.registro.usuario }}<br>
-📌 {{ item.registro.acao }}<br>
-📦 {{ item.registro.produto }}<br>
-🔢 Quantidade: {{ item.registro.quantidade }}<br>
-📍 Origem: {{ item.registro.origem }}<br>
-📍 Destino: {{ item.registro.destino }}
+🕒 {{ item.data }}<br>
+👤 Usuário: {{ item.usuario }}<br>
+📌 {{ item.acao }}<br>
+📦 {{ item.produto }}<br>
+🔢 Quantidade: {{ item.quantidade }}<br>
+📍 Origem: {{ item.origem }}<br>
+📍 Destino: {{ item.destino }}
 
 </div>
 
 </div>
 
 {% endfor %}
+
+</div>
+
+{% endblock %}
