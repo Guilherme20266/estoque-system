@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-<title>Histórico</title>
+{% block title %}Histórico{% endblock %}
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
+{% block style %}
 
 body{
     font-family:Arial;
@@ -36,6 +32,7 @@ body{
     background:#6c757d;
     color:white;
     margin-bottom:15px;
+    cursor:pointer;
 }
 
 h2{
@@ -46,20 +43,27 @@ h2{
     line-height:1.8;
 }
 
-</style>
+input{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
+}
 
-</head>
+a{ text-decoration:none; }
 
-<body>
+{% endblock %}
+
+{% block content %}
 
 <div class="box">
 
 <h2>📜 Histórico</h2>
 
-<a href="/">
-<button class="menu">
-🏠 Voltar ao Menu
-</button>
+<a href="/menu">
+<button class="menu">🏠 Voltar ao Menu</button>
 </a>
 
 <form method="GET" action="/historico">
@@ -69,45 +73,24 @@ h2{
     name="busca" 
     placeholder="Buscar usuário, produto, data ou endereço"
     value="{{ busca }}"
-    style="width:100%;padding:10px;margin-bottom:15px;border-radius:8px;border:1px solid #ccc;"
 >
 
-<button type="submit" class="menu">
-🔍 Pesquisar
-</button>
+<button type="submit" class="menu">🔍 Pesquisar</button>
 
 </form>
-    
+
 {% for item in registros %}
 
 <div class="card">
 
 <div class="info">
 
-🕒 {{ item.data }}
-
-<br>
-
-👤 Usuário: {{ item.usuario }}
-
-<br>
-
-📌 {{ item.acao }}
-
-<br>
-
-📦 {{ item.produto }}
-
-<br>
-
-🔢 Quantidade: {{ item.quantidade }}
-
-<br>
-
-📍 Origem: {{ item.origem }}
-
-<br>
-
+🕒 {{ item.data }}<br>
+👤 Usuário: {{ item.usuario }}<br>
+📌 {{ item.acao }}<br>
+📦 {{ item.produto }}<br>
+🔢 Quantidade: {{ item.quantidade }}<br>
+📍 Origem: {{ item.origem }}<br>
 📍 Destino: {{ item.destino }}
 
 </div>
@@ -118,5 +101,4 @@ h2{
 
 </div>
 
-</body>
-</html>
+{% endblock %}
