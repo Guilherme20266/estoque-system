@@ -1,9 +1,7 @@
-from flask import Flask, render_template, request, redirect, session, flash, Response
+from flask import Flask, render_template, request, redirect, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from openpyxl import Workbook
-from io import BytesIO
 
 app = Flask(__name__)
 
@@ -14,8 +12,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+
 # ==========================
-# REDIRECT INICIAL
+# REDIRECT
 # ==========================
 @app.route('/')
 def index():
@@ -67,8 +66,27 @@ def operador():
     return session.get('perfil') in ['admin', 'operador', 'separacao']
 
 
+def calcular_status(validade):
+
+    try:
+        hoje = datetime.today()
+        data = datetime.strptime(validade, "%d/%m/%Y")
+
+        meses = (data.year - hoje.year) * 12 + (data.month - hoje.month)
+
+        if meses <= 4:
+            return "URGENTE", 3
+        elif meses <= 7:
+            return "ATENCAO", 2
+        else:
+            return "OK", 1
+
+    except:
+        return "SEM_DATA", 0
+
+
 # ==========================
-# LOGIN / LOGOUT / MENU
+# LOGIN
 # ==========================
 @app.route('/login')
 def login():
@@ -102,15 +120,13 @@ def menu():
     if not logado():
         return redirect('/login')
 
-    return render_template(
-        'menu.html',
-        usuario=session.get('usuario'),
-        perfil=session.get('perfil')
-    )
+    return render_template('menu.html',
+                           usuario=session.get('usuario'),
+                           perfil=session.get('perfil'))
 
 
 # ==========================
-# CADASTRAR
+# CADASTRO
 # ==========================
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
@@ -121,8 +137,7 @@ def cadastrar():
 
         endereco = f"{request.form['rua']}-{request.form['coluna']}-{request.form['nivel']}"
 
-        existe = Produto.query.filter_by(endereco=endereco).first()
-        if existe:
+        if Produto.query.filter_by(endereco=endereco).first():
             return redirect('/cadastrar?erro=endereco')
 
         produto = Produto(
@@ -153,13 +168,13 @@ def cadastrar():
 
 
 # ==========================
-# CONSULTA
+# CONSULTA (CORRIGIDA)
 # ==========================
 @app.route('/consulta')
 def consulta():
 
     if not logado():
-        return redirect('/')
+        return redirect('/login')
 
     busca = request.args.get('busca', '')
 
@@ -185,14 +200,10 @@ def consulta():
             "prioridade": prioridade
         })
 
-    # 🔥 ISSO AQUI faz os URGENTES irem pro topo
-    lista.sort(key=lambda x: x["prioridade"])
+    # 🔥 CORREÇÃO FINAL (URGENTE NO TOPO)
+    lista.sort(key=lambda x: x["prioridade"], reverse=True)
 
-    return render_template(
-        'consulta.html',
-        lista=lista,
-        busca=busca
-    )
+    return render_template('consulta.html', lista=lista, busca=busca)
 
 
 # ==========================
@@ -200,12 +211,19 @@ def consulta():
 # ==========================
 @app.route('/inventario')
 def inventario():
+
     if not logado():
         return redirect('/login')
 
     produtos = Produto.query.all()
 
-    lista = [{"produto": p, "status": "OK", "prioridade": 1} for p in produtos]
+    lista = []
+
+    for p in produtos:
+        status, prioridade = calcular_status(p.validade)
+        lista.append({"produto": p, "status": status, "prioridade": prioridade})
+
+    lista.sort(key=lambda x: x["prioridade"], reverse=True)
 
     return render_template('inventario.html', lista=lista)
 
@@ -215,6 +233,7 @@ def inventario():
 # ==========================
 @app.route('/historico')
 def historico():
+
     if not operador():
         return redirect('/menu')
 
@@ -226,54 +245,29 @@ def historico():
 
     for r in registros:
 
-        produto = Produto.query.filter_by(nome=r.produto).first()
-
-        status = "OK"
-
-        if produto and produto.validade:
-            try:
-                data = datetime.strptime(produto.validade, "%d/%m/%Y")
-                hoje = datetime.today()
-
-                meses = (data.year - hoje.year) * 12 + (data.month - hoje.month)
-
-                if meses <= 4:
-                    status = "URGENTE"
-                elif meses <= 7:
-                    status = "ATENCAO"
-                else:
-                    status = "OK"
-
-            except:
-                status = "SEM_DATA"
-
-        # filtro de busca (opcional)
         if busca:
             if busca.lower() not in (r.usuario or '').lower() and \
                busca.lower() not in (r.produto or '').lower() and \
                busca.lower() not in (r.data or '').lower():
                 continue
 
-        lista.append({
-            "registro": r,
-            "status": status
-        })
+        lista.append({"registro": r})
 
     return render_template('historico.html', lista=lista, busca=busca)
+
 
 # ==========================
 # ADMIN
 # ==========================
 @app.route('/administracao')
 def administracao():
+
     if not admin():
         return redirect('/menu')
 
-    usuarios = Usuario.query.all()
-
     return render_template(
         'administracao.html',
-        usuarios=usuarios,
+        usuarios=Usuario.query.all(),
         total_produtos=Produto.query.count(),
         total_enderecos=Produto.query.count(),
         total_historico=Historico.query.count()
@@ -281,10 +275,11 @@ def administracao():
 
 
 # ==========================
-# RANKING (OK)
+# RANKING
 # ==========================
 @app.route('/ranking-usuarios')
 def ranking_usuarios():
+
     if not operador():
         return redirect('/menu')
 
