@@ -67,16 +67,16 @@ button{
     border-left:5px solid #007bff;
 }
 
+.master{
+    border-left:5px solid gold;
+    background:#fff8dc;
+}
+
 .acoes-usuario{
     display:flex;
     flex-direction:column;
     gap:8px;
     margin-top:10px;
-}
-
-.master{
-    border-left:5px solid gold;
-    background:#fff8dc;
 }
 
 h2{ margin:0; }
@@ -99,25 +99,29 @@ a{ text-decoration:none; }
         <button class="menu">🏠 Voltar ao Menu</button>
     </a>
 
+    <!-- 📊 RELATÓRIO DO SISTEMA -->
     <div class="card">
 
-        <div class="info">
-        📦 Produtos cadastrados:
-        <b>{{ total_produtos }}</b>
-        </div>
+        <h3>📊 Relatório do Sistema</h3>
 
-        <div class="info">
-        📍 Endereços ocupados:
-        <b>{{ total_enderecos }}</b>
-        </div>
+        <div class="info">👥 Usuários: <b>{{ total_usuarios }}</b></div>
+        <div class="info">📦 Produtos: <b>{{ total_produtos }}</b></div>
+        <div class="info">📍 Endereços ocupados: <b>{{ total_enderecos }}</b></div>
+        <div class="info">📜 Movimentações: <b>{{ total_historico }}</b></div>
+        <div class="info">🚫 Estoque zerado: <b>{{ produtos_zerados }}</b></div>
+        <div class="info">⚠️ Estoque baixo: <b>{{ produtos_baixo_estoque }}</b></div>
 
+        {% if ultimo_historico %}
         <div class="info">
-        📜 Movimentações:
-        <b>{{ total_historico }}</b>
+            🕒 Última ação:
+            <b>{{ ultimo_historico.acao }}</b>
+            por <b>{{ ultimo_historico.usuario }}</b>
         </div>
+        {% endif %}
 
     </div>
 
+    <!-- 👥 CRIAR USUÁRIO -->
     <div class="card">
 
         <h3>👥 Criar Usuário</h3>
@@ -140,32 +144,30 @@ a{ text-decoration:none; }
 
     </div>
 
+    <!-- 👑 MASTER -->
+    {% if master %}
+    <div class="card usuario master">
+
+        <div style="font-size:18px; font-weight:bold;">
+            👑 MASTER
+        </div>
+
+        <b>{{ master.usuario }}</b><br>
+        <small>Perfil: {{ master.perfil }}</small>
+
+    </div>
+    {% endif %}
+
+    <!-- 👥 USUÁRIOS -->
     <div class="card">
 
         <h3>👥 Usuários Cadastrados</h3>
-
-        {% if master %}
-
-        <div class="card usuario master">
-
-            <div style="font-size:18px; font-weight:bold;">
-                👑-Ceo
-            </div>
-
-            <b>{{ master.usuario }}</b>
-            <br>
-            <small>Perfil: {{ master.perfil }}</small>
-
-        </div>
-
-        {% endif %}
 
         {% for user in usuarios %}
 
         <div class="card usuario">
 
-            <b>{{ user.usuario }}</b>
-            <br>
+            <b>{{ user.usuario }}</b><br>
             <small>Perfil: {{ user.perfil }}</small>
 
             {% if user.usuario != 'admin' and user.usuario != 'Guilherme$' %}
@@ -191,6 +193,7 @@ a{ text-decoration:none; }
 
     </div>
 
+    <!-- ⚠️ FERRAMENTAS -->
     <div class="card">
 
         <h3>⚠️ Ferramentas</h3>
