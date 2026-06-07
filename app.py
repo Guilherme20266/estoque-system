@@ -637,6 +637,9 @@ def administracao():
         Usuario.usuario.asc()
     ).all()
 
+    for u in usuarios:
+    print(u.id, u.usuario, u.perfil)
+
     return render_template(
         'administracao.html',
         total_produtos=total_produtos,
