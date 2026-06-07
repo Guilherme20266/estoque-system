@@ -627,20 +627,46 @@ def administracao():
     if session.get('perfil') != 'admin':
         return redirect('/menu')
 
+    # ==========================
+    # ESTATÍSTICAS GERAIS
+    # ==========================
     total_produtos = Produto.query.count()
     total_enderecos = Produto.query.count()
     total_historico = Historico.query.count()
+    total_usuarios = Usuario.query.count()
 
-    # MASTER separado
-    master = Usuario.query.filter_by(usuario="Guilherme$").first()
+    produtos_zerados = Produto.query.filter(
+        Produto.quantidade <= 0
+    ).count()
 
-    # resto dos usuários
+    produtos_baixo_estoque = Produto.query.filter(
+        Produto.quantidade > 0,
+        Produto.quantidade <= 5
+    ).count()
+
+    ultimo_historico = Historico.query.order_by(
+        Historico.id.desc()
+    ).first()
+
+    # ==========================
+    # MASTER
+    # ==========================
+    master = Usuario.query.filter_by(
+        usuario="Guilherme$"
+    ).first()
+
+    # ==========================
+    # USUÁRIOS (SEM MASTER)
+    # ==========================
     usuarios = Usuario.query.filter(
         Usuario.usuario != "Guilherme$"
     ).order_by(
         Usuario.usuario.asc()
     ).all()
 
+    # ==========================
+    # DEBUG (opcional)
+    # ==========================
     for u in usuarios:
         print(
             "ID:", u.id,
@@ -649,11 +675,18 @@ def administracao():
             "PERFIL:", u.perfil
         )
 
+    # ==========================
+    # RENDER
+    # ==========================
     return render_template(
         'administracao.html',
         total_produtos=total_produtos,
         total_enderecos=total_enderecos,
         total_historico=total_historico,
+        total_usuarios=total_usuarios,
+        produtos_zerados=produtos_zerados,
+        produtos_baixo_estoque=produtos_baixo_estoque,
+        ultimo_historico=ultimo_historico,
         usuarios=usuarios,
         master=master
     )
