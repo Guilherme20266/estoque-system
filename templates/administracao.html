@@ -145,6 +145,8 @@ a{ text-decoration:none; }
 
 {% if user.usuario != 'admin' %}
 
+<a href="/editar-usuario/{{ user.id }}">Editar</a>
+
 <a href="/excluir-usuario/{{ user.id }}"
 onclick="return confirm('Excluir usuário?')">
 
