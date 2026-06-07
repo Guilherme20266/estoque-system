@@ -459,7 +459,7 @@ def transferencia():
 
         db.session.commit()
 
-       flash(f"✔ Transferência realizada com sucesso. Novo endereço: {novo_endereco}", "success")
+        flash(f"✔ Transferência realizada com sucesso. Novo endereço: {novo_endereco}", "success")
 
         return redirect('/transferencia?produto_id=' + str(produto.id))
 
