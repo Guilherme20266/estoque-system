@@ -637,7 +637,7 @@ def administracao():
         Usuario.usuario.asc()
     ).all()
 
-    for u in usuarios:
+for u in usuarios:
     print(
         "ID:", u.id,
         "USUARIO:", u.usuario,
