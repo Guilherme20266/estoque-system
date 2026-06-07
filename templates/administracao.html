@@ -84,9 +84,7 @@ button{
 }
 
 h2{ margin:0; }
-
 small{ color:#666; }
-
 a{ text-decoration:none; }
 
 {% endblock %}
@@ -103,20 +101,21 @@ a{ text-decoration:none; }
         <button class="menu">🏠 Voltar ao Menu</button>
     </a>
 
-    <!-- 📊 RELATÓRIO DO SISTEMA -->
+    <!-- 📊 RELATÓRIO -->
     <div class="card">
 
         <h3>📊 Relatório do Sistema</h3>
 
-        <div class="info">👥 Usuários: <b>{{ total_usuarios }}</b></div>
-        <div class="info">📦 Produtos: <b>{{ total_produtos }}</b></div>
-        <div class="info">📍 Endereços ocupados: <b>{{ total_enderecos }}</b></div>
-        <div class="info">📜 Movimentações: <b>{{ total_historico }}</b></div>
-        <div class="info">🚫 Estoque zerado: <b>{{ produtos_zerados }}</b></div>
-        <div class="info">⚠️ Estoque baixo: <b>{{ produtos_baixo_estoque }}</b></div>
+        <div class="info ok">👥 Usuários: <b>{{ total_usuarios }}</b></div>
+        <div class="info ok">📦 Produtos: <b>{{ total_produtos }}</b></div>
+        <div class="info ok">📍 Endereços ocupados: <b>{{ total_enderecos }}</b></div>
+        <div class="info ok">📜 Movimentações: <b>{{ total_historico }}</b></div>
+
+        <div class="info alerta">🚫 Estoque zerado: <b>{{ produtos_zerados }}</b></div>
+        <div class="info critico">⚠️ Estoque baixo: <b>{{ produtos_baixo_estoque }}</b></div>
 
         {% if ultimo_historico %}
-        <div class="info">
+        <div class="info alerta">
             🕒 Última ação:
             <b>{{ ultimo_historico.acao }}</b>
             por <b>{{ ultimo_historico.usuario }}</b>
@@ -150,7 +149,7 @@ a{ text-decoration:none; }
 
     <!-- 👑 MASTER -->
     {% if master %}
-    <div class="card usuario master">
+    <div class="card master">
 
         <div style="font-size:18px; font-weight:bold;">
             👑 MASTER
