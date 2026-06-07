@@ -74,6 +74,11 @@ button{
     margin-top:10px;
 }
 
+.master{
+    border-left:5px solid gold;
+    background:#fff8dc;
+}
+
 h2{ margin:0; }
 
 small{ color:#666; }
@@ -139,6 +144,22 @@ a{ text-decoration:none; }
 
         <h3>👥 Usuários Cadastrados</h3>
 
+        {% if master %}
+
+        <div class="card usuario master">
+
+            <div style="font-size:18px; font-weight:bold;">
+                👑 MASTER DO SISTEMA
+            </div>
+
+            <b>{{ master.usuario }}</b>
+            <br>
+            <small>Perfil: {{ master.perfil }}</small>
+
+        </div>
+
+        {% endif %}
+
         {% for user in usuarios %}
 
         <div class="card usuario">
@@ -184,22 +205,5 @@ a{ text-decoration:none; }
     </div>
 
 </div>
-
-{% if master %}
-
-<div class="card usuario" style="border-left:5px solid gold; background:#fffbe6;">
-
-    <div style="font-size:18px; font-weight:bold;">
-        👑 MASTER
-    </div>
-
-    <b>{{ master.usuario }}</b>
-    <br>
-
-    <small>Perfil: {{ master.perfil }}</small>
-
-</div>
-
-{% endif %}
 
 {% endblock %}
