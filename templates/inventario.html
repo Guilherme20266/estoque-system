@@ -210,9 +210,9 @@ data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.en
 <button class="btn edit">✏️ Editar Produto</button>
 </a>
 
-<a href="/excluir/{{ item.produto.id }}"
-   onclick="confirmarExclusao(event, '/excluir/{{ item.produto.id }}', '{{ item.produto.nome }}')">
-    <button class="btn del">🗑️ Excluir</button>
+<a href="/excluir/{{ produto.id }}"
+   onclick="return confirm('Deseja realmente excluir este produto?')">
+    <button class="excluir">🗑️ Excluir</button>
 </a>
 
 </div>
