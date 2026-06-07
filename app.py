@@ -689,6 +689,10 @@ def excluir_usuario(id):
 
     usuario = Usuario.query.get_or_404(id)
 
+    # bloqueia o master
+    if usuario.usuario == "Guilherme$":
+        return redirect('/administracao')
+
     db.session.delete(usuario)
     db.session.commit()
 
