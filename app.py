@@ -525,6 +525,11 @@ def consulta():
 
     lista.sort(key=lambda x: x["prioridade"])
 
+    return render_template(
+        'consulta.html',
+        lista=lista,
+        busca=busca
+    )
     # ==========================
     # HISTÓRICO DE CONSULTA
     # ==========================
