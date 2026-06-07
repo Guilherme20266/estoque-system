@@ -613,11 +613,12 @@ def excluir(id):
     )
 
     db.session.add(historico)
-
     db.session.delete(produto)
     db.session.commit()
 
-    return redirect('/inventario?excluido=1')
+    flash("Produto excluído com sucesso!", "success")
+
+    return redirect('/inventario')
 # ==========================
 # ADMINISTRAÇÃO
 # ==========================
