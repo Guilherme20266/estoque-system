@@ -185,4 +185,21 @@ a{ text-decoration:none; }
 
 </div>
 
+{% if master %}
+
+<div class="card usuario" style="border-left:5px solid gold; background:#fffbe6;">
+
+    <div style="font-size:18px; font-weight:bold;">
+        👑 MASTER
+    </div>
+
+    <b>{{ master.usuario }}</b>
+    <br>
+
+    <small>Perfil: {{ master.perfil }}</small>
+
+</div>
+
+{% endif %}
+
 {% endblock %}
