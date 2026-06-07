@@ -1,18 +1,116 @@
-<form method="POST">
+{% extends "base.html" %}
 
-    <label>Usuário</label>
-    <input type="text" value="{{ usuario.usuario }}" disabled>
+{% block title %}Editar Usuário{% endblock %}
 
-    <label>Senha</label>
-    <input type="text" name="senha" value="{{ usuario.senha }}" required>
+{% block style %}
 
-    <label>Perfil</label>
-    <select name="perfil">
-        <option value="admin" {% if usuario.perfil == 'admin' %}selected{% endif %}>admin</option>
-        <option value="operador" {% if usuario.perfil == 'operador' %}selected{% endif %}>operador</option>
-        <option value="separacao" {% if usuario.perfil == 'separacao' %}selected{% endif %}>separacao</option>
-        <option value="consulta" {% if usuario.perfil == 'consulta' %}selected{% endif %}>consulta</option>
-    </select>
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+    margin:0;
+    padding:20px;
+}
 
-    <button type="submit">Salvar</button>
-</form>
+.container{
+    max-width:450px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+label{
+    font-size:14px;
+    color:#444;
+}
+
+input, select{
+    width:100%;
+    padding:12px;
+    margin-top:6px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-size:15px;
+    margin-top:10px;
+}
+
+.salvar{
+    background:#007bff;
+}
+
+.voltar{
+    background:#6c757d;
+}
+
+.usuario-info{
+    background:#f8f9fa;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:15px;
+    font-size:14px;
+    color:#333;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>✏️ Editar Usuário</h2>
+
+        <div class="usuario-info">
+            <b>Usuário:</b> {{ usuario.usuario }}
+        </div>
+
+        <form method="POST">
+
+            <label>Senha</label>
+            <input type="text" name="senha" value="{{ usuario.senha }}" required>
+
+            <label>Perfil</label>
+            <select name="perfil">
+
+                <option value="admin" {% if usuario.perfil == 'admin' %}selected{% endif %}>admin</option>
+                <option value="operador" {% if usuario.perfil == 'operador' %}selected{% endif %}>operador</option>
+                <option value="separacao" {% if usuario.perfil == 'separacao' %}selected{% endif %}>separacao</option>
+                <option value="consulta" {% if usuario.perfil == 'consulta' %}selected{% endif %}>consulta</option>
+
+            </select>
+
+            <button class="salvar" type="submit">💾 Salvar Alterações</button>
+
+        </form>
+
+        <a href="/administracao">
+            <button class="voltar">↩️ Voltar</button>
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
