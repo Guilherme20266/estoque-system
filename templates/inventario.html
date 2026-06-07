@@ -141,7 +141,7 @@ a{ text-decoration:none; }
     <button class="menu-btn">🏠 Menu</button>
 </a>
 
-<!-- 🔥 BUSCA + CÂMERA LADO A LADO -->
+<!-- BUSCA + CÂMERA -->
 <div class="busca-area">
 
     <input
@@ -210,9 +210,9 @@ data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.en
 <button class="btn edit">✏️ Editar Produto</button>
 </a>
 
-<a href="/excluir/{{ produto.id }}"
-   onclick="return confirm('Deseja realmente excluir este produto?')">
-    <button class="excluir">🗑️ Excluir</button>
+<a href="/excluir/{{ item.produto.id }}"
+   onclick="confirmarExclusao(event, '/excluir/{{ item.produto.id }}', '{{ item.produto.nome }}')">
+    <button class="btn del">🗑️ Excluir</button>
 </a>
 
 </div>
@@ -237,10 +237,7 @@ scanner.start(
     { facingMode: "environment" },
     {
         fps: 10,
-        qrbox: {
-            width: 300,
-            height: 120
-        }
+        qrbox: { width: 300, height: 120 }
     },
     (codigo) => {
 
@@ -273,14 +270,33 @@ function confirmarExclusao(event, url, produto){
     Swal.fire({
         icon: 'warning',
         title: 'Excluir produto?',
-        html: `<b>${produto}</b><br><br>Esta ação não pode ser desfeita.`,
+        html: `
+            <div style="font-size:16px">
+                Tem certeza que deseja excluir:
+                <br><br>
+                <b style="color:#dc3545">${produto}</b>
+            </div>
+        `,
         showCancelButton: true,
         confirmButtonText: 'Sim, excluir',
         cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#dc3545'
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d'
     }).then((result) => {
         if(result.isConfirmed){
-            window.location.href = url;
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Excluído!',
+                text: 'Produto removido com sucesso.',
+                timer: 1200,
+                showConfirmButton: false
+            });
+
+            setTimeout(() => {
+                window.location.href = url;
+            }, 1000);
+
         }
     });
 
