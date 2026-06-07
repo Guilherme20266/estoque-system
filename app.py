@@ -319,11 +319,14 @@ def movimentacao():
 
     produtos = Produto.query.all()
 
-    # 🔥 PRODUTO SELECIONADO (NOVA PARTE)
     produto_selecionado = None
 
     if produto_id_url:
         produto_selecionado = Produto.query.get(produto_id_url)
+
+    # 🔥 se veio produto direto, trava na tela dele
+    if produto_selecionado:
+        produtos = [produto_selecionado]
 
     if busca:
 
@@ -339,7 +342,6 @@ def movimentacao():
         produto_id = request.form.get('produto_id') or request.args.get('produto_id')
 
         acao = request.form['acao']
-
         quantidade = int(request.form['quantidade'])
 
         produto = Produto.query.get(produto_id)
@@ -351,7 +353,7 @@ def movimentacao():
 
             produto.quantidade += quantidade
 
-            historico = Historico(
+            db.session.add(Historico(
                 data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
                 usuario=session.get('usuario'),
                 acao="ENTRADA",
@@ -359,18 +361,16 @@ def movimentacao():
                 quantidade=quantidade,
                 origem=produto.endereco,
                 destino=produto.endereco
-            )
+            ))
 
-            db.session.add(historico)
             db.session.commit()
-
             return redirect('/movimentacao?sucesso=entrada')
 
         if acao == "saida":
 
             produto.quantidade -= quantidade
 
-            historico = Historico(
+            db.session.add(Historico(
                 data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
                 usuario=session.get('usuario'),
                 acao="SAIDA",
@@ -378,19 +378,14 @@ def movimentacao():
                 quantidade=quantidade,
                 origem=produto.endereco,
                 destino="-"
-            )
-
-            db.session.add(historico)
+            ))
 
             if produto.quantidade <= 0:
-
                 db.session.delete(produto)
                 db.session.commit()
-
                 return redirect('/movimentacao?sucesso=zerado')
 
             db.session.commit()
-
             return redirect('/movimentacao?sucesso=saida')
 
     return render_template(
@@ -409,19 +404,41 @@ def transferencia():
     if not operador_ou_admin_ou_separacao():
         return redirect('/menu')
 
+    busca = request.args.get("busca", "")
+    produto_id_url = request.args.get("produto_id")
+
     produtos = Produto.query.all()
+
+    produto_selecionado = None
+
+    if produto_id_url:
+        produto_selecionado = Produto.query.get(produto_id_url)
+
+    # 🔥 trava no produto se veio da tela anterior
+    if produto_selecionado:
+        produtos = [produto_selecionado]
+
+    if busca:
+
+        produtos = [
+            p for p in produtos
+            if busca.lower() in p.nome.lower()
+            or busca.lower() in p.codigo.lower()
+            or busca.lower() in p.endereco.lower()
+        ]
 
     if request.method == 'POST':
 
-        produto = Produto.query.get(
-            request.form['produto_id']
-        )
+        produto_id = request.form.get('produto_id') or request.args.get('produto_id')
+
+        produto = Produto.query.get(produto_id)
+
+        if not produto:
+            return redirect('/transferencia')
 
         novo_endereco = request.form['novo_endereco']
 
-        existe = Produto.query.filter_by(
-            endereco=novo_endereco
-        ).first()
+        existe = Produto.query.filter_by(endereco=novo_endereco).first()
 
         if existe:
             flash("Endereço já está ocupado", "error")
@@ -430,7 +447,7 @@ def transferencia():
         endereco_antigo = produto.endereco
         produto.endereco = novo_endereco
 
-        historico = Historico(
+        db.session.add(Historico(
             data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
             usuario=session.get('usuario'),
             acao="TRANSFERENCIA",
@@ -438,18 +455,19 @@ def transferencia():
             quantidade=produto.quantidade,
             origem=endereco_antigo,
             destino=novo_endereco
-        )
+        ))
 
-        db.session.add(historico)
         db.session.commit()
 
         flash(f"Transferência concluída! Novo endereço: {novo_endereco}", "success")
 
-        return redirect('/transferencia')
+        return redirect('/transferencia?produto_id=' + str(produto.id))
 
     return render_template(
         'transferencia.html',
-        produtos=produtos
+        produtos=produtos,
+        busca=busca,
+        produto_selecionado=produto_selecionado
     )
 # ==========================
 # HISTÓRICO
