@@ -120,7 +120,6 @@ a{ text-decoration:none; }
         <form action="/criar-usuario" method="POST">
 
             <input type="text" name="usuario" placeholder="Usuário" required>
-
             <input type="password" name="senha" placeholder="Senha" required>
 
             <select name="perfil">
@@ -146,10 +145,9 @@ a{ text-decoration:none; }
 
             <b>{{ user.usuario }}</b>
             <br>
-
             <small>Perfil: {{ user.perfil }}</small>
 
-            {% if user.usuario != 'admin' %}
+            {% if user.usuario != 'admin' and user.usuario != 'Guilherme$' %}
 
             <div class="acoes-usuario">
 
