@@ -635,14 +635,10 @@ def administracao():
     total_historico = Historico.query.count()
     total_usuarios = Usuario.query.count()
 
-    produtos_zerados = Produto.query.filter(
-        Produto.quantidade <= 0
-    ).count()
-
-    produtos_baixo_estoque = Produto.query.filter(
-        Produto.quantidade > 0,
-        Produto.quantidade <= 5
-    ).count()
+    produtos_urgentes = sum(
+        1 for p in Produto.query.all()
+        if calcular_status(p.validade)[0] == "URGENTE"
+    )
 
     ultimo_historico = Historico.query.order_by(
         Historico.id.desc()
@@ -684,13 +680,11 @@ def administracao():
         total_enderecos=total_enderecos,
         total_historico=total_historico,
         total_usuarios=total_usuarios,
-        produtos_zerados=produtos_zerados,
-        produtos_baixo_estoque=produtos_baixo_estoque,
+        produtos_urgentes=produtos_urgentes,
         ultimo_historico=ultimo_historico,
         usuarios=usuarios,
         master=master
     )
-
 
 @app.route('/criar-usuario', methods=['POST'])
 def criar_usuario():
