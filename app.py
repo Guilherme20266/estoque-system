@@ -686,9 +686,6 @@ def excluir_usuario(id):
 
     usuario = Usuario.query.get_or_404(id)
 
-    if usuario.usuario == 'admin':
-        return redirect('/administracao')
-
     db.session.delete(usuario)
     db.session.commit()
 
