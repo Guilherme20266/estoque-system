@@ -5,11 +5,14 @@ from zoneinfo import ZoneInfo
 from openpyxl import Workbook
 from io import BytesIO
 
+import os
+
 app = Flask(__name__)
 
-app.secret_key = "estoque_super_secreto_2026"
+app.secret_key = os.getenv("SECRET_KEY")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://automatico:yC0t7wVgQ2ozXUMfhtdUT8l4FZue9HW3@dpg-d8fpjbv7f7vs73ejl8sg-a.oregon-postgres.render.com/estoque_zd9a"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -699,22 +702,7 @@ def limpar_historico():
     return redirect('/administracao')
 
 with app.app_context():
-
     db.create_all()
-
-    admin_user = Usuario.query.filter_by(usuario='admin').first()
-
-    if not admin_user:
-
-        novo_admin = Usuario(
-            usuario='admin',
-            senha='10080810',
-            perfil='admin'
-        )
-
-        db.session.add(novo_admin)
-        db.session.commit()
-
 
 if __name__ == '__main__':
     app.run()
