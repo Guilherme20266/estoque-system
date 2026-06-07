@@ -686,16 +686,10 @@ def excluir_usuario(id):
 
     usuario = Usuario.query.get_or_404(id)
 
-    print("Excluir:", usuario.id, usuario.usuario, usuario.perfil)
-
-    if usuario.usuario == 'Guilherme$':
-        return redirect('/administracao')
-
     db.session.delete(usuario)
     db.session.commit()
 
     return redirect('/administracao')
-
 
 @app.route('/limpar-historico')
 def limpar_historico():
