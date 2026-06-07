@@ -694,6 +694,28 @@ def excluir_usuario(id):
 
     return redirect('/administracao')
 
+@app.route('/editar-usuario/<int:id>', methods=['GET', 'POST'])
+def editar_usuario(id):
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    usuario = Usuario.query.get_or_404(id)
+
+    if request.method == 'POST':
+
+        nova_senha = request.form['senha']
+        novo_perfil = request.form['perfil']
+
+        usuario.senha = nova_senha
+        usuario.perfil = novo_perfil
+
+        db.session.commit()
+
+        return redirect('/administracao')
+
+    return render_template('editar_usuario.html', usuario=usuario)
+
 @app.route('/limpar-historico')
 def limpar_historico():
 
