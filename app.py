@@ -315,36 +315,34 @@ def movimentacao():
         return redirect('/menu')
 
     busca = request.args.get("busca", "")
+    produto_id_url = request.args.get("produto_id")
 
     produtos = Produto.query.all()
+
+    # 🔥 PRODUTO SELECIONADO (NOVA PARTE)
+    produto_selecionado = None
+
+    if produto_id_url:
+        produto_selecionado = Produto.query.get(produto_id_url)
 
     if busca:
 
         produtos = [
-
             p for p in produtos
-
             if busca.lower() in p.nome.lower()
-
             or busca.lower() in p.codigo.lower()
-
             or busca.lower() in p.endereco.lower()
-
         ]
 
     if request.method == 'POST':
 
-        produto_id = request.form['produto_id']
+        produto_id = request.form.get('produto_id') or request.args.get('produto_id')
 
         acao = request.form['acao']
 
-        quantidade = int(
-            request.form['quantidade']
-        )
+        quantidade = int(request.form['quantidade'])
 
-        produto = Produto.query.get(
-            produto_id
-        )
+        produto = Produto.query.get(produto_id)
 
         if not produto:
             return redirect('/movimentacao')
@@ -364,7 +362,6 @@ def movimentacao():
             )
 
             db.session.add(historico)
-
             db.session.commit()
 
             return redirect('/movimentacao?sucesso=entrada')
@@ -388,7 +385,6 @@ def movimentacao():
             if produto.quantidade <= 0:
 
                 db.session.delete(produto)
-
                 db.session.commit()
 
                 return redirect('/movimentacao?sucesso=zerado')
@@ -400,7 +396,8 @@ def movimentacao():
     return render_template(
         'movimentacao.html',
         produtos=produtos,
-        busca=busca
+        busca=busca,
+        produto_selecionado=produto_selecionado
     )
 
 # ==========================
