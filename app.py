@@ -628,22 +628,20 @@ def administracao():
         return redirect('/menu')
 
     total_produtos = Produto.query.count()
-
     total_enderecos = Produto.query.count()
-
     total_historico = Historico.query.count()
 
     usuarios = Usuario.query.order_by(
         Usuario.usuario.asc()
     ).all()
 
-for u in usuarios:
-    print(
-        "ID:", u.id,
-        "USUARIO:", u.usuario,
-        "SENHA:", u.senha,
-        "PERFIL:", u.perfil
-    )
+    for u in usuarios:
+        print(
+            "ID:", u.id,
+            "USUARIO:", u.usuario,
+            "SENHA:", u.senha,
+            "PERFIL:", u.perfil
+        )
 
     return render_template(
         'administracao.html',
