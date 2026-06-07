@@ -198,12 +198,12 @@ data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.en
 
 <div class="botoes">
 
-<a href="/movimentacao">
-<button class="btn mov">🔄 Movimentação</button>
+<a href="/movimentacao?produto_id={{ item.produto.id }}">
+    <button class="btn mov">🔄 Movimentação</button>
 </a>
 
-<a href="/transferencia">
-<button class="btn transf">📍 Transferir</button>
+<a href="/transferencia?produto_id={{ item.produto.id }}">
+    <button class="btn transf">📍 Transferir</button>
 </a>
 
 <a href="/editar/{{ item.produto.id }}">
