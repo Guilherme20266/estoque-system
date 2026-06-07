@@ -71,7 +71,7 @@ h2{
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-select,input,button{
+input,button{
     width:100%;
     height:44px;
     margin-top:10px;
@@ -88,19 +88,13 @@ button{
     cursor:pointer;
 }
 
+/* infos */
 .info{
     color:#555;
     line-height:1.8;
 }
 
-a{ text-decoration:none; }
-
-#reader{
-    display:none;
-    margin-bottom:15px;
-}
-
-/* 🔥 FLASH MENSAGENS */
+/* flash */
 .flash{
     padding:12px;
     border-radius:8px;
@@ -119,6 +113,13 @@ a{ text-decoration:none; }
     background:#f8d7da;
     color:#721c24;
     border:1px solid #f5c6cb;
+}
+
+a{ text-decoration:none; }
+
+#reader{
+    display:none;
+    margin-bottom:15px;
 }
 
 {% endblock %}
@@ -164,8 +165,6 @@ a{ text-decoration:none; }
 {% endwith %}
 
 <!-- LISTA -->
-<div id="lista">
-
 {% for produto in produtos %}
 
 <div class="card item">
@@ -179,18 +178,18 @@ a{ text-decoration:none; }
     </div>
 
     <form method="POST">
+
         <input type="hidden" name="produto_id" value="{{ produto.id }}">
 
-        <input type="text" name="novo_endereco" placeholder="Novo endereço" required>
+        <input type="text" name="novo_endereco" placeholder="Novo endereço (ex: A-01-01)" required>
 
         <button type="submit">Transferir</button>
+
     </form>
 
 </div>
 
 {% endfor %}
-
-</div>
 
 </div>
 
