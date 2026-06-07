@@ -61,9 +61,17 @@ button{
 .criar{ background:#28a745; }
 .excluir{ background:#dc3545; }
 .limpar{ background:#dc3545; }
+.editar{ background:#007bff; }
 
 .usuario{
     border-left:5px solid #007bff;
+}
+
+.acoes-usuario{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:10px;
 }
 
 h2{ margin:0; }
@@ -78,104 +86,104 @@ a{ text-decoration:none; }
 
 <div class="container">
 
-<div class="topo">
-    <h2>⚙️ Administração</h2>
-</div>
+    <div class="topo">
+        <h2>⚙️ Administração</h2>
+    </div>
 
-<a href="/menu">
-<button class="menu">🏠 Voltar ao Menu</button>
-</a>
-
-<div class="card">
-
-<div class="info">
-📦 Produtos cadastrados:
-<b>{{ total_produtos }}</b>
-</div>
-
-<div class="info">
-📍 Endereços ocupados:
-<b>{{ total_enderecos }}</b>
-</div>
-
-<div class="info">
-📜 Movimentações:
-<b>{{ total_historico }}</b>
-</div>
-
-</div>
-
-<div class="card">
-
-<h3>👥 Criar Usuário</h3>
-
-<form action="/criar-usuario" method="POST">
-
-<input type="text" name="usuario" placeholder="Usuário" required>
-
-<input type="password" name="senha" placeholder="Senha" required>
-
-<select name="perfil">
-
-<option value="admin">Administrador</option>
-<option value="separacao">Separacao</option>
-<option value="operador">Operador</option>
-<option value="consulta">Consulta</option>
-
-</select>
-
-<button class="criar" type="submit">➕ Criar Usuário</button>
-
-</form>
-
-</div>
-
-<div class="card">
-
-<h3>👥 Usuários Cadastrados</h3>
-
-{% for user in usuarios %}
-
-<div class="card usuario">
-
-<b>{{ user.usuario }}</b>
-<br>
-
-<small>Perfil: {{ user.perfil }}</small>
-
-{% if user.usuario != 'admin' %}
-
-<div class="acoes-usuario">
-
-    <a href="/editar-usuario/{{ user.id }}">
-        <button class="editar">✏️ Editar Usuário</button>
+    <a href="/menu">
+        <button class="menu">🏠 Voltar ao Menu</button>
     </a>
 
-    <a href="/excluir-usuario/{{ user.id }}"
-    onclick="return confirm('Excluir usuário?')">
-        <button class="excluir">🗑️ Excluir Usuário</button>
-    </a>
+    <div class="card">
 
-{% endif %}
+        <div class="info">
+        📦 Produtos cadastrados:
+        <b>{{ total_produtos }}</b>
+        </div>
 
-</div>
+        <div class="info">
+        📍 Endereços ocupados:
+        <b>{{ total_enderecos }}</b>
+        </div>
 
-{% endfor %}
+        <div class="info">
+        📜 Movimentações:
+        <b>{{ total_historico }}</b>
+        </div>
 
-</div>
+    </div>
 
-<div class="card">
+    <div class="card">
 
-<h3>⚠️ Ferramentas</h3>
+        <h3>👥 Criar Usuário</h3>
 
-<a href="/limpar-historico"
-onclick="return confirm('Deseja apagar todo histórico?')">
+        <form action="/criar-usuario" method="POST">
 
-<button class="limpar">🗑️ Limpar Histórico</button>
+            <input type="text" name="usuario" placeholder="Usuário" required>
 
-</a>
+            <input type="password" name="senha" placeholder="Senha" required>
 
-</div>
+            <select name="perfil">
+                <option value="admin">Administrador</option>
+                <option value="separacao">Separacao</option>
+                <option value="operador">Operador</option>
+                <option value="consulta">Consulta</option>
+            </select>
+
+            <button class="criar" type="submit">➕ Criar Usuário</button>
+
+        </form>
+
+    </div>
+
+    <div class="card">
+
+        <h3>👥 Usuários Cadastrados</h3>
+
+        {% for user in usuarios %}
+
+        <div class="card usuario">
+
+            <b>{{ user.usuario }}</b>
+            <br>
+
+            <small>Perfil: {{ user.perfil }}</small>
+
+            {% if user.usuario != 'admin' %}
+
+            <div class="acoes-usuario">
+
+                <a href="/editar-usuario/{{ user.id }}">
+                    <button class="editar">✏️ Editar Usuário</button>
+                </a>
+
+                <a href="/excluir-usuario/{{ user.id }}"
+                   onclick="return confirm('Excluir usuário?')">
+                    <button class="excluir">🗑️ Excluir Usuário</button>
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="card">
+
+        <h3>⚠️ Ferramentas</h3>
+
+        <a href="/limpar-historico"
+           onclick="return confirm('Deseja apagar todo histórico?')">
+
+            <button class="limpar">🗑️ Limpar Histórico</button>
+
+        </a>
+
+    </div>
 
 </div>
 
