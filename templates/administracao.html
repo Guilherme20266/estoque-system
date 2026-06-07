@@ -101,18 +101,26 @@ a{ text-decoration:none; }
         <button class="menu">🏠 Voltar ao Menu</button>
     </a>
 
-    <!-- 📊 RELATÓRIO -->
+    <!-- 📊 RELATÓRIO LIMPO -->
     <div class="card">
 
         <h3>📊 Relatório do Sistema</h3>
 
-        <div class="info ok">👥 Usuários: <b>{{ total_usuarios }}</b></div>
-        <div class="info ok">📦 Produtos: <b>{{ total_produtos }}</b></div>
-        <div class="info ok">📍 Endereços ocupados: <b>{{ total_enderecos }}</b></div>
-        <div class="info ok">📜 Movimentações: <b>{{ total_historico }}</b></div>
+        <div class="info ok">
+            👥 Usuários: <b>{{ total_usuarios }}</b>
+        </div>
 
-        <div class="info alerta">🚫 Estoque zerado: <b>{{ produtos_zerados }}</b></div>
-        <div class="info critico">⚠️ Estoque baixo: <b>{{ produtos_baixo_estoque }}</b></div>
+        <div class="info ok">
+            📦 Produtos: <b>{{ total_produtos }}</b>
+        </div>
+
+        <div class="info ok">
+            📜 Movimentações: <b>{{ total_historico }}</b>
+        </div>
+
+        <div class="info critico">
+            🔴 Produtos urgentes: <b>{{ produtos_urgentes }}</b>
+        </div>
 
         {% if ultimo_historico %}
         <div class="info alerta">
