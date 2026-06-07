@@ -631,8 +631,13 @@ def administracao():
     total_enderecos = Produto.query.count()
     total_historico = Historico.query.count()
 
-    usuarios = Usuario.query.order_by(
-        (Usuario.usuario != 'Guilherme$'),
+    # MASTER separado
+    master = Usuario.query.filter_by(usuario="Guilherme$").first()
+
+    # resto dos usuários
+    usuarios = Usuario.query.filter(
+        Usuario.usuario != "Guilherme$"
+    ).order_by(
         Usuario.usuario.asc()
     ).all()
 
@@ -649,7 +654,8 @@ def administracao():
         total_produtos=total_produtos,
         total_enderecos=total_enderecos,
         total_historico=total_historico,
-        usuarios=usuarios
+        usuarios=usuarios,
+        master=master
     )
 
 
