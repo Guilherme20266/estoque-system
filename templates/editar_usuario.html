@@ -1,0 +1,18 @@
+<form method="POST">
+
+    <label>Usuário</label>
+    <input type="text" value="{{ usuario.usuario }}" disabled>
+
+    <label>Senha</label>
+    <input type="text" name="senha" value="{{ usuario.senha }}" required>
+
+    <label>Perfil</label>
+    <select name="perfil">
+        <option value="admin" {% if usuario.perfil == 'admin' %}selected{% endif %}>admin</option>
+        <option value="operador" {% if usuario.perfil == 'operador' %}selected{% endif %}>operador</option>
+        <option value="separacao" {% if usuario.perfil == 'separacao' %}selected{% endif %}>separacao</option>
+        <option value="consulta" {% if usuario.perfil == 'consulta' %}selected{% endif %}>consulta</option>
+    </select>
+
+    <button type="submit">Salvar</button>
+</form>
