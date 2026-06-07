@@ -24,7 +24,7 @@ h2{
     text-align:center;
 }
 
-/* botões padrão */
+/* botões */
 .voltar,.menu{
     width:100%;
     padding:12px;
@@ -36,12 +36,11 @@ h2{
     cursor:pointer;
 }
 
-/* 🔥 BUSCA + CÂMERA */
+/* busca */
 .busca-area{
     display:flex;
     gap:8px;
     margin-bottom:15px;
-    align-items:center;
 }
 
 .search{
@@ -50,26 +49,20 @@ h2{
     padding:0 12px;
     border-radius:8px;
     border:1px solid #ccc;
-    box-sizing:border-box;
     font-size:15px;
 }
 
 .cam-btn{
     width:44px;
-    height:44px;
-    min-width:44px;
     border:none;
     border-radius:8px;
     background:#28a745;
     color:white;
     font-size:18px;
     cursor:pointer;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
 }
 
+/* card */
 .card{
     background:white;
     padding:15px;
@@ -78,27 +71,21 @@ h2{
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-select,input{
+select,input,button{
     width:100%;
     height:44px;
-    padding:0 12px;
     margin-top:10px;
     border-radius:8px;
     border:1px solid #ccc;
-    box-sizing:border-box;
     font-size:15px;
+    box-sizing:border-box;
 }
 
 button{
-    width:100%;
-    height:44px;
-    margin-top:10px;
-    border:none;
-    border-radius:8px;
     background:#28a745;
     color:white;
+    border:none;
     cursor:pointer;
-    font-size:15px;
 }
 
 .info{
@@ -113,6 +100,27 @@ a{ text-decoration:none; }
     margin-bottom:15px;
 }
 
+/* 🔥 FLASH MENSAGENS */
+.flash{
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:12px;
+    font-weight:bold;
+    text-align:center;
+}
+
+.success{
+    background:#d4edda;
+    color:#155724;
+    border:1px solid #c3e6cb;
+}
+
+.error{
+    background:#f8d7da;
+    color:#721c24;
+    border:1px solid #f5c6cb;
+}
+
 {% endblock %}
 
 {% block content %}
@@ -124,28 +132,27 @@ a{ text-decoration:none; }
 <button onclick="history.back()" class="voltar">⬅️ Voltar</button>
 
 <a href="/menu">
-<button class="menu">🏠 Voltar ao Menu</button>
+<button class="menu">🏠 Menu</button>
 </a>
 
-<!-- 🔥 BUSCA + CÂMERA PADRÃO -->
+<!-- BUSCA -->
 <div class="busca-area">
 
     <input
         type="text"
         class="search"
         id="buscar"
-        placeholder="Pesquisar por nome, código ou endereço..."
+        placeholder="Pesquisar produto..."
         onkeyup="filtrar()"
     >
 
-    <button class="cam-btn" type="button" onclick="abrirCamera()">
-        📷
-    </button>
+    <button class="cam-btn" type="button" onclick="abrirCamera()">📷</button>
 
 </div>
 
 <div id="reader"></div>
 
+<!-- FLASH -->
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     {% for category, msg in messages %}
@@ -156,29 +163,28 @@ a{ text-decoration:none; }
   {% endif %}
 {% endwith %}
 
+<!-- LISTA -->
 <div id="lista">
 
 {% for produto in produtos %}
 
 <div class="card item">
 
-<b>{{ produto.nome }}</b>
+    <b>{{ produto.nome }}</b>
 
-<div class="info">
-🏷️ Código: {{ produto.codigo }}<br>
-📦 Quantidade: {{ produto.quantidade }}<br>
-📍 Atual: {{ produto.endereco }}
-</div>
+    <div class="info">
+        🏷️ Código: {{ produto.codigo }}<br>
+        📦 Quantidade: {{ produto.quantidade }}<br>
+        📍 Atual: {{ produto.endereco }}
+    </div>
 
-<form method="POST">
+    <form method="POST">
+        <input type="hidden" name="produto_id" value="{{ produto.id }}">
 
-<input type="hidden" name="produto_id" value="{{ produto.id }}">
+        <input type="text" name="novo_endereco" placeholder="Novo endereço" required>
 
-<input type="text" name="novo_endereco" placeholder="Novo endereço (Ex: A-10-3)" required>
-
-<button type="submit">Transferir</button>
-
-</form>
+        <button type="submit">Transferir</button>
+    </form>
 
 </div>
 
@@ -215,19 +221,16 @@ scanner.start(
 
 }
 
-function filtrar() {
+function filtrar(){
 
-    let input = document.getElementById("buscar");
-    let filtro = input.value.toLowerCase();
+let input = document.getElementById("buscar").value.toLowerCase();
+let itens = document.getElementsByClassName("item");
 
-    let itens = document.getElementsByClassName("item");
+for(let i=0;i<itens.length;i++){
+    let texto = itens[i].innerText.toLowerCase();
+    itens[i].style.display = texto.includes(input) ? "" : "none";
+}
 
-    for (let i = 0; i < itens.length; i++) {
-
-        let texto = itens[i].innerText.toLowerCase();
-
-        itens[i].style.display = texto.includes(filtro) ? "" : "none";
-    }
 }
 
 </script>
