@@ -686,6 +686,8 @@ def excluir_usuario(id):
 
     usuario = Usuario.query.get_or_404(id)
 
+    print("Excluir:", usuario.id, usuario.usuario, usuario.perfil)
+
     if usuario.usuario == 'Guilherme$':
         return redirect('/administracao')
 
