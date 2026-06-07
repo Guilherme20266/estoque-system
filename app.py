@@ -638,7 +638,12 @@ def administracao():
     ).all()
 
     for u in usuarios:
-        print(u.id, u.usuario, u.perfil)
+    print(
+        "ID:", u.id,
+        "USUARIO:", u.usuario,
+        "SENHA:", u.senha,
+        "PERFIL:", u.perfil
+    )
 
     return render_template(
         'administracao.html',
