@@ -631,10 +631,10 @@ def administracao():
     total_enderecos = Produto.query.count()
     total_historico = Historico.query.count()
 
-usuarios = Usuario.query.order_by(
-    (Usuario.usuario != 'Guilherme$'),
-    Usuario.usuario.asc()
-).all()
+    usuarios = Usuario.query.order_by(
+        (Usuario.usuario != 'Guilherme$'),
+        Usuario.usuario.asc()
+    ).all()
 
     for u in usuarios:
         print(
