@@ -324,12 +324,11 @@ def movimentacao():
     if produto_id_url:
         produto_selecionado = Produto.query.get(produto_id_url)
 
-    # 🔥 se veio produto direto, trava na tela dele
+    # 🔥 trava no produto selecionado
     if produto_selecionado:
         produtos = [produto_selecionado]
 
     if busca:
-
         produtos = [
             p for p in produtos
             if busca.lower() in p.nome.lower()
@@ -340,14 +339,13 @@ def movimentacao():
     if request.method == 'POST':
 
         produto_id = request.form.get('produto_id') or request.args.get('produto_id')
-
-        acao = request.form['acao']
-        quantidade = int(request.form['quantidade'])
-
         produto = Produto.query.get(produto_id)
 
         if not produto:
             return redirect('/movimentacao')
+
+        acao = request.form['acao']
+        quantidade = int(request.form['quantidade'])
 
         if acao == "entrada":
 
@@ -364,7 +362,10 @@ def movimentacao():
             ))
 
             db.session.commit()
-            return redirect('/movimentacao?sucesso=entrada')
+
+            flash(f"✔ Entrada: +{quantidade} unidades em {produto.endereco}", "success")
+
+            return redirect('/movimentacao?produto_id=' + str(produto.id))
 
         if acao == "saida":
 
@@ -386,7 +387,10 @@ def movimentacao():
                 return redirect('/movimentacao?sucesso=zerado')
 
             db.session.commit()
-            return redirect('/movimentacao?sucesso=saida')
+
+            flash(f"✔ Saída: -{quantidade} unidades de {produto.endereco}", "success")
+
+            return redirect('/movimentacao?produto_id=' + str(produto.id))
 
     return render_template(
         'movimentacao.html',
@@ -394,7 +398,6 @@ def movimentacao():
         busca=busca,
         produto_selecionado=produto_selecionado
     )
-
 # ==========================
 # TRANSFERÊNCIA
 # ==========================
