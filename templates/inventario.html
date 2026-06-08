@@ -3,10 +3,8 @@
 {% block title %}Inventário{% endblock %}
 
 {% block head %}
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://unpkg.com/html5-qrcode"></script>
-
 {% endblock %}
 
 {% block style %}
@@ -141,7 +139,6 @@ a{ text-decoration:none; }
     <button class="menu-btn">🏠 Menu</button>
 </a>
 
-<!-- BUSCA + CÂMERA -->
 <div class="busca-area">
 
     <input
@@ -152,9 +149,7 @@ a{ text-decoration:none; }
         onkeyup="filtrar()"
     >
 
-    <button class="cam-btn" onclick="abrirCamera()">
-        📷
-    </button>
+    <button class="cam-btn" onclick="abrirCamera()">📷</button>
 
 </div>
 
@@ -207,7 +202,7 @@ data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.en
 </a>
 
 <a href="/editar/{{ item.produto.id }}">
-<button class="btn edit">✏️ Editar Produto</button>
+    <button class="btn edit">✏️ Editar Produto</button>
 </a>
 
 <a href="/excluir/{{ item.produto.id }}"
@@ -235,10 +230,7 @@ scanner = new Html5Qrcode("reader");
 
 scanner.start(
     { facingMode: "environment" },
-    {
-        fps: 10,
-        qrbox: { width: 300, height: 120 }
-    },
+    { fps: 10, qrbox: { width: 300, height: 120 } },
     (codigo) => {
 
         document.getElementById("busca").value = codigo;
@@ -270,13 +262,7 @@ function confirmarExclusao(event, url, produto){
     Swal.fire({
         icon: 'warning',
         title: 'Excluir produto?',
-        html: `
-            <div style="font-size:16px">
-                Tem certeza que deseja excluir:
-                <br><br>
-                <b style="color:#dc3545">${produto}</b>
-            </div>
-        `,
+        html: `<b style="color:#dc3545">${produto}</b><br><br>Essa ação não pode ser desfeita.`,
         showCancelButton: true,
         confirmButtonText: 'Sim, excluir',
         cancelButtonText: 'Cancelar',
@@ -284,19 +270,7 @@ function confirmarExclusao(event, url, produto){
         cancelButtonColor: '#6c757d'
     }).then((result) => {
         if(result.isConfirmed){
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Excluído!',
-                text: 'Produto removido com sucesso.',
-                timer: 1200,
-                showConfirmButton: false
-            });
-
-            setTimeout(() => {
-                window.location.href = url;
-            }, 1000);
-
+            window.location.href = url;
         }
     });
 
