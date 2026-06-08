@@ -324,7 +324,6 @@ def movimentacao():
     if produto_id_url:
         produto_selecionado = Produto.query.get(produto_id_url)
 
-    # 🔥 trava no produto selecionado
     if produto_selecionado:
         produtos = [produto_selecionado]
 
@@ -347,6 +346,9 @@ def movimentacao():
         acao = request.form['acao']
         quantidade = int(request.form['quantidade'])
 
+        # ==========================
+        # ENTRADA
+        # ==========================
         if acao == "entrada":
 
             produto.quantidade += quantidade
@@ -367,6 +369,9 @@ def movimentacao():
 
             return redirect('/movimentacao?produto_id=' + str(produto.id))
 
+        # ==========================
+        # SAÍDA
+        # ==========================
         if acao == "saida":
 
             produto.quantidade -= quantidade
@@ -381,10 +386,18 @@ def movimentacao():
                 destino="-"
             ))
 
+            # 🔥 SE ZEROU OU MENOR QUE ZERO
             if produto.quantidade <= 0:
+
+                nome = produto.nome
+                endereco = produto.endereco
+
                 db.session.delete(produto)
                 db.session.commit()
-                return redirect('/movimentacao?sucesso=zerado')
+
+                flash(f"🚨 ESTOQUE ZERADO: {nome} removido do endereço {endereco}", "error")
+
+                return redirect('/movimentacao')
 
             db.session.commit()
 
