@@ -21,7 +21,9 @@ body{
     margin:auto;
 }
 
-h2{text-align:center;}
+h2{
+    text-align:center;
+}
 
 .voltar,.menu{
     width:100%;
@@ -35,7 +37,7 @@ h2{text-align:center;}
     cursor:pointer;
 }
 
-/* 🔥 PADRÃO IGUAL CONSULTA */
+/* BUSCA */
 .busca-area{
     display:flex;
     gap:8px;
@@ -60,13 +62,10 @@ h2{text-align:center;}
     color:white;
     font-size:20px;
     cursor:pointer;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     padding:0;
-    margin-top:0;
 }
 
 #reader{
@@ -76,6 +75,7 @@ h2{text-align:center;}
     overflow:hidden;
 }
 
+/* CARD */
 .card{
     background:white;
     padding:14px;
@@ -84,9 +84,18 @@ h2{text-align:center;}
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.nome{font-size:18px;font-weight:bold;margin-bottom:8px;}
-.info{color:#555;line-height:1.8;}
+.nome{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
 
+.info{
+    color:#555;
+    line-height:1.8;
+}
+
+/* FORM */
 select,input[type=number]{
     width:100%;
     padding:12px;
@@ -108,6 +117,31 @@ button{
     cursor:pointer;
 }
 
+/* FLASH (ISOLADO SÓ AQUI) */
+.flash-box{
+    margin-bottom:12px;
+}
+
+.flash{
+    padding:12px;
+    border-radius:8px;
+    font-weight:bold;
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.flash.success{
+    background:#d4edda;
+    color:#155724;
+    border:1px solid #c3e6cb;
+}
+
+.flash.error{
+    background:#f8d7da;
+    color:#721c24;
+    border:1px solid #f5c6cb;
+}
+
 a{text-decoration:none;}
 
 {% endblock %}
@@ -121,56 +155,65 @@ a{text-decoration:none;}
 <button onclick="history.back()" class="voltar">⬅️ Voltar</button>
 
 <a href="/menu">
-<button class="menu">🏠 Voltar ao Menu</button>
+<button class="menu">🏠 Menu</button>
 </a>
 
-<!-- 🔥 BUSCA + CÂMERA (IGUAL CONSULTA) -->
+<!-- BUSCA -->
 <div class="busca-area">
 
     <input
         class="busca"
         type="text"
         id="busca"
-        placeholder="Buscar nome, código ou endereço..."
+        placeholder="Buscar produto..."
         value="{{ busca }}"
         oninput="filtrar()"
     >
 
-    <button class="cam-btn" type="button" onclick="abrirCamera()">
-        📷
-    </button>
+    <button class="cam-btn" type="button" onclick="abrirCamera()">📷</button>
 
 </div>
 
 <div id="reader"></div>
 
+<!-- FLASH SOMENTE DA MOVIMENTAÇÃO -->
+<div class="flash-box">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, msg in messages %}
+        <div class="flash {{ category }}">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+</div>
+
 {% for produto in produtos %}
 
 <div class="card">
 
-<div class="nome">{{ produto.nome }}</div>
+    <div class="nome">{{ produto.nome }}</div>
 
-<div class="info">
-🏷️ Código: {{ produto.codigo }}<br>
-📦 Quantidade: {{ produto.quantidade }}<br>
-📅 Validade: {{ produto.validade }}<br>
-📍 Endereço: {{ produto.endereco }}
-</div>
+    <div class="info">
+        🏷️ Código: {{ produto.codigo }}<br>
+        📦 Quantidade: {{ produto.quantidade }}<br>
+        📅 Validade: {{ produto.validade }}<br>
+        📍 Endereço: {{ produto.endereco }}
+    </div>
 
-<form method="POST">
+    <form method="POST">
 
-<input type="hidden" name="produto_id" value="{{ produto.id }}">
+        <input type="hidden" name="produto_id" value="{{ produto.id }}">
 
-<select name="acao">
-<option value="entrada">📥 Entrada</option>
-<option value="saida">📤 Saída</option>
-</select>
+        <select name="acao">
+            <option value="entrada">📥 Entrada</option>
+            <option value="saida">📤 Saída</option>
+        </select>
 
-<input type="number" name="quantidade" min="1" required>
+        <input type="number" name="quantidade" min="1" required>
 
-<button type="submit">Confirmar</button>
+        <button type="submit">Confirmar</button>
 
-</form>
+    </form>
 
 </div>
 
@@ -190,10 +233,7 @@ scanner = new Html5Qrcode("reader");
 
 scanner.start(
     { facingMode: "environment" },
-    {
-        fps: 10,
-        qrbox: { width: 300, height: 120 }
-    },
+    { fps: 10, qrbox: { width: 300, height: 120 } },
     (codigo) => {
 
         document.getElementById("busca").value = codigo;
