@@ -4,6 +4,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from openpyxl import Workbook
 from io import BytesIO
+from flask import jsonify
 
 import os
 
@@ -148,6 +149,25 @@ def calcular_status(validade):
         return "SEM_DATA", 4
 
 
+@app.route('/buscar-produto/<codigo>')
+def buscar_produto(codigo):
+
+    produto = CatalogoProduto.query.filter_by(
+        codigo=codigo
+    ).first()
+
+    if produto:
+
+        return {
+            "encontrado": True,
+            "nome": produto.nome
+        }
+
+    return {
+        "encontrado": False
+    }
+
+
 # ==========================
 # MENU
 # ==========================
@@ -219,6 +239,19 @@ def cadastrar():
 
         if existe:
             return redirect('/cadastrar?erro=endereco')
+
+        catalogo = CatalogoProduto.query.filter_by(
+    codigo=request.form['codigo']
+).first()
+
+if not catalogo:
+
+    catalogo = CatalogoProduto(
+        codigo=request.form['codigo'],
+        nome=request.form['nome']
+    )
+
+    db.session.add(catalogo)
 
         produto = Produto(
             codigo=request.form['codigo'],
