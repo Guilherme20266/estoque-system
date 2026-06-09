@@ -9,7 +9,7 @@ import os
 
 app = Flask(__name__)
 
-app.permanent_session_lifetime = timedelta(minutes=20)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=20)
 
 app.secret_key = os.environ.get(
     "SECRET_KEY",
