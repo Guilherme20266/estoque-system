@@ -912,8 +912,7 @@ def editar_catalogo(id):
         novo_nome = request.form.get('nome', '').strip()
 
         if not novo_nome:
-            flash("Nome inválido!", "error")
-            return redirect(url_for('editar_catalogo', id=id))
+            return redirect(url_for('editar_catalogo', id=id, erro=1))
 
         try:
             # atualiza catálogo
@@ -927,16 +926,19 @@ def editar_catalogo(id):
 
             db.session.commit()
 
-            flash("✔ Nome atualizado com sucesso!", "success")
-
-            return redirect(url_for('catalogo'))
+            # volta para MESMA tela com sucesso
+            return redirect(url_for('editar_catalogo', id=id, ok=1))
 
         except Exception:
             db.session.rollback()
-            flash("Erro ao atualizar catálogo!", "error")
-            return redirect(url_for('editar_catalogo', id=id))
+            return redirect(url_for('editar_catalogo', id=id, erro=1))
 
-    return render_template('editar_catalogo.html', catalogo=catalogo)
+    return render_template(
+        'editar_catalogo.html',
+        catalogo=catalogo,
+        ok=request.args.get('ok'),
+        erro=request.args.get('erro')
+    )
     
 with app.app_context():
     db.create_all()
