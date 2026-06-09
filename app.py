@@ -341,6 +341,13 @@ def editar(id):
         produto.nome = novo_nome
         produto.codigo = novo_codigo
         produto.validade = nova_validade
+        
+        catalogo = CatalogoProduto.query.filter_by(
+            codigo=novo_codigo
+        ).first()
+
+        if catalogo:
+            catalogo.nome = novo_nome
 
         historico = Historico(
             data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
