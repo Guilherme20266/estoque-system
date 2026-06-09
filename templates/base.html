@@ -67,6 +67,26 @@
     }
 }
 
+/* =========================
+   BOTÃO MENU GLOBAL
+========================= */
+
+.menu-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 14px 18px;
+    border-radius: 50px;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 99999;
+    text-decoration: none;
+}
+
 /* ========================= */
 
 {% block style %}{% endblock %}
@@ -89,6 +109,11 @@
     </div>
   {% endif %}
 {% endwith %}
+
+<!-- BOTÃO MENU GLOBAL -->
+<a href="/menu" class="menu-float">
+    🏠 Menu
+</a>
 
 {% block content %}{% endblock %}
 
