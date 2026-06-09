@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Catálogo de Produtos</h2>
+
+<table border="1" width="100%">
+<tr>
+    <th>Código</th>
+    <th>Nome</th>
+    <th>Ação</th>
+</tr>
+
+{% for p in produtos %}
+<tr>
+    <td>{{ p.codigo }}</td>
+    <td>{{ p.nome }}</td>
+    <td>
+        <a href="/editar-catalogo/{{ p.id }}">
+            Editar
+        </a>
+    </td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}
