@@ -865,29 +865,7 @@ def limpar_historico():
 
     return redirect('/administracao')
 
-# PREENCHE CATÁLOGO UMA VEZ
 with app.app_context():
-
-    produtos = Produto.query.all()
-
-    for p in produtos:
-
-        existe = CatalogoProduto.query.filter_by(
-            codigo=p.codigo
-        ).first()
-
-        if not existe:
-
-            db.session.add(
-                CatalogoProduto(
-                    codigo=p.codigo,
-                    nome=p.nome
-                )
-            )
-
-    db.session.commit()
-
-    print("Catálogo preenchido!")
 
 with app.app_context():
     db.create_all()
