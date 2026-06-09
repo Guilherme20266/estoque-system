@@ -12,13 +12,13 @@ body{
 }
 
 .container{
-    max-width:850px;
+    max-width:800px;
     margin:auto;
 }
 
 .topo{
     background:white;
-    padding:25px;
+    padding:20px;
     border-radius:15px;
     margin-bottom:15px;
     text-align:center;
@@ -27,42 +27,33 @@ body{
 
 .card{
     background:white;
-    padding:18px;
+    padding:15px;
     border-radius:12px;
     margin-bottom:15px;
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.resumo{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-    margin-top:15px;
-}
-
-.box{
+.info{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
     background:#f8f9fa;
-    padding:15px;
-    border-radius:10px;
-    text-align:center;
+    padding:14px;
+    border-radius:8px;
+    margin-top:10px;
+    font-size:16px;
 }
 
-.box h2{
-    margin:0;
+.info b{
     color:#007bff;
-}
-
-.box p{
-    margin:5px 0 0;
-    color:#666;
-    font-size:14px;
+    font-size:18px;
 }
 
 input,
 select{
     width:100%;
     padding:12px;
-    border:1px solid #ddd;
+    border:1px solid #ccc;
     border-radius:8px;
     margin-top:10px;
     box-sizing:border-box;
@@ -126,14 +117,12 @@ button{
     margin-top:0;
 }
 
-.titulo{
-    margin:0 0 10px 0;
+h2,h3{
+    margin-top:0;
 }
 
-.descricao{
+small{
     color:#666;
-    font-size:14px;
-    margin-top:5px;
 }
 
 a{
@@ -141,10 +130,6 @@ a{
 }
 
 @media(max-width:600px){
-
-    .resumo{
-        grid-template-columns:1fr;
-    }
 
     .acoes-usuario{
         flex-direction:column;
@@ -159,7 +144,7 @@ a{
 <div class="container">
 
     <div class="topo">
-        <h2>⚙️ Administração do Sistema</h2>
+        <h2>⚙️ Administração</h2>
     </div>
 
     <a href="/menu">
@@ -171,55 +156,29 @@ a{
     <!-- RELATÓRIO -->
     <div class="card">
 
-        <h3 class="titulo">📊 Relatório do Sistema</h3>
+        <h3>📊 Relatório do Sistema</h3>
 
-        <div class="resumo">
-
-            <div class="box">
-                <h2>{{ total_produtos }}</h2>
-                <p>Produtos</p>
-            </div>
-
-            <div class="box">
-                <h2>{{ total_usuarios }}</h2>
-                <p>Usuários</p>
-            </div>
-
-            <div class="box">
-                <h2>{{ produtos_urgentes }}</h2>
-                <p>Produtos Urgentes</p>
-            </div>
-
-            <div class="box">
-                <h2>{{ total_enderecos }}</h2>
-                <p>Endereços Ocupados</p>
-            </div>
-
+        <div class="info">
+            📦 Produtos Cadastrados
+            <b>{{ total_produtos }}</b>
         </div>
 
-    </div>
-
-    <!-- CATÁLOGO -->
-    <div class="card">
-
-        <h3 class="titulo">📦 Catálogo de Produtos</h3>
-
-        <div class="descricao">
-            Padronize nomes dos produtos por código.
+        <div class="info">
+            👥 Usuários Cadastrados
+            <b>{{ total_usuarios }}</b>
         </div>
 
-        <a href="/catalogo">
-            <button class="editar">
-                📦 Abrir Catálogo
-            </button>
-        </a>
+        <div class="info">
+            🔴 Produtos Urgentes
+            <b>{{ produtos_urgentes }}</b>
+        </div>
 
     </div>
 
     <!-- CRIAR USUÁRIO -->
     <div class="card">
 
-        <h3 class="titulo">👤 Criar Usuário</h3>
+        <h3>👤 Criar Usuário</h3>
 
         <form action="/criar-usuario" method="POST">
 
@@ -258,8 +217,8 @@ a{
             </select>
 
             <button
-                type="submit"
                 class="criar"
+                type="submit"
             >
                 ➕ Criar Usuário
             </button>
@@ -271,7 +230,7 @@ a{
     <!-- USUÁRIOS -->
     <div class="card">
 
-        <h3 class="titulo">👥 Usuários Cadastrados</h3>
+        <h3>👥 Usuários Cadastrados</h3>
 
         {% if master %}
 
@@ -305,13 +264,13 @@ a{
                     </button>
                 </a>
 
-                <a
-                    href="/excluir-usuario/{{ user.id }}"
-                    onclick="return confirm('Excluir usuário?')"
-                >
+                <a href="/excluir-usuario/{{ user.id }}"
+                   onclick="return confirm('Excluir usuário?')">
+
                     <button class="excluir">
                         🗑️ Excluir
                     </button>
+
                 </a>
 
             </div>
@@ -322,18 +281,37 @@ a{
 
     </div>
 
+    <!-- CATÁLOGO -->
+    <div class="card">
+
+        <h3>📦 Catálogo de Produtos</h3>
+
+        <p style="color:#666;">
+            Gerencie os nomes padronizados dos produtos.
+        </p>
+
+        <a href="/catalogo">
+
+            <button class="editar">
+                📦 Abrir Catálogo
+            </button>
+
+        </a>
+
+    </div>
+
     <!-- FERRAMENTAS -->
     <div class="card">
 
-        <h3 class="titulo">⚠️ Ferramentas do Sistema</h3>
+        <h3>⚠️ Ferramentas do Sistema</h3>
 
-        <a
-            href="/limpar-historico"
-            onclick="return confirm('Deseja apagar todo histórico?')"
-        >
+        <a href="/limpar-historico"
+           onclick="return confirm('Deseja apagar todo histórico?')">
+
             <button class="limpar">
                 🗑️ Limpar Histórico
             </button>
+
         </a>
 
     </div>
