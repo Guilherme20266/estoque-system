@@ -864,9 +864,7 @@ def limpar_historico():
     db.session.commit()
 
     return redirect('/administracao')
-
-with app.app_context():
-
+    
 with app.app_context():
     db.create_all()
 
