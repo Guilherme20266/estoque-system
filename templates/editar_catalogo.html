@@ -1,26 +1,118 @@
 {% extends "base.html" %}
 
+{% block title %}Editar Catálogo{% endblock %}
+
+{% block style %}
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+    margin:0;
+    padding:15px;
+}
+
+.container{
+    max-width:600px;
+    margin:auto;
+}
+
+.topo{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:15px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.card{
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin-top:10px;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    margin-top:10px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.salvar{
+    background:#28a745;
+}
+
+.voltar{
+    background:#6c757d;
+}
+
+a{
+    text-decoration:none;
+}
+
+{% endblock %}
+
 {% block content %}
 
-<h2>Editar Produto</h2>
+<div class="container">
 
-<form method="POST">
+    <div class="topo">
+        <h2>✏️ Editar Produto do Catálogo</h2>
+    </div>
 
-<input
-    value="{{ produto.codigo }}"
-    readonly
->
+    <a href="/catalogo">
+        <button class="voltar">
+            ⬅️ Voltar
+        </button>
+    </a>
 
-<input
-    name="nome"
-    value="{{ produto.nome }}"
-    required
->
+    <div class="card">
 
-<button type="submit">
-Salvar
-</button>
+        <form method="POST">
 
-</form>
+            <label><b>Código</b></label>
+
+            <input
+                type="text"
+                value="{{ produto.codigo }}"
+                readonly
+            >
+
+            <label><b>Nome do Produto</b></label>
+
+            <input
+                type="text"
+                name="nome"
+                value="{{ produto.nome }}"
+                required
+            >
+
+            <button
+                type="submit"
+                class="salvar"
+            >
+                💾 Salvar Alteração
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}
