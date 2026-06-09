@@ -877,27 +877,24 @@ def catalogo():
     if session.get('perfil') != 'admin':
         return redirect('/menu')
 
+    busca = request.args.get('busca', '')
+
     produtos = CatalogoProduto.query.order_by(
         CatalogoProduto.nome.asc()
     ).all()
 
+    if busca:
+        produtos = [
+            p for p in produtos
+            if busca.lower() in p.nome.lower()
+            or busca.lower() in p.codigo.lower()
+        ]
+
     return render_template(
         'catalogo.html',
-        produtos=produtos
+        produtos=produtos,
+        busca=busca
     )
-
-
-@app.route('/limpar-historico')
-def limpar_historico():
-
-    if session.get('perfil') != 'admin':
-        return redirect('/menu')
-
-    Historico.query.delete()
-
-    db.session.commit()
-
-    return redirect('/administracao')
 
 # ==========================
 # EDITAR CATÁLOGO
