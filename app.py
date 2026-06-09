@@ -10,6 +10,8 @@ import os
 
 app = Flask(__name__)
 
+app.permanent_session_lifetime = timedelta(minutes=20)
+
 app.secret_key = os.environ.get(
     "SECRET_KEY",
     "teste123456789"
@@ -204,6 +206,7 @@ def entrar():
     if not user:
         return redirect('/')
 
+    session.permanent = True
     session['usuario'] = user.usuario
     session['perfil'] = user.perfil
 
