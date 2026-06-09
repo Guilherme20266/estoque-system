@@ -9,12 +9,7 @@
 <link rel="manifest" href="/static/manifest.json">
 <meta name="theme-color" content="#007bff">
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Estoque">
-
 <link rel="icon" type="image/png" href="/static/icon-192.png?v=2">
-<link rel="apple-touch-icon" href="/static/icon-192.png">
 
 {% block head %}{% endblock %}
 
@@ -49,18 +44,12 @@
 .popup.info { background: #007bff; }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -10px);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, 0);
-    }
+    from { opacity: 0; transform: translate(-50%, -10px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 /* =========================
-   BARRA SUPERIOR (MENU + VOLTAR)
+   BARRA SUPERIOR
 ========================= */
 
 .top-bar {
@@ -81,15 +70,8 @@
     color: white;
 }
 
-.btn-voltar {
-    background: #6c757d;
-}
-
-.btn-menu {
-    background: #007bff;
-}
-
-/* ========================= */
+.btn-voltar { background: #6c757d; }
+.btn-menu { background: #007bff; }
 
 {% block style %}{% endblock %}
 
@@ -99,7 +81,7 @@
 
 <body>
 
-<!-- FLASH GLOBAL -->
+<!-- FLASH -->
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     <div id="popup-container">
@@ -112,11 +94,11 @@
   {% endif %}
 {% endwith %}
 
-<!-- BARRA SUPERIOR FIXA -->
+<!-- BARRA SUPERIOR -->
+
 <div class="top-bar">
 
-    <!-- VOLTAR (opcional por página) -->
-    {% block back_button %}
+    {% block show_back_button %}
     <a href="javascript:history.back()" style="flex:1;">
         <button class="top-btn btn-voltar">
             ⬅️ Voltar
@@ -124,7 +106,6 @@
     </a>
     {% endblock %}
 
-    <!-- MENU -->
     <a href="/menu" style="flex:1;">
         <button class="top-btn btn-menu">
             🏠 Menu
@@ -137,7 +118,6 @@
 
 {% block script %}{% endblock %}
 
-<!-- AUTO FECHAR POPUP -->
 <script>
 setTimeout(() => {
     const popup = document.getElementById("popup-container");
