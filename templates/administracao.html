@@ -101,115 +101,137 @@ a{ text-decoration:none; }
         <button class="menu">🏠 Voltar ao Menu</button>
     </a>
 
-    <!-- 📊 RELATÓRIO LIMPO -->
+    <!-- RELATÓRIO -->
     <div class="card">
 
         <h3>📊 Relatório do Sistema</h3>
 
         <div class="info ok">
-            👥 Usuários: <b>{{ total_usuarios }}</b>
+            📦 Produtos Cadastrados:
+            <b>{{ total_produtos }}</b>
         </div>
 
         <div class="info ok">
-            📦 Produtos: <b>{{ total_produtos }}</b>
-        </div>
-
-        <div class="info ok">
-            📜 Movimentações: <b>{{ total_historico }}</b>
+            👥 Usuários Cadastrados:
+            <b>{{ total_usuarios }}</b>
         </div>
 
         <div class="info critico">
-            🔴 Produtos urgentes: <b>{{ produtos_urgentes }}</b>
+            🔴 Produtos Urgentes:
+            <b>{{ produtos_urgentes }}</b>
         </div>
-
-        {% if ultimo_historico %}
-        <div class="info alerta">
-            🕒 Última ação:
-            <b>{{ ultimo_historico.acao }}</b>
-            por <b>{{ ultimo_historico.usuario }}</b>
-        </div>
-        {% endif %}
 
     </div>
 
-    <!-- 📦 CATÁLOGO -->
-<div class="card">
+    <!-- CATÁLOGO -->
+    <div class="card">
 
-    <h3>📦 Catálogo de Produtos</h3>
+        <h3>📦 Catálogo de Produtos</h3>
 
-    <a href="/catalogo">
-        <button class="editar">
-            📦 Catálogo de Produtos
-        </button>
-    </a>
+        <p style="color:#666;margin-top:5px;">
+            Gerencie nomes padronizados dos produtos por código.
+        </p>
 
-</div>
+        <a href="/catalogo">
+            <button class="editar">
+                📦 Abrir Catálogo
+            </button>
+        </a>
 
-    <!-- 👥 CRIAR USUÁRIO -->
+    </div>
+
+    <!-- CRIAR USUÁRIO -->
     <div class="card">
 
         <h3>👤 Criar Usuário</h3>
 
         <form action="/criar-usuario" method="POST">
 
-            <input type="text" name="usuario" placeholder="Usuário" required>
-            <input type="password" name="senha" placeholder="Senha" required>
+            <input
+                type="text"
+                name="usuario"
+                placeholder="Usuário"
+                required
+            >
+
+            <input
+                type="password"
+                name="senha"
+                placeholder="Senha"
+                required
+            >
 
             <select name="perfil">
-                <option value="admin">Administrador</option>
-                <option value="separacao">Separacao</option>
-                <option value="operador">Operador</option>
-                <option value="consulta">Consulta</option>
+                <option value="admin">
+                    Administrador
+                </option>
+
+                <option value="separacao">
+                    Separação
+                </option>
+
+                <option value="operador">
+                    Operador
+                </option>
+
+                <option value="consulta">
+                    Consulta
+                </option>
             </select>
 
-            <button class="criar" type="submit">➕ Criar Usuário</button>
+            <button
+                class="criar"
+                type="submit"
+            >
+                ➕ Criar Usuário
+            </button>
 
         </form>
 
     </div>
 
-    <!-- 👑 MASTER -->
-    {% if master %}
-    <div class="card master">
-
-        <div style="font-size:18px; font-weight:bold;">
-            
-        </div>
-
-        <b>{{ master.usuario }}</b><br>
-        <small>Perfil: {{ master.perfil }}</small>
-
-    </div>
-    {% endif %}
-
-    <!-- 👥 USUÁRIOS -->
+    <!-- USUÁRIOS -->
     <div class="card">
 
         <h3>👥 Usuários Cadastrados</h3>
+
+        {% if master %}
+        <div class="card master">
+
+            <b>👑 {{ master.usuario }}</b><br>
+            <small>Perfil: {{ master.perfil }}</small>
+
+        </div>
+        {% endif %}
 
         {% for user in usuarios %}
 
         <div class="card usuario">
 
             <b>{{ user.usuario }}</b><br>
-            <small>Perfil: {{ user.perfil }}</small>
 
-            {% if user.usuario != 'admin' and user.usuario != 'Guilherme$' %}
+            <small>
+                Perfil: {{ user.perfil }}
+            </small>
 
             <div class="acoes-usuario">
 
                 <a href="/editar-usuario/{{ user.id }}">
-                    <button class="editar">✏️ Editar Usuário</button>
+                    <button class="editar">
+                        ✏️ Editar Usuário
+                    </button>
                 </a>
 
-                <a href="/excluir-usuario/{{ user.id }}"
-                   onclick="return confirm('Excluir usuário?')">
-                    <button class="excluir">🗑️ Excluir Usuário</button>
+                <a
+                    href="/excluir-usuario/{{ user.id }}"
+                    onclick="return confirm('Excluir usuário?')"
+                >
+                    <button class="excluir">
+                        🗑️ Excluir Usuário
+                    </button>
                 </a>
 
             </div>
-
-            {% endif %}
 
         </div>
 
@@ -217,16 +239,18 @@ a{ text-decoration:none; }
 
     </div>
 
-    <!-- ⚠️ FERRAMENTAS -->
+    <!-- FERRAMENTAS -->
     <div class="card">
 
-        <h3>⚠️ Ferramentas</h3>
+        <h3>⚠️ Ferramentas do Sistema</h3>
 
-        <a href="/limpar-historico"
-           onclick="return confirm('Deseja apagar todo histórico?')">
-
-            <button class="limpar">🗑️ Limpar Histórico</button>
-
+        <a
+            href="/limpar-historico"
+            onclick="return confirm('Deseja apagar todo histórico?')"
+        >
+            <button class="limpar">
+                🗑️ Limpar Histórico
+            </button>
         </a>
 
     </div>
