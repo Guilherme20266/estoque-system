@@ -931,16 +931,10 @@ def editar_catalogo(id):
 
             return redirect('/catalogo')
 
-        except Exception as e:
+        except Exception:
             db.session.rollback()
             flash("Erro ao atualizar catálogo!", "error")
             return redirect(f'/editar-catalogo/{id}')
-
-    return render_template(
-        'editar_catalogo.html',
-        catalogo=catalogo
-    )
-        return redirect('/catalogo')
 
     return render_template(
         'editar_catalogo.html',
