@@ -596,7 +596,6 @@ def consulta():
     produtos = Produto.query.all()
 
     if busca:
-
         produtos = [
             p for p in produtos
             if busca.lower() in p.nome.lower()
@@ -617,6 +616,22 @@ def consulta():
         })
 
     lista.sort(key=lambda x: x["prioridade"])
+
+    # HISTÓRICO DE CONSULTA
+    if busca and len(produtos) > 0:
+
+        historico = Historico(
+            data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
+            usuario=session.get('usuario'),
+            acao="CONSULTA",
+            produto=busca,
+            quantidade=len(produtos),
+            origem="-",
+            destino="-"
+        )
+
+        db.session.add(historico)
+        db.session.commit()
 
     return render_template(
         'consulta.html',
@@ -872,41 +887,6 @@ def catalogo():
     )
 
 
-@app.route('/editar-catalogo/<int:id>', methods=['GET', 'POST'])
-def editar_catalogo(id):
-
-    if session.get('perfil') != 'admin':
-        return redirect('/menu')
-
-    catalogo = CatalogoProduto.query.get_or_404(id)
-
-    if request.method == 'POST':
-
-        novo_nome = request.form['nome']
-
-        catalogo.nome = novo_nome
-
-        produtos = Produto.query.filter_by(
-            codigo=catalogo.codigo
-        ).all()
-
-        for produto in produtos:
-            produto.nome = novo_nome
-
-        db.session.commit()
-
-        flash(
-            "Nome atualizado em todos os produtos com este código!",
-            "success"
-        )
-
-        return redirect('/catalogo')
-
-    return render_template(
-        'editar_catalogo.html',
-        catalogo=catalogo
-    )
-
 @app.route('/limpar-historico')
 def limpar_historico():
 
@@ -952,10 +932,12 @@ def editar_catalogo(id):
 
         return redirect('/catalogo')
 
-    return render_template(
-        'editar_catalogo.html',
-        produto=produto
-    )
+    catalogo = CatalogoProduto.query.get_or_404(id)
+
+return render_template(
+    'editar_catalogo.html',
+    catalogo=catalogo
+)
     
 with app.app_context():
     db.create_all()
