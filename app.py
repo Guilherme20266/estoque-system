@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, redirect, session, url_for, flash, Response
+from flask import Flask, jsonify, render_template, request, redirect, session, url_for, flash, Response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from openpyxl import Workbook
 from io import BytesIO
-from flask import jsonify
 
 import os
 
