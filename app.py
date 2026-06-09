@@ -909,32 +909,26 @@ def editar_catalogo(id):
 
     if request.method == 'POST':
 
-        try:
-            novo_nome = request.form['nome'].strip()
+        novo_nome = request.form['nome'].strip()
 
-            if not novo_nome:
-                flash("Nome inválido!", "error")
-                return redirect(f'/editar-catalogo/{id}')
+        if not novo_nome:
+            flash("Nome inválido!", "error")
+            return redirect(url_for('editar_catalogo', id=id))
 
-            catalogo.nome = novo_nome
+        catalogo.nome = novo_nome
 
-            produtos = Produto.query.filter_by(
-                codigo=catalogo.codigo
-            ).all()
+        produtos = Produto.query.filter_by(
+            codigo=catalogo.codigo
+        ).all()
 
-            for p in produtos:
-                p.nome = novo_nome
+        for p in produtos:
+            p.nome = novo_nome
 
-            db.session.commit()
+        db.session.commit()
 
-            flash("✔ Nome atualizado com sucesso!", "success")
+        flash("✔ Nome atualizado com sucesso!", "success")
 
-            return redirect('/catalogo')
-
-        except Exception:
-            db.session.rollback()
-            flash("Erro ao atualizar catálogo!", "error")
-            return redirect(f'/editar-catalogo/{id}')
+        return redirect(url_for('catalogo'))  # sempre sai da tela
 
     return render_template(
         'editar_catalogo.html',
