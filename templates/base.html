@@ -21,7 +21,7 @@
 <style>
 
 /* =========================
-   POPUP GLOBAL (FLASH)
+   POPUP GLOBAL
 ========================= */
 
 #popup-container {
@@ -44,17 +44,9 @@
     animation: fadeIn 0.25s ease-in-out;
 }
 
-.popup.success {
-    background: #28a745;
-}
-
-.popup.error {
-    background: #dc3545;
-}
-
-.popup.info {
-    background: #007bff;
-}
+.popup.success { background: #28a745; }
+.popup.error { background: #dc3545; }
+.popup.info { background: #007bff; }
 
 @keyframes fadeIn {
     from {
@@ -68,25 +60,33 @@
 }
 
 /* =========================
-   BOTÃO MENU (AGORA NO FLUXO)
+   BARRA SUPERIOR (MENU + VOLTAR)
 ========================= */
 
-.menu-container {
+.top-bar {
     max-width: 800px;
-    margin: 15px auto;
+    margin: 10px auto 15px auto;
     padding: 0 15px;
+    display: flex;
+    gap: 10px;
 }
 
-.menu-btn {
-    width: 100%;
-    background: #007bff;
-    color: white;
+.top-btn {
+    flex: 1;
+    padding: 12px;
     border: none;
-    padding: 14px;
     border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    color: white;
+}
+
+.btn-voltar {
+    background: #6c757d;
+}
+
+.btn-menu {
+    background: #007bff;
 }
 
 /* ========================= */
@@ -112,16 +112,28 @@
   {% endif %}
 {% endwith %}
 
-{% block content %}{% endblock %}
+<!-- BARRA SUPERIOR FIXA -->
+<div class="top-bar">
 
-<!-- BOTÃO MENU (AGORA ABAIXO DO CONTEÚDO) -->
-<div class="menu-container">
-    <a href="/menu">
-        <button class="menu-btn">
+    <!-- VOLTAR (opcional por página) -->
+    {% block back_button %}
+    <a href="javascript:history.back()" style="flex:1;">
+        <button class="top-btn btn-voltar">
+            ⬅️ Voltar
+        </button>
+    </a>
+    {% endblock %}
+
+    <!-- MENU -->
+    <a href="/menu" style="flex:1;">
+        <button class="top-btn btn-menu">
             🏠 Menu
         </button>
     </a>
+
 </div>
+
+{% block content %}{% endblock %}
 
 {% block script %}{% endblock %}
 
