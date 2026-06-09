@@ -9,125 +9,26 @@
 <link rel="manifest" href="/static/manifest.json">
 <meta name="theme-color" content="#007bff">
 
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Estoque">
+
 <link rel="icon" type="image/png" href="/static/icon-192.png?v=2">
+<link rel="apple-touch-icon" href="/static/icon-192.png">
 
 {% block head %}{% endblock %}
 
 <style>
-
-/* =========================
-   POPUP GLOBAL
-========================= */
-
-#popup-container {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 99999;
-}
-
-.popup {
-    min-width: 250px;
-    padding: 14px 20px;
-    border-radius: 10px;
-    color: #fff;
-    font-weight: bold;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-    margin-bottom: 10px;
-    text-align: center;
-    animation: fadeIn 0.25s ease-in-out;
-}
-
-.popup.success { background: #28a745; }
-.popup.error { background: #dc3545; }
-.popup.info { background: #007bff; }
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translate(-50%, -10px); }
-    to { opacity: 1; transform: translate(-50%, 0); }
-}
-
-/* =========================
-   BARRA SUPERIOR
-========================= */
-
-.top-bar {
-    max-width: 800px;
-    margin: 10px auto 15px auto;
-    padding: 0 15px;
-    display: flex;
-    gap: 10px;
-}
-
-.top-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    color: white;
-}
-
-.btn-voltar { background: #6c757d; }
-.btn-menu { background: #007bff; }
-
 {% block style %}{% endblock %}
-
 </style>
 
 </head>
 
 <body>
 
-<!-- FLASH -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <div id="popup-container">
-      {% for category, message in messages %}
-        <div class="popup {{ category }}">
-          {{ message }}
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-{% endwith %}
-
-<!-- BARRA SUPERIOR -->
-
-<div class="top-bar">
-
-    {% block show_back_button %}
-    <a href="javascript:history.back()" style="flex:1;">
-        <button class="top-btn btn-voltar">
-            ⬅️ Voltar
-        </button>
-    </a>
-    {% endblock %}
-
-    <a href="/menu" style="flex:1;">
-        <button class="top-btn btn-menu">
-            🏠 Menu
-        </button>
-    </a>
-
-</div>
-
 {% block content %}{% endblock %}
 
 {% block script %}{% endblock %}
-
-<script>
-setTimeout(() => {
-    const popup = document.getElementById("popup-container");
-    if (popup) {
-        popup.style.opacity = "0";
-        popup.style.transition = "0.3s ease";
-        setTimeout(() => popup.remove(), 300);
-    }
-}, 2500);
-</script>
 
 </body>
 </html>
