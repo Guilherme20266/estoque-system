@@ -5,69 +5,91 @@
 {% block style %}
 
 body{
-font-family:Arial;
-background:#f4f4f4;
-margin:0;
-padding:15px;
+    font-family:Arial;
+    background:#f4f4f4;
+    margin:0;
+    padding:15px;
 }
 
 .container{
-max-width:800px;
-margin:auto;
+    max-width:800px;
+    margin:auto;
 }
 
 .topo{
-background:white;
-padding:20px;
-border-radius:15px;
-margin-bottom:15px;
-text-align:center;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:15px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.botoes-nav{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.botoes-nav a{
+    flex:1;
+}
+
+.botoes-nav button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-voltar{
+    background:#6c757d;
+}
+
+.btn-menu{
+    background:#007bff;
 }
 
 .card{
-background:white;
-padding:15px;
-border-radius:12px;
-margin-bottom:12px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
 input{
-width:100%;
-padding:12px;
-border:1px solid #ccc;
-border-radius:8px;
-margin-top:10px;
-box-sizing:border-box;
-}
-
-button{
-width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
-color:white;
-margin-top:10px;
-font-size:15px;
-cursor:pointer;
-}
-
-.menu{
-background:#6c757d;
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin-top:10px;
+    box-sizing:border-box;
 }
 
 .editar{
-background:#007bff;
+    background:#007bff;
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    margin-top:10px;
+    font-size:15px;
+    cursor:pointer;
 }
 
 .codigo{
-color:#666;
-font-size:14px;
+    color:#666;
+    font-size:14px;
 }
 
 a{
-text-decoration:none;
+    text-decoration:none;
 }
 
 {% endblock %}
@@ -76,43 +98,51 @@ text-decoration:none;
 
 <div class="container">
 
-<div class="topo">
-    <h2>📦 Catálogo de Produtos</h2>
-</div>
-
-<a href="/administracao">
-    <button class="menu">⚙️ Voltar para Administração</button>
-</a>
-
-<form method="GET">
-    <input
-        type="text"
-        name="busca"
-        placeholder="🔍 Buscar por nome ou código..."
-        value="{{ busca }}"
-    >
-</form>
-
-{% for produto in produtos %}
-
-<div class="card">
-
-    <b>{{ produto.nome }}</b><br>
-
-    <div class="codigo">
-        Código: {{ produto.codigo }}
+    <div class="topo">
+        <h2>📦 Catálogo de Produtos</h2>
     </div>
 
-    <a href="/editar-catalogo/{{ produto.id }}">
-        <button class="editar">
-            ✏️ Editar Nome
-        </button>
-    </a>
+    <!-- ✔ BOTÕES LADO A LADO -->
+    <div class="botoes-nav">
 
-</div>
+        <a href="javascript:history.back()">
+            <button class="btn-voltar">⬅️ Voltar</button>
+        </a>
 
-{% endfor %}
-```
+        <a href="/menu">
+            <button class="btn-menu">🏠 Menu</button>
+        </a>
+
+    </div>
+
+    <form method="GET">
+        <input
+            type="text"
+            name="busca"
+            placeholder="🔍 Buscar por nome ou código..."
+            value="{{ busca }}"
+        >
+    </form>
+
+    {% for produto in produtos %}
+
+    <div class="card">
+
+        <b>{{ produto.nome }}</b><br>
+
+        <div class="codigo">
+            Código: {{ produto.codigo }}
+        </div>
+
+        <a href="/editar-catalogo/{{ produto.id }}">
+            <button class="editar">
+                ✏️ Editar Nome
+            </button>
+        </a>
+
+    </div>
+
+    {% endfor %}
 
 </div>
 
