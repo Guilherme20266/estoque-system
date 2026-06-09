@@ -853,6 +853,60 @@ def editar_usuario(id):
 
     return render_template('editar_usuario.html', usuario=usuario)
 
+# ==========================
+# CATÁLOGO DE PRODUTOS
+# ==========================
+@app.route('/catalogo')
+def catalogo():
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    produtos = CatalogoProduto.query.order_by(
+        CatalogoProduto.nome.asc()
+    ).all()
+
+    return render_template(
+        'catalogo.html',
+        produtos=produtos
+    )
+
+
+@app.route('/editar-catalogo/<int:id>', methods=['GET', 'POST'])
+def editar_catalogo(id):
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    catalogo = CatalogoProduto.query.get_or_404(id)
+
+    if request.method == 'POST':
+
+        novo_nome = request.form['nome']
+
+        catalogo.nome = novo_nome
+
+        produtos = Produto.query.filter_by(
+            codigo=catalogo.codigo
+        ).all()
+
+        for produto in produtos:
+            produto.nome = novo_nome
+
+        db.session.commit()
+
+        flash(
+            "Nome atualizado em todos os produtos com este código!",
+            "success"
+        )
+
+        return redirect('/catalogo')
+
+    return render_template(
+        'editar_catalogo.html',
+        catalogo=catalogo
+    )
+
 @app.route('/limpar-historico')
 def limpar_historico():
 
