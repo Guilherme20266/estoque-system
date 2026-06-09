@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Editar Produto</h2>
+
+<form method="POST">
+
+<input
+    value="{{ produto.codigo }}"
+    readonly
+>
+
+<input
+    name="nome"
+    value="{{ produto.nome }}"
+    required
+>
+
+<button type="submit">
+Salvar
+</button>
+
+</form>
+
+{% endblock %}
