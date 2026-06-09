@@ -4,10 +4,6 @@
 
 {% block style %}
 
-.ok { color: green; }
-.alerta { color: orange; }
-.critico { color: red; }
-
 body{
     font-family:Arial;
     background:#f4f4f4;
@@ -16,13 +12,13 @@ body{
 }
 
 .container{
-    max-width:700px;
+    max-width:850px;
     margin:auto;
 }
 
 .topo{
     background:white;
-    padding:20px;
+    padding:25px;
     border-radius:15px;
     margin-bottom:15px;
     text-align:center;
@@ -31,21 +27,42 @@ body{
 
 .card{
     background:white;
-    padding:15px;
+    padding:18px;
     border-radius:12px;
-    margin-bottom:12px;
+    margin-bottom:15px;
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.info{
-    font-size:18px;
-    margin:10px 0;
+.resumo{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:15px;
 }
 
-input,select{
+.box{
+    background:#f8f9fa;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.box h2{
+    margin:0;
+    color:#007bff;
+}
+
+.box p{
+    margin:5px 0 0;
+    color:#666;
+    font-size:14px;
+}
+
+input,
+select{
     width:100%;
     padding:12px;
-    border:1px solid #ccc;
+    border:1px solid #ddd;
     border-radius:8px;
     margin-top:10px;
     box-sizing:border-box;
@@ -59,16 +76,35 @@ button{
     color:white;
     margin-top:10px;
     font-size:15px;
+    cursor:pointer;
+    font-weight:bold;
 }
 
-.menu{ background:#6c757d; }
-.criar{ background:#28a745; }
-.excluir{ background:#dc3545; }
-.limpar{ background:#dc3545; }
-.editar{ background:#007bff; }
+.menu{
+    background:#6c757d;
+}
+
+.criar{
+    background:#28a745;
+}
+
+.editar{
+    background:#007bff;
+}
+
+.excluir{
+    background:#dc3545;
+}
+
+.limpar{
+    background:#dc3545;
+}
 
 .usuario{
-    border-left:5px solid #007bff;
+    border:1px solid #e5e5e5;
+    border-radius:10px;
+    padding:15px;
+    margin-top:10px;
 }
 
 .master{
@@ -78,14 +114,43 @@ button{
 
 .acoes-usuario{
     display:flex;
-    flex-direction:column;
     gap:8px;
-    margin-top:10px;
+    margin-top:12px;
 }
 
-h2{ margin:0; }
-small{ color:#666; }
-a{ text-decoration:none; }
+.acoes-usuario a{
+    flex:1;
+}
+
+.acoes-usuario button{
+    margin-top:0;
+}
+
+.titulo{
+    margin:0 0 10px 0;
+}
+
+.descricao{
+    color:#666;
+    font-size:14px;
+    margin-top:5px;
+}
+
+a{
+    text-decoration:none;
+}
+
+@media(max-width:600px){
+
+    .resumo{
+        grid-template-columns:1fr;
+    }
+
+    .acoes-usuario{
+        flex-direction:column;
+    }
+
+}
 
 {% endblock %}
 
@@ -94,31 +159,42 @@ a{ text-decoration:none; }
 <div class="container">
 
     <div class="topo">
-        <h2>⚙️ Administração</h2>
+        <h2>⚙️ Administração do Sistema</h2>
     </div>
 
     <a href="/menu">
-        <button class="menu">🏠 Voltar ao Menu</button>
+        <button class="menu">
+            🏠 Voltar ao Menu
+        </button>
     </a>
 
     <!-- RELATÓRIO -->
     <div class="card">
 
-        <h3>📊 Relatório do Sistema</h3>
+        <h3 class="titulo">📊 Relatório do Sistema</h3>
 
-        <div class="info ok">
-            📦 Produtos Cadastrados:
-            <b>{{ total_produtos }}</b>
-        </div>
+        <div class="resumo">
 
-        <div class="info ok">
-            👥 Usuários Cadastrados:
-            <b>{{ total_usuarios }}</b>
-        </div>
+            <div class="box">
+                <h2>{{ total_produtos }}</h2>
+                <p>Produtos</p>
+            </div>
 
-        <div class="info critico">
-            🔴 Produtos Urgentes:
-            <b>{{ produtos_urgentes }}</b>
+            <div class="box">
+                <h2>{{ total_usuarios }}</h2>
+                <p>Usuários</p>
+            </div>
+
+            <div class="box">
+                <h2>{{ produtos_urgentes }}</h2>
+                <p>Produtos Urgentes</p>
+            </div>
+
+            <div class="box">
+                <h2>{{ total_enderecos }}</h2>
+                <p>Endereços Ocupados</p>
+            </div>
+
         </div>
 
     </div>
@@ -126,11 +202,11 @@ a{ text-decoration:none; }
     <!-- CATÁLOGO -->
     <div class="card">
 
-        <h3>📦 Catálogo de Produtos</h3>
+        <h3 class="titulo">📦 Catálogo de Produtos</h3>
 
-        <p style="color:#666;margin-top:5px;">
-            Gerencie nomes padronizados dos produtos por código.
-        </p>
+        <div class="descricao">
+            Padronize nomes dos produtos por código.
+        </div>
 
         <a href="/catalogo">
             <button class="editar">
@@ -143,7 +219,7 @@ a{ text-decoration:none; }
     <!-- CRIAR USUÁRIO -->
     <div class="card">
 
-        <h3>👤 Criar Usuário</h3>
+        <h3 class="titulo">👤 Criar Usuário</h3>
 
         <form action="/criar-usuario" method="POST">
 
@@ -162,26 +238,28 @@ a{ text-decoration:none; }
             >
 
             <select name="perfil">
+
                 <option value="admin">
                     Administrador
-                </option>
-
-                <option value="separacao">
-                    Separação
                 </option>
 
                 <option value="operador">
                     Operador
                 </option>
 
+                <option value="separacao">
+                    Separação
+                </option>
+
                 <option value="consulta">
                     Consulta
                 </option>
+
             </select>
 
             <button
-                class="criar"
                 type="submit"
+                class="criar"
             >
                 ➕ Criar Usuário
             </button>
@@ -193,20 +271,25 @@ a{ text-decoration:none; }
     <!-- USUÁRIOS -->
     <div class="card">
 
-        <h3>👥 Usuários Cadastrados</h3>
+        <h3 class="titulo">👥 Usuários Cadastrados</h3>
 
         {% if master %}
-        <div class="card master">
+
+        <div class="usuario master">
 
             <b>👑 {{ master.usuario }}</b><br>
-            <small>Perfil: {{ master.perfil }}</small>
+
+            <small>
+                Perfil: {{ master.perfil }}
+            </small>
 
         </div>
+
         {% endif %}
 
         {% for user in usuarios %}
 
-        <div class="card usuario">
+        <div class="usuario">
 
             <b>{{ user.usuario }}</b><br>
 
@@ -218,7 +301,7 @@ a{ text-decoration:none; }
 
                 <a href="/editar-usuario/{{ user.id }}">
                     <button class="editar">
-                        ✏️ Editar Usuário
+                        ✏️ Editar
                     </button>
                 </a>
 
@@ -227,7 +310,7 @@ a{ text-decoration:none; }
                     onclick="return confirm('Excluir usuário?')"
                 >
                     <button class="excluir">
-                        🗑️ Excluir Usuário
+                        🗑️ Excluir
                     </button>
                 </a>
 
@@ -242,7 +325,7 @@ a{ text-decoration:none; }
     <!-- FERRAMENTAS -->
     <div class="card">
 
-        <h3>⚠️ Ferramentas do Sistema</h3>
+        <h3 class="titulo">⚠️ Ferramentas do Sistema</h3>
 
         <a
             href="/limpar-historico"
