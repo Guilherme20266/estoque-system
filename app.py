@@ -918,6 +918,44 @@ def limpar_historico():
     db.session.commit()
 
     return redirect('/administracao')
+
+# ==========================
+# EDITAR CATÁLOGO
+# ==========================
+@app.route('/editar-catalogo/<int:id>', methods=['GET', 'POST'])
+def editar_catalogo(id):
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    produto = CatalogoProduto.query.get_or_404(id)
+
+    if request.method == 'POST':
+
+        novo_nome = request.form['nome']
+
+        produto.nome = novo_nome
+
+        produtos = Produto.query.filter_by(
+            codigo=produto.codigo
+        ).all()
+
+        for p in produtos:
+            p.nome = novo_nome
+
+        db.session.commit()
+
+        flash(
+            "Nome atualizado em todos os produtos com este código!",
+            "success"
+        )
+
+        return redirect('/catalogo')
+
+    return render_template(
+        'editar_catalogo.html',
+        produto=produto
+    )
     
 with app.app_context():
     db.create_all()
