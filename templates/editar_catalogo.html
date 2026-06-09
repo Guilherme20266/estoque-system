@@ -11,6 +11,39 @@ body{
     padding:15px;
 }
 
+/* POPUP */
+#popup-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
+
+.popup {
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease-in-out;
+    text-align:center;
+}
+
+.popup.success {
+    background: #28a745;
+}
+
+.popup.error {
+    background: #dc3545;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -10px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
 .container{
     max-width:600px;
     margin:auto;
@@ -69,6 +102,19 @@ a{
 
 {% block content %}
 
+<!-- POPUP FLASH -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div id="popup-container">
+      {% for category, message in messages %}
+        <div class="popup {{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
 <div class="container">
 
     <div class="topo">
@@ -89,7 +135,7 @@ a{
 
             <input
                 type="text"
-               value="{{ catalogo.codigo }}"
+                value="{{ catalogo.codigo }}"
                 readonly
             >
 
@@ -102,10 +148,7 @@ a{
                 required
             >
 
-            <button
-                type="submit"
-                class="salvar"
-            >
+            <button type="submit" class="salvar">
                 💾 Salvar Alteração
             </button>
 
@@ -114,5 +157,15 @@ a{
     </div>
 
 </div>
+
+<!-- AUTO FECHAR POPUP -->
+<script>
+setTimeout(() => {
+    const popup = document.getElementById("popup-container");
+    if (popup) {
+        popup.style.display = "none";
+    }
+}, 2500);
+</script>
 
 {% endblock %}
