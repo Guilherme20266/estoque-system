@@ -157,15 +157,14 @@ def buscar_produto(codigo):
     ).first()
 
     if produto:
+        return jsonify({
+            "encontrado": True,
+            "nome": produto.nome
+        })
 
-       return jsonify({
-           "encontrado": True,
-           "nome": produto.nome
-       })
-
-       return jsonify({
-           "encontrado": False
-       })
+    return jsonify({
+        "encontrado": False
+    })
 
 
 # ==========================
@@ -235,37 +234,41 @@ def cadastrar():
             f"{request.form['nivel']}"
         )
 
-        existe = Produto.query.filter_by(endereco=endereco).first()
+        existe = Produto.query.filter_by(
+            endereco=endereco
+        ).first()
 
         if existe:
             return redirect('/cadastrar?erro=endereco')
 
-         # SALVA NO CATÁLOGO
-         catalogo = CatalogoProduto.query.filter_by(
-             codigo=request.form['codigo']
-         ).first()
+        # SALVA NO CATÁLOGO
+        catalogo = CatalogoProduto.query.filter_by(
+            codigo=request.form['codigo']
+        ).first()
 
-         if not catalogo:
+        if not catalogo:
 
-              catalogo = CatalogoProduto(
-                  codigo=request.form['codigo'],
-                  nome=request.form['nome']
-              )
+            catalogo = CatalogoProduto(
+                codigo=request.form['codigo'],
+                nome=request.form['nome']
+            )
 
-              db.session.add(catalogo)
+            db.session.add(catalogo)
 
-    produto = Produto(
-        codigo=request.form['codigo'],
-        nome=request.form['nome'],
-        quantidade=int(request.form['quantidade']),
-        validade=request.form['validade'],
-        endereco=endereco
-    )
+        produto = Produto(
+            codigo=request.form['codigo'],
+            nome=request.form['nome'],
+            quantidade=int(request.form['quantidade']),
+            validade=request.form['validade'],
+            endereco=endereco
+        )
 
-    db.session.add(produto)
+        db.session.add(produto)
 
         historico = Historico(
-            data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
+            data=datetime.now(
+                ZoneInfo("America/Sao_Paulo")
+            ).strftime("%d/%m/%Y %H:%M"),
             usuario=session.get('usuario'),
             acao="CADASTRO",
             produto=produto.nome,
