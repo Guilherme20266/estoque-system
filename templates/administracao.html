@@ -153,6 +153,28 @@ a{
         </button>
     </a>
 
+    <!-- ACESSOS RÁPIDOS -->
+    <div class="card">
+
+        <h3>🚀 Acessos Rápidos</h3>
+
+        <a href="/catalogo">
+            <button class="editar">
+                📦 Abrir Catálogo de Produtos
+            </button>
+        </a>
+
+        <a href="/limpar-historico"
+           onclick="return confirm('Deseja apagar todo histórico?')">
+
+            <button class="limpar">
+                🗑️ Limpar Histórico
+            </button>
+
+        </a>
+
+    </div>
+
     <!-- RELATÓRIO -->
     <div class="card">
 
@@ -256,6 +278,8 @@ a{
                 Perfil: {{ user.perfil }}
             </small>
 
+            {% if user.usuario != 'Guilherme$' %}
+
             <div class="acoes-usuario">
 
                 <a href="/editar-usuario/{{ user.id }}">
@@ -275,44 +299,11 @@ a{
 
             </div>
 
+            {% endif %}
+
         </div>
 
         {% endfor %}
-
-    </div>
-
-    <!-- CATÁLOGO -->
-    <div class="card">
-
-        <h3>📦 Catálogo de Produtos</h3>
-
-        <p style="color:#666;">
-            Gerencie os nomes padronizados dos produtos.
-        </p>
-
-        <a href="/catalogo">
-
-            <button class="editar">
-                📦 Abrir Catálogo
-            </button>
-
-        </a>
-
-    </div>
-
-    <!-- FERRAMENTAS -->
-    <div class="card">
-
-        <h3>⚠️ Ferramentas do Sistema</h3>
-
-        <a href="/limpar-historico"
-           onclick="return confirm('Deseja apagar todo histórico?')">
-
-            <button class="limpar">
-                🗑️ Limpar Histórico
-            </button>
-
-        </a>
 
     </div>
 
