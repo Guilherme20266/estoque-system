@@ -908,16 +908,16 @@ def editar_catalogo(id):
     if session.get('perfil') != 'admin':
         return redirect('/menu')
 
-    produto = CatalogoProduto.query.get_or_404(id)
+    catalogo = CatalogoProduto.query.get_or_404(id)
 
     if request.method == 'POST':
 
         novo_nome = request.form['nome']
 
-        produto.nome = novo_nome
+        catalogo.nome = novo_nome
 
         produtos = Produto.query.filter_by(
-            codigo=produto.codigo
+            codigo=catalogo.codigo
         ).all()
 
         for p in produtos:
@@ -932,12 +932,10 @@ def editar_catalogo(id):
 
         return redirect('/catalogo')
 
-    catalogo = CatalogoProduto.query.get_or_404(id)
-
-return render_template(
-    'editar_catalogo.html',
-    catalogo=catalogo
-)
+    return render_template(
+        'editar_catalogo.html',
+        catalogo=catalogo
+    )
     
 with app.app_context():
     db.create_all()
