@@ -85,6 +85,15 @@ text-decoration:none;
     <button class="menu">⚙️ Voltar para Administração</button>
 </a>
 
+<form method="GET">
+    <input
+        type="text"
+        name="busca"
+        placeholder="🔍 Buscar por nome ou código..."
+        value="{{ busca }}"
+    >
+</form>
+
 {% for produto in produtos %}
 
 <div class="card">
