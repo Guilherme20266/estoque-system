@@ -158,14 +158,14 @@ def buscar_produto(codigo):
 
     if produto:
 
-        return {
-            "encontrado": True,
-            "nome": produto.nome
-        }
+       return jsonify({
+           "encontrado": True,
+           "nome": produto.nome
+       })
 
-    return {
-        "encontrado": False
-    }
+       return jsonify({
+           "encontrado": False
+       })
 
 
 # ==========================
