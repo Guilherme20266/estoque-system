@@ -1,28 +1,111 @@
 {% extends "base.html" %}
 
+{% block title %}Catálogo de Produtos{% endblock %}
+
+{% block style %}
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+margin:0;
+padding:15px;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+}
+
+.topo{
+background:white;
+padding:20px;
+border-radius:15px;
+margin-bottom:15px;
+text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:12px;
+margin-bottom:12px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+input{
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:8px;
+margin-top:10px;
+box-sizing:border-box;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+color:white;
+margin-top:10px;
+font-size:15px;
+cursor:pointer;
+}
+
+.menu{
+background:#6c757d;
+}
+
+.editar{
+background:#007bff;
+}
+
+.codigo{
+color:#666;
+font-size:14px;
+}
+
+a{
+text-decoration:none;
+}
+
+{% endblock %}
+
 {% block content %}
 
-<h2>Catálogo de Produtos</h2>
+<div class="container">
 
-<table border="1" width="100%">
-<tr>
-    <th>Código</th>
-    <th>Nome</th>
-    <th>Ação</th>
-</tr>
+```
+<div class="topo">
+    <h2>📦 Catálogo de Produtos</h2>
+</div>
 
-{% for p in produtos %}
-<tr>
-    <td>{{ p.codigo }}</td>
-    <td>{{ p.nome }}</td>
-    <td>
-        <a href="/editar-catalogo/{{ p.id }}">
-            Editar
-        </a>
-    </td>
-</tr>
+<a href="/administracao">
+    <button class="menu">⚙️ Voltar para Administração</button>
+</a>
+
+{% for produto in produtos %}
+
+<div class="card">
+
+    <b>{{ produto.nome }}</b><br>
+
+    <div class="codigo">
+        Código: {{ produto.codigo }}
+    </div>
+
+    <a href="/editar-catalogo/{{ produto.id }}">
+        <button class="editar">
+            ✏️ Editar Nome
+        </button>
+    </a>
+
+</div>
+
 {% endfor %}
+```
 
-</table>
+</div>
 
 {% endblock %}
