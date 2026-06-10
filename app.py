@@ -17,7 +17,6 @@ app.secret_key = os.environ.get(
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
@@ -656,12 +655,7 @@ def consulta():
 
         db.session.add(historico)
         db.session.commit()
-
-    return render_template(
-        'consulta.html',
-        lista=lista,
-        busca=busca
-    )
+        )
 
 # ==========================
 # EXPORTAR EXCEL - CONSULTA
