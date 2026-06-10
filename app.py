@@ -588,6 +588,47 @@ def historico():
     )
 
 # ==========================
+# EXPORTAR HISTÓRICO EXCEL
+# ==========================
+
+@app.route('/exportar-historico')
+def exportar_historico():
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    historico = Historico.query.order_by(Historico.id.desc()).all()
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Historico"
+
+    ws.append(["Data", "Usuário", "Ação", "Produto", "Quantidade", "Origem", "Destino"])
+
+    for h in historico:
+        ws.append([
+            h.data,
+            h.usuario,
+            h.acao,
+            h.produto,
+            h.quantidade,
+            h.origem,
+            h.destino
+        ])
+
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    return Response(
+        output.read(),
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={
+            "Content-Disposition": "attachment; filename=historico.xlsx"
+        }
+    )
+
+# ==========================
 # CONSULTA
 # ==========================
 @app.route('/consulta')
