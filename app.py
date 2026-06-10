@@ -967,6 +967,25 @@ def editar_catalogo(id):
         erro=request.args.get('erro')
     )
 
+@app.route('/excluir-catalogo/<int:id>')
+def excluir_catalogo(id):
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    catalogo = CatalogoProduto.query.get_or_404(id)
+
+    # remove produtos vinculados (opcional, mas recomendado)
+    produtos = Produto.query.filter_by(codigo=catalogo.codigo).all()
+
+    for p in produtos:
+        db.session.delete(p)
+
+    db.session.delete(catalogo)
+    db.session.commit()
+
+    return redirect('/catalogo')
+
 @app.route('/limpar-historico', methods=['POST'])
 def limpar_historico():
 
