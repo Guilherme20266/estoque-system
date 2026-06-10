@@ -71,25 +71,11 @@ button{
     font-weight:bold;
 }
 
-.menu{
-    background:#6c757d;
-}
-
-.criar{
-    background:#28a745;
-}
-
-.editar{
-    background:#007bff;
-}
-
-.excluir{
-    background:#dc3545;
-}
-
-.limpar{
-    background:#dc3545;
-}
+.menu{ background:#6c757d; }
+.criar{ background:#28a745; }
+.editar{ background:#007bff; }
+.excluir{ background:#dc3545; }
+.limpar{ background:#dc3545; }
 
 .usuario{
     border:1px solid #e5e5e5;
@@ -117,24 +103,12 @@ button{
     margin-top:0;
 }
 
-h2,h3{
-    margin-top:0;
-}
-
-small{
-    color:#666;
-}
-
-a{
-    text-decoration:none;
-}
+h2,h3{ margin-top:0; }
+small{ color:#666; }
+a{ text-decoration:none; }
 
 @media(max-width:600px){
-
-    .acoes-usuario{
-        flex-direction:column;
-    }
-
+    .acoes-usuario{ flex-direction:column; }
 }
 
 {% endblock %}
@@ -148,9 +122,7 @@ a{
     </div>
 
     <a href="/menu">
-        <button class="menu">
-            🏠 Voltar ao Menu
-        </button>
+        <button class="menu">🏠 Voltar ao Menu</button>
     </a>
 
     <!-- ACESSOS RÁPIDOS -->
@@ -159,21 +131,12 @@ a{
         <h3>🚀 Acessos Rápidos</h3>
 
         <a href="/catalogo">
-            <button class="editar">
-                📦 Abrir Catálogo de Produtos
-            </button>
+            <button class="editar">📦 Abrir Catálogo de Produtos</button>
         </a>
 
-        <a href="/limpar-historico"
-           onclick="return confirm('Deseja apagar todo histórico?')">
-
-        <a href="/limpar-historico">
-            <button style="background:#dc3545;">
-                 🗑️ Limpar Histórico
-            </button>
-        </a>
-
-        </a>
+        <button class="limpar" onclick="abrirModalLimpar()">
+            🗑️ Limpar Histórico
+        </button>
 
     </div>
 
@@ -206,46 +169,17 @@ a{
 
         <form action="/criar-usuario" method="POST">
 
-            <input
-                type="text"
-                name="usuario"
-                placeholder="Usuário"
-                required
-            >
-
-            <input
-                type="password"
-                name="senha"
-                placeholder="Senha"
-                required
-            >
+            <input type="text" name="usuario" placeholder="Usuário" required>
+            <input type="password" name="senha" placeholder="Senha" required>
 
             <select name="perfil">
-
-                <option value="admin">
-                    Administrador
-                </option>
-
-                <option value="operador">
-                    Operador
-                </option>
-
-                <option value="separacao">
-                    Separação
-                </option>
-
-                <option value="consulta">
-                    Consulta
-                </option>
-
+                <option value="admin">Administrador</option>
+                <option value="operador">Operador</option>
+                <option value="separacao">Separação</option>
+                <option value="consulta">Consulta</option>
             </select>
 
-            <button
-                class="criar"
-                type="submit"
-            >
-                ➕ Criar Usuário
-            </button>
+            <button class="criar" type="submit">➕ Criar Usuário</button>
 
         </form>
 
@@ -257,17 +191,10 @@ a{
         <h3>👥 Usuários Cadastrados</h3>
 
         {% if master %}
-
         <div class="usuario master">
-
             <b>👑 {{ master.usuario }}</b><br>
-
-            <small>
-                Perfil: {{ master.perfil }}
-            </small>
-
+            <small>Perfil: {{ master.perfil }}</small>
         </div>
-
         {% endif %}
 
         {% for user in usuarios %}
@@ -275,28 +202,18 @@ a{
         <div class="usuario">
 
             <b>{{ user.usuario }}</b><br>
-
-            <small>
-                Perfil: {{ user.perfil }}
-            </small>
+            <small>Perfil: {{ user.perfil }}</small>
 
             {% if user.usuario != 'Guilherme$' %}
 
             <div class="acoes-usuario">
 
                 <a href="/editar-usuario/{{ user.id }}">
-                    <button class="editar">
-                        ✏️ Editar
-                    </button>
+                    <button class="editar">✏️ Editar</button>
                 </a>
 
-                <a href="/excluir-usuario/{{ user.id }}"
-                   onclick="return confirm('Excluir usuário?')">
-
-                    <button class="excluir">
-                        🗑️ Excluir
-                    </button>
-
+                <a href="/excluir-usuario/{{ user.id }}">
+                    <button class="excluir">🗑️ Excluir</button>
                 </a>
 
             </div>
@@ -310,5 +227,67 @@ a{
     </div>
 
 </div>
+
+<!-- MODAL CONFIRMAÇÃO -->
+<div id="modal-limpar" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+">
+
+    <div style="
+        background:white;
+        padding:25px;
+        border-radius:12px;
+        width:320px;
+        text-align:center;
+        box-shadow:0 5px 20px rgba(0,0,0,0.3);
+    ">
+
+        <h3>⚠️ Confirmação</h3>
+
+        <p>Tem certeza que deseja apagar todo o histórico?</p>
+
+        <form method="POST" action="/limpar-historico">
+
+            <button type="submit" class="excluir">
+                Sim, apagar
+            </button>
+
+            <button type="button" onclick="fecharModal()" style="
+                background:#6c757d;
+                color:white;
+                width:100%;
+                margin-top:10px;
+                padding:12px;
+                border:none;
+                border-radius:8px;
+                cursor:pointer;
+                font-weight:bold;
+            ">
+                Cancelar
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+function abrirModalLimpar() {
+    document.getElementById('modal-limpar').style.display = 'flex';
+}
+
+function fecharModal() {
+    document.getElementById('modal-limpar').style.display = 'none';
+}
+</script>
 
 {% endblock %}
