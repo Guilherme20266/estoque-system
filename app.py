@@ -655,7 +655,6 @@ def consulta():
 
         db.session.add(historico)
         db.session.commit()
-        )
 
 # ==========================
 # EXPORTAR EXCEL - CONSULTA
