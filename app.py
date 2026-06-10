@@ -940,6 +940,18 @@ def editar_catalogo(id):
         ok=request.args.get('ok'),
         erro=request.args.get('erro')
     )
+
+@app.route('/limpar-historico', methods=['POST'])
+def limpar_historico():
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    Historico.query.delete()
+    db.session.commit()
+
+    flash("Histórico apagado com sucesso!", "success")
+    return redirect('/administracao')
     
 with app.app_context():
     db.create_all()
