@@ -29,7 +29,6 @@ body{
     background:white;
     padding:15px;
     border-radius:12px;
-    margin-bottom:12px;
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
@@ -65,7 +64,6 @@ a{
     text-decoration:none;
 }
 
-/* MENSAGENS LOCAIS */
 .msg-sucesso{
     background:#28a745;
     color:white;
@@ -95,15 +93,12 @@ a{
     </div>
 
     <a href="/catalogo">
-        <button class="voltar">
-            ⬅️ Voltar
-        </button>
+        <button class="voltar">⬅️ Voltar</button>
     </a>
 
-    <!-- ✔ MENSAGENS (SÓ NESSA TELA) -->
     {% if ok %}
         <div class="msg-sucesso">
-            ✔ Nome atualizado com sucesso!
+            ✔ Atualizado com sucesso!
         </div>
     {% endif %}
 
@@ -117,22 +112,11 @@ a{
 
         <form method="POST">
 
-            <label><b>Código</b></label>
-
-            <input
-                type="text"
-                value="{{ catalogo.codigo }}"
-                readonly
-            >
+            <label><b>Código do Produto</b></label>
+            <input type="text" name="codigo" value="{{ catalogo.codigo }}" required>
 
             <label><b>Nome do Produto</b></label>
-
-            <input
-                type="text"
-                name="nome"
-                value="{{ catalogo.nome }}"
-                required
-            >
+            <input type="text" name="nome" value="{{ catalogo.nome }}" required>
 
             <button type="submit" class="salvar">
                 💾 Salvar Alteração
