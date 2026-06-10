@@ -606,7 +606,6 @@ def consulta():
     lista = []
 
     for produto in produtos:
-
         status, prioridade = calcular_status(produto.validade)
 
         lista.append({
@@ -617,7 +616,9 @@ def consulta():
 
     lista.sort(key=lambda x: x["prioridade"])
 
+    # ==========================
     # HISTÓRICO DE CONSULTA
+    # ==========================
     if busca and len(produtos) > 0:
 
         historico = Historico(
