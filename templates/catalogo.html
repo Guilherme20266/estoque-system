@@ -84,6 +84,18 @@ input{
     cursor:pointer;
 }
 
+.excluir{
+    background:#dc3545;
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    margin-top:10px;
+    font-size:15px;
+    cursor:pointer;
+}
+
 .codigo{
     color:#666;
     font-size:14px;
@@ -103,12 +115,12 @@ a{
         <h2>📦 Catálogo de Produtos</h2>
     </div>
 
-    <!-- ✔ BOTÕES EM COLUNA -->
+    <!-- BOTÕES -->
     <div class="botoes-nav">
 
         <a href="/administracao">
-             <button class="btn-voltar">⬅️ Voltar</button>
-     </a>
+            <button class="btn-voltar">⬅️ Voltar</button>
+        </a>
 
         <a href="/menu">
             <button class="btn-menu">🏠 Menu</button>
@@ -116,6 +128,7 @@ a{
 
     </div>
 
+    <!-- BUSCA -->
     <form method="GET">
         <input
             type="text"
@@ -125,6 +138,7 @@ a{
         >
     </form>
 
+    <!-- LISTA -->
     {% for produto in produtos %}
 
     <div class="card">
@@ -141,8 +155,13 @@ a{
             </button>
         </a>
 
-        <a href="/excluir-catalogo/{{ p.id }}">
-            <button class="excluir">🗑️ Excluir</button>
+        <a href="/excluir-catalogo/{{ produto.id }}"
+           onclick="return confirm('Tem certeza que deseja excluir este item?')">
+
+            <button class="excluir">
+                🗑️ Excluir
+            </button>
+
         </a>
 
     </div>
