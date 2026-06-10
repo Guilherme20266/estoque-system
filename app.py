@@ -621,7 +621,7 @@ def consulta():
     # ==========================
     if busca and len(produtos) > 0:
 
-        historico = Historico(
+        db.session.add(Historico(
             data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
             usuario=session.get('usuario'),
             acao="CONSULTA",
@@ -629,9 +629,8 @@ def consulta():
             quantidade=len(produtos),
             origem="-",
             destino="-"
-        )
+        ))
 
-        db.session.add(historico)
         db.session.commit()
 
     return render_template(
@@ -639,23 +638,6 @@ def consulta():
         lista=lista,
         busca=busca
     )
-    # ==========================
-    # HISTÓRICO DE CONSULTA
-    # ==========================
-    if busca and len(produtos) > 0:
-
-        historico = Historico(
-            data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
-            usuario=session.get('usuario'),
-            acao="CONSULTA",
-            produto=busca,
-            quantidade=len(produtos),
-            origem="-",
-            destino="-"
-        )
-
-        db.session.add(historico)
-        db.session.commit()
 
 # ==========================
 # EXPORTAR EXCEL - CONSULTA
