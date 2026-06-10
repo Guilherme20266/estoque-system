@@ -932,24 +932,28 @@ def editar_catalogo(id):
 
     if request.method == 'POST':
 
+        novo_codigo = request.form.get('codigo', '').strip()
         novo_nome = request.form.get('nome', '').strip()
 
-        if not novo_nome:
+        if not novo_codigo or not novo_nome:
             return redirect(url_for('editar_catalogo', id=id, erro=1))
 
         try:
+            codigo_antigo = catalogo.codigo
+
             # atualiza catálogo
+            catalogo.codigo = novo_codigo
             catalogo.nome = novo_nome
 
             # atualiza produtos vinculados
-            produtos = Produto.query.filter_by(codigo=catalogo.codigo).all()
+            produtos = Produto.query.filter_by(codigo=codigo_antigo).all()
 
             for p in produtos:
+                p.codigo = novo_codigo
                 p.nome = novo_nome
 
             db.session.commit()
 
-            # volta para MESMA tela com sucesso
             return redirect(url_for('editar_catalogo', id=id, ok=1))
 
         except Exception:
