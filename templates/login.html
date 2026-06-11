@@ -76,7 +76,6 @@ button{
 }
 
 button:hover{
-    transform:translateY(-1px);
     opacity:0.95;
 }
 
@@ -95,8 +94,74 @@ button:hover{
     margin-top:5px;
 }
 
-a{
+.links{
+    text-align:center;
+    margin-top:15px;
+    font-size:12px;
+}
+
+.links a{
+    color:#64748b;
     text-decoration:none;
+    font-weight:bold;
+}
+
+.links a:hover{
+    color:#2563eb;
+}
+
+.links span{
+    margin:0 6px;
+    color:#cbd5e1;
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.6);
+    z-index:9999;
+}
+
+.modal-content{
+    background:white;
+    width:90%;
+    max-width:450px;
+    margin:80px auto;
+    padding:20px;
+    border-radius:15px;
+    position:relative;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.fechar{
+    position:absolute;
+    top:12px;
+    right:15px;
+    cursor:pointer;
+    font-size:22px;
+    font-weight:bold;
+    color:#666;
+}
+
+.fechar:hover{
+    color:red;
+}
+
+.modal-content h3{
+    margin-top:0;
+    color:#111827;
+}
+
+.modal-content p{
+    color:#555;
+    line-height:1.6;
+    font-size:14px;
 }
 
 {% endblock %}
@@ -105,40 +170,78 @@ a{
 
 <div class="box">
 
-<img src="/static/icon-192.png" class="logo">
+    <img src="/static/icon-192.png" class="logo">
 
-<h1>ATACA-TUDO</h1>
+    <h1>ATACA-TUDO</h1>
 
-<div class="subtitle">
-Sistema de Estoque e Controle
+    <div class="subtitle">
+        Sistema de Estoque e Controle
+    </div>
+
+    <form action="/entrar" method="POST">
+
+        <input
+            type="text"
+            name="usuario"
+            placeholder="Usuário"
+            required
+        >
+
+        <input
+            type="password"
+            name="senha"
+            placeholder="Senha"
+            required
+        >
+
+        <button type="submit">
+            Entrar
+        </button>
+
+    </form>
+
+    <div class="links">
+
+        <a href="#" onclick="abrirModal('termos')">
+            Termos de Uso
+        </a>
+
+        <span>•</span>
+
+        <a href="#" onclick="abrirModal('privacidade')">
+            Privacidade
+        </a>
+
+        <span>•</span>
+
+        <a href="#" onclick="abrirModal('sobre')">
+            Sobre
+        </a>
+
+    </div>
+
+    <div class="info">
+        © 2026 | All rights reserved | Dev. @Guilherme.Silva
+        <span class="badge">v4.1.5 - Beta Final</span>
+    </div>
+
 </div>
 
-<form action="/entrar" method="POST">
+<!-- MODAL -->
 
-<input
-type="text"
-name="usuario"
-placeholder="Usuário"
-required
->
+<div id="modal" class="modal">
 
-<input
-type="password"
-name="senha"
-placeholder="Senha"
-required
->
+    <div class="modal-content">
 
-<button type="submit">
-Entrar
-</button>
+        <span class="fechar" onclick="fecharModal()">
+            ×
+        </span>
 
-</form>
+        <h3 id="tituloModal"></h3>
 
-<div class="info">
-© 2026 | All rights reserved | Dev. @Guilherme.Silva
-<span class="badge">v4.1.5 - Beta Final</span>
-</div>
+        <p id="textoModal"></p>
+
+    </div>
 
 </div>
 
@@ -147,9 +250,60 @@ Entrar
 {% block script %}
 
 <script>
+
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/static/sw.js");
 }
+
+function abrirModal(tipo){
+
+    let titulo = "";
+    let texto = "";
+
+    if(tipo === "termos"){
+
+        titulo = "Termos de Uso";
+
+        texto = "Este sistema é destinado exclusivamente ao gerenciamento interno de estoque. O uso indevido, compartilhamento de credenciais ou alteração não autorizada de informações poderá resultar em bloqueio de acesso.";
+
+    }
+
+    if(tipo === "privacidade"){
+
+        titulo = "Política de Privacidade";
+
+        texto = "Os dados armazenados neste sistema são utilizados apenas para operações internas de estoque, controle de usuários e movimentações. Nenhuma informação é compartilhada com terceiros.";
+
+    }
+
+    if(tipo === "sobre"){
+
+        titulo = "Sobre o Sistema";
+
+        texto = "ATACA-TUDO - Sistema de Estoque e Controle. Desenvolvido por Guilherme Silva para gerenciamento de produtos, inventário, movimentações, transferências e administração. Versão 4.1.5 Beta Final.";
+
+    }
+
+    document.getElementById("tituloModal").innerText = titulo;
+    document.getElementById("textoModal").innerText = texto;
+
+    document.getElementById("modal").style.display = "block";
+}
+
+function fecharModal(){
+    document.getElementById("modal").style.display = "none";
+}
+
+window.onclick = function(event){
+
+    let modal = document.getElementById("modal");
+
+    if(event.target == modal){
+        modal.style.display = "none";
+    }
+
+}
+
 </script>
 
 {% endblock %}
