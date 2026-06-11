@@ -262,38 +262,27 @@ function abrirModal(tipo){
 
     if(tipo === "termos"){
 
-        titulo = "Termos de Uso";
+    titulo = "Termos de Uso";
 
-        texto = "Este sistema encontra-se em fase de testes e aprimoramento contínuo. Embora sejam adotadas boas práticas de desenvolvimento, não é garantida a disponibilidade ininterrupta do serviço nem a preservação integral dos dados. Recomenda-se a manutenção de registros e backups independentes. O uso do sistema implica ciência dessas condições.";
+    texto = "Este sistema foi desenvolvido para auxiliar no controle interno de estoque e encontra-se em constante evolução. Apesar dos esforços para garantir estabilidade e integridade das informações, não são oferecidas garantias de disponibilidade contínua, ausência de falhas ou recuperação integral de dados em casos de eventos imprevistos. Recomenda-se a realização periódica de conferências e backups dos registros considerados importantes. A utilização do sistema implica concordância com estas condições.";
 
-    }
+}
 
-    if(tipo === "privacidade"){
+if(tipo === "privacidade"){
 
-        titulo = "Política de Privacidade";
+    titulo = "Política de Privacidade";
 
-        texto = "Este sistema é destinado ao controle interno de estoque e operações relacionadas.
+    texto = "O sistema armazena exclusivamente informações relacionadas ao controle operacional de estoque, incluindo produtos, códigos, endereços de armazenamento, movimentações e usuários autorizados. Não são coletados dados bancários, financeiros ou informações pessoais sensíveis. As informações registradas destinam-se exclusivamente à organização interna das operações e podem ser utilizadas para fins de auditoria, rastreabilidade e histórico das atividades realizadas no sistema.";
 
-                 As informações armazenadas consistem principalmente em dados de produtos, códigos, endereços de armazenamento, movimentações e usuários autorizados do sistema.
+}
 
-                 Não são coletados dados financeiros, dados bancários, documentos pessoais ou informações sensíveis.
+if(tipo === "sobre"){
 
-                 Os dados registrados são utilizados exclusivamente para operação e organização do estoque.
+    titulo = "Sobre o Sistema";
 
-                 O acesso às informações é restrito aos usuários autorizados pela empresa.
+    texto = "ATACA-TUDO - Sistema de Estoque. Desenvolvido por Guilherme Silva para apoio à gestão e organização interna de estoque. O sistema encontra-se em processo contínuo de desenvolvimento, podendo receber atualizações, correções, melhorias e alterações de funcionalidades sem aviso prévio.";
 
-                 O sistema poderá registrar ações realizadas pelos usuários para fins de auditoria e rastreabilidade das operações.";
-              
-    }
-
-    if(tipo === "sobre"){
-
-        titulo = "Sobre o Sistema";
-
-        texto = "Sistema desenvolvido por Guilherme Silva para fins de organização e controle interno de estoque. Ferramenta em fase experimental, sujeita a alterações, melhorias e correções.";
-
-    }
-
+}
     document.getElementById("tituloModal").innerText = titulo;
     document.getElementById("textoModal").innerText = texto;
 
