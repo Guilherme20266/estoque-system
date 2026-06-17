@@ -1136,10 +1136,6 @@ def baixar_backup():
         ultimo,
         as_attachment=True
     )
-
-@app.route('/backup-automatico')
-def backup_automatico():
-    return str(os.getenv("BACKUP_KEY"))
     
 with app.app_context():
     db.create_all()
