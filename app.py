@@ -1137,7 +1137,11 @@ def baixar_backup():
 @app.route('/backup-automatico')
 def backup_automatico():
 
-    return str(os.getenv("BACKUP_KEY"))
+    return {
+        "BACKUP_KEY": os.environ.get("BACKUP_KEY"),
+        "SECRET_KEY": os.environ.get("SECRET_KEY"),
+        "DATABASE_URL": "OK" if os.environ.get("DATABASE_URL") else "NONE"
+    }
     
 with app.app_context():
     db.create_all()
