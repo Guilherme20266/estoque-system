@@ -119,9 +119,10 @@ a{ text-decoration:none; }
 
 <div class="container">
 
-    <div class="topo">
-        <h2>⚙️ Administração</h2>
-    </div>
+<div class="topo">
+    <h2>⚙️ Administração</h2>
+    <small>Painel de Controle do Sistema</small>
+</div>
 
     <a href="/menu">
         <button class="menu">🏠 Voltar ao Menu</button>
@@ -147,37 +148,70 @@ a{ text-decoration:none; }
             <b>{{ produtos_urgentes }}</b>
         </div>
 
+        <div class="info">
+    📋 Movimentações Registradas
+    <b>{{ total_historico }}</b>
+</div>
+
+<div class="info">
+    🗄️ Banco de Dados
+    <b>Online</b>
+</div>
+
+{% if ultimo_historico %}
+<div class="info">
+    🕒 Última Ação
+    <b>{{ ultimo_historico.acao }}</b>
+</div>
+{% endif %}
+
     </div>
 
     <!-- Ferramentas -->
-    <div class="card">
+<div class="card">
 
-        <h3>🛠️ Ferramentas</h3>
+    <h3>🛠️ Ferramentas</h3>
 
-        <a href="/catalogo">
-            <button class="editar">📦 Abrir Catálogo de Produtos</button>
-        </a>
-
-        <a href="/exportar-historico">
-            <button class="excel">📥 Exportar Histórico (Excel)</button>
+    <a href="/catalogo">
+        <button class="editar">
+            📦 Abrir Catálogo de Produtos
         </button>
-        </a>
+    </a>
 
-        <a href="/criar-backup">
-            <button class="backup">💾 Criar Backup Agora</button>
+    <a href="/exportar-historico">
+        <button class="excel">
+            📥 Exportar Histórico (Excel)
         </button>
-        </a>
+    </a>
 
-        <a href="/baixar-backup">
-            <button class="backup">📥 Baixar Último Backup</button>
-        </button>
-        </a>
-        
-        <button class="limpar" onclick="abrirModalLimpar()">
-            🗑️ Limpar Histórico
-        </button>
+    <button class="limpar" onclick="abrirModalLimpar()">
+        🗑️ Limpar Histórico
+    </button>
 
-    </div>
+</div>
+
+<!-- Segurança -->
+<div class="card">
+
+    <h3>🔒 Segurança e Backup</h3>
+
+    <a href="/criar-backup">
+        <button class="backup">
+            💾 Criar Backup Agora
+        </button>
+    </a>
+
+    <a href="/baixar-backup">
+        <button class="backup">
+            📥 Baixar Último Backup
+        </button>
+    </a>
+
+    <button class="menu" disabled>
+        ☁️ Restaurar Backup
+    </button>
+
+</div>
 
     <!-- CRIAR USUÁRIO -->
     <div class="card">
