@@ -1133,6 +1133,18 @@ def baixar_backup():
         ultimo,
         as_attachment=True
     )
+
+@app.route('/backup-automatico')
+def backup_automatico():
+
+    chave = request.args.get("key")
+
+    if chave != os.getenv("BACKUP_KEY"):
+        return "Acesso negado", 403
+
+    # aqui depois vamos colocar a função real do backup
+
+    return "Backup executado com sucesso"
     
 with app.app_context():
     db.create_all()
