@@ -1018,6 +1018,121 @@ def limpar_historico():
 
     flash("Histórico apagado com sucesso!", "success")
     return redirect('/administracao')
+
+@app.route('/criar-backup')
+def criar_backup():
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    backup = {
+
+        "produtos": [
+            {
+                "codigo": p.codigo,
+                "nome": p.nome,
+                "quantidade": p.quantidade,
+                "validade": p.validade,
+                "endereco": p.endereco
+            }
+            for p in Produto.query.all()
+        ],
+
+        "catalogo": [
+            {
+                "codigo": c.codigo,
+                "nome": c.nome
+            }
+            for c in CatalogoProduto.query.all()
+        ],
+
+        "historico": [
+            {
+                "data": h.data,
+                "usuario": h.usuario,
+                "acao": h.acao,
+                "produto": h.produto,
+                "quantidade": h.quantidade,
+                "origem": h.origem,
+                "destino": h.destino
+            }
+            for h in Historico.query.all()
+        ],
+
+        "usuarios": [
+            {
+                "usuario": u.usuario,
+                "senha": u.senha,
+                "perfil": u.perfil
+            }
+            for u in Usuario.query.all()
+        ]
+
+    }
+
+    pasta = "backups"
+
+    os.makedirs(pasta, exist_ok=True)
+
+    nome_arquivo = (
+        datetime.now(
+            ZoneInfo("America/Sao_Paulo")
+        ).strftime("backup_%Y%m%d_%H%M%S.json")
+    )
+
+    caminho = os.path.join(
+        pasta,
+        nome_arquivo
+    )
+
+    with open(
+        caminho,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            backup,
+            f,
+            ensure_ascii=False,
+            indent=4
+        )
+
+    flash(
+        "Backup criado com sucesso!",
+        "success"
+    )
+
+    return redirect('/administracao')
+
+@app.route('/baixar-backup')
+def baixar_backup():
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    pasta = "backups"
+
+    if not os.path.exists(pasta):
+        return redirect('/administracao')
+
+    arquivos = sorted(
+        os.listdir(pasta),
+        reverse=True
+    )
+
+    if not arquivos:
+        return redirect('/administracao')
+
+    ultimo = os.path.join(
+        pasta,
+        arquivos[0]
+    )
+
+    return send_file(
+        ultimo,
+        as_attachment=True
+    )
     
 with app.app_context():
     db.create_all()
