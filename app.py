@@ -31,14 +31,10 @@ app = Flask(__name__)
 
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=20)
 
-@app.route('/backup-automatico')
-def backup_automatico():
-
-    return {
-        "SECRET_KEY": os.environ.get("SECRET_KEY"),
-        "BACKUP_KEY": os.environ.get("BACKUP_KEY")
-    }
-
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "teste123456789"
+)
 db_url = os.getenv("DATABASE_URL")
 
 if db_url and db_url.startswith("postgres://"):
@@ -1136,6 +1132,16 @@ def baixar_backup():
         ultimo,
         as_attachment=True
     )
+
+@app.route('/backup-automatico')
+def backup_automatico():
+
+    chave = request.args.get("key")
+
+    if chave != os.getenv("BACKUP_KEY"):
+        return "Acesso negado", 403
+
+    return "Backup executado com sucesso"
     
 with app.app_context():
     db.create_all()
