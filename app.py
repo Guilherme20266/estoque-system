@@ -1096,6 +1096,8 @@ def criar_backup():
             ensure_ascii=False,
             indent=4
         )
+        
+    enviar_backup_drive(caminho)
 
     flash(
         "Backup criado com sucesso!",
@@ -1141,7 +1143,58 @@ def backup_automatico():
     if chave != os.getenv("BACKUP_KEY"):
         return "Acesso negado", 403
 
+    criar_backup()
+
     return "Backup executado com sucesso"
+def enviar_backup_drive(caminho_arquivo):
+
+    credenciais_json = json.loads(
+        os.getenv("GOOGLE_CREDENTIALS")
+    )
+
+    creds = service_account.Credentials.from_service_account_info(
+        credenciais_json,
+        scopes=["https://www.googleapis.com/auth/drive"]
+    )
+
+    drive = build(
+        "drive",
+        "v3",
+        credentials=creds
+    )
+
+    nome_arquivo = os.path.basename(caminho_arquivo)
+
+    media = MediaIoBaseUpload(
+        open(caminho_arquivo, "rb"),
+        mimetype="application/json"
+    )
+
+    arquivo = {
+        "name": nome_arquivo
+    }
+
+    drive.files().create(
+        body=arquivo,
+        media_body=media,
+        fields="id"
+    ).execute()
+
+    arquivos = drive.files().list(
+        orderBy="createdTime desc",
+        pageSize=100,
+        fields="files(id,name)"
+    ).execute()
+
+    lista = arquivos.get("files", [])
+
+    if len(lista) > 30:
+
+        for arquivo_antigo in lista[30:]:
+
+            drive.files().delete(
+                fileId=arquivo_antigo["id"]
+            ).execute()
     
 with app.app_context():
     db.create_all()
