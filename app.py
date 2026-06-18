@@ -24,8 +24,13 @@ from openpyxl import Workbook
 
 from io import BytesIO
 
+import io
 import os
 import json
+
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 
 app = Flask(__name__)
 
@@ -1070,42 +1075,39 @@ def criar_backup():
     }
 
     pasta = "backups"
-
     os.makedirs(pasta, exist_ok=True)
 
-    nome_arquivo = (
-        datetime.now(
-            ZoneInfo("America/Sao_Paulo")
-        ).strftime("backup_%Y%m%d_%H%M%S.json")
-    )
+    nome_arquivo = datetime.now(
+        ZoneInfo("America/Sao_Paulo")
+    ).strftime("backup_%Y%m%d_%H%M%S.json")
 
-    caminho = os.path.join(
-        pasta,
-        nome_arquivo
-    )
+    caminho = os.path.join(pasta, nome_arquivo)
 
-    with open(
-        caminho,
-        "w",
-        encoding="utf-8"
-    ) as f:
-
+    with open(caminho, "w", encoding="utf-8") as f:
         json.dump(
             backup,
             f,
             ensure_ascii=False,
             indent=4
         )
-        
-    enviar_backup_drive(caminho)
 
-    flash(
-        "Backup criado com sucesso!",
-        "success"
-    )
+    try:
+        enviar_backup_drive(caminho)
+
+        flash(
+            "Backup criado e enviado ao Google Drive com sucesso!",
+            "success"
+        )
+
+    except Exception as e:
+        print(e)
+
+        flash(
+            f"Erro ao enviar backup: {e}",
+            "error"
+        )
 
     return redirect('/administracao')
-
 @app.route('/baixar-backup')
 def baixar_backup():
 
