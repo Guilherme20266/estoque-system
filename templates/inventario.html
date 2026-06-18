@@ -9,6 +9,7 @@
 
 {% block style %}
 
+/* (SEU CSS INTACTO) */
 body{
     font-family:Arial;
     background:#f4f4f4;
@@ -16,14 +17,9 @@ body{
     margin:0;
 }
 
-.box{
-    max-width:600px;
-    margin:auto;
-}
+.box{ max-width:600px; margin:auto; }
 
-h2{
-    text-align:center;
-}
+h2{ text-align:center; }
 
 .menu-btn{
     width:100%;
@@ -74,10 +70,7 @@ h2{
 .atencao{ border-left:8px solid #ffc107; }
 .ok{ border-left:8px solid #28a745; }
 
-.status{
-    font-weight:bold;
-    margin-bottom:8px;
-}
+.status{ font-weight:bold; margin-bottom:8px; }
 
 .piscando{
     color:#dc3545;
@@ -139,6 +132,22 @@ a{ text-decoration:none; }
     <button class="menu-btn">🏠 Menu</button>
 </a>
 
+<!-- 🔥 FLASH CORRIGIDO (NÃO VAZA MAIS) -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <script>
+        Swal.fire({
+            icon: "{{ 'success' if category == 'success' else 'error' }}",
+            title: "{{ message }}",
+            timer: 2000,
+            showConfirmButton: false
+        });
+      </script>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 <div class="busca-area">
 
     <input
@@ -168,27 +177,21 @@ data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.en
 
 {% if item.status == 'URGENTE' %}
 <span class="piscando">🚨 URGENTE</span>
-
 {% elif item.status == 'ATENCAO' %}
 🟡 ATENÇÃO
-
 {% else %}
 🟢 OK
 {% endif %}
 
 </div>
 
-<div class="nome">
-{{ item.produto.nome }}
-</div>
+<div class="nome">{{ item.produto.nome }}</div>
 
 <div class="info">
-
 🏷️ Código: {{ item.produto.codigo }}<br>
 📦 Quantidade: {{ item.produto.quantidade }}<br>
 📅 Validade: {{ item.produto.validade }}<br>
 📍 Endereço: {{ item.produto.endereco }}
-
 </div>
 
 <div class="botoes">
@@ -257,22 +260,22 @@ cards.forEach(card => {
 
 function confirmarExclusao(event, url, produto){
 
-    event.preventDefault();
+event.preventDefault();
 
-    Swal.fire({
-        icon: 'warning',
-        title: 'Excluir produto?',
-        html: `<b style="color:#dc3545">${produto}</b><br><br>Essa ação não pode ser desfeita.`,
-        showCancelButton: true,
-        confirmButtonText: 'Sim, excluir',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#dc3545',
-        cancelButtonColor: '#6c757d'
-    }).then((result) => {
-        if(result.isConfirmed){
-            window.location.href = url;
-        }
-    });
+Swal.fire({
+    icon: 'warning',
+    title: 'Excluir produto?',
+    html: `<b style="color:#dc3545">${produto}</b><br><br>Essa ação não pode ser desfeita.`,
+    showCancelButton: true,
+    confirmButtonText: 'Sim, excluir',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d'
+}).then((result) => {
+    if(result.isConfirmed){
+        window.location.href = url;
+    }
+});
 
 }
 
