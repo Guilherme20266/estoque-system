@@ -1172,7 +1172,8 @@ def enviar_backup_drive(caminho_arquivo):
     )
 
     arquivo = {
-        "name": os.path.basename(caminho_arquivo)
+        "name": os.path.basename(caminho_arquivo),
+        "parents": [os.getenv("GOOGLE_DRIVE_FOLDER_ID")]
     }
 
     drive.files().create(
