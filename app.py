@@ -1165,15 +1165,14 @@ def enviar_backup_drive(caminho_arquivo):
         credentials=creds
     )
 
-    nome_arquivo = os.path.basename(caminho_arquivo)
-
-    media = MediaIoBaseUpload(
-        open(caminho_arquivo, "rb"),
-        mimetype="application/json"
+    media = MediaFileUpload(
+        caminho_arquivo,
+        mimetype="application/json",
+        resumable=True
     )
 
     arquivo = {
-        "name": nome_arquivo
+        "name": os.path.basename(caminho_arquivo)
     }
 
     drive.files().create(
@@ -1191,9 +1190,7 @@ def enviar_backup_drive(caminho_arquivo):
     lista = arquivos.get("files", [])
 
     if len(lista) > 30:
-
         for arquivo_antigo in lista[30:]:
-
             drive.files().delete(
                 fileId=arquivo_antigo["id"]
             ).execute()
