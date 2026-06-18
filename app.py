@@ -1151,14 +1151,12 @@ def backup_automatico():
     return "Backup executado com sucesso"
 def enviar_backup_drive(caminho_arquivo):
 
-    credenciais_json = json.loads(
-        os.getenv("GOOGLE_CREDENTIALS")
-    )
+    token = json.loads(os.getenv("GOOGLE_TOKEN"))
 
-    creds = service_account.Credentials.from_service_account_info(
-        credenciais_json,
-        scopes=["https://www.googleapis.com/auth/drive"]
-    )
+    creds = Credentials.from_authorized_user_info(token)
+
+    if creds.expired and creds.refresh_token:
+        creds.refresh(Request())
 
     drive = build(
         "drive",
@@ -1166,36 +1164,22 @@ def enviar_backup_drive(caminho_arquivo):
         credentials=creds
     )
 
+    arquivo = {
+        "name": os.path.basename(caminho_arquivo),
+        "parents": [os.getenv("GOOGLE_DRIVE_FOLDER_ID")]
+    }
+
     media = MediaFileUpload(
         caminho_arquivo,
         mimetype="application/json",
         resumable=True
     )
 
-    arquivo = {
-        "name": os.path.basename(caminho_arquivo),
-        "parents": [os.getenv("GOOGLE_DRIVE_FOLDER_ID")]
-    }
-
     drive.files().create(
         body=arquivo,
         media_body=media,
         fields="id"
     ).execute()
-
-    arquivos = drive.files().list(
-        orderBy="createdTime desc",
-        pageSize=100,
-        fields="files(id,name)"
-    ).execute()
-
-    lista = arquivos.get("files", [])
-
-    if len(lista) > 30:
-        for arquivo_antigo in lista[30:]:
-            drive.files().delete(
-                fileId=arquivo_antigo["id"]
-            ).execute()
     
 with app.app_context():
     db.create_all()
