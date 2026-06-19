@@ -3,93 +3,91 @@
 {% block title %}Cadastrar{% endblock %}
 
 {% block head %}
-
 <script src="https://unpkg.com/html5-qrcode"></script>
-
 {% endblock %}
 
 {% block style %}
 
 body{
-font-family:Arial;
-background:#f4f4f4;
-padding:15px;
+    font-family:Arial;
+    background:#f4f4f4;
+    padding:15px;
 }
 
 .box{
-background:white;
-max-width:500px;
-width:100%;
-margin:auto;
-padding:20px;
-border-radius:10px;
-box-sizing:border-box;
+    background:white;
+    max-width:500px;
+    width:100%;
+    margin:auto;
+    padding:20px;
+    border-radius:10px;
+    box-sizing:border-box;
 }
 
 input,select{
-width:100%;
-padding:12px;
-margin-bottom:12px;
-font-size:16px;
-box-sizing:border-box;
+    width:100%;
+    padding:12px;
+    margin-bottom:12px;
+    font-size:16px;
+    box-sizing:border-box;
 }
 
 button{
-width:100%;
-padding:14px;
-background:#007bff;
-color:white;
-border:none;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
+    width:100%;
+    padding:14px;
+    background:#007bff;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
 }
 
 .codigo-box{
-display:flex;
-gap:8px;
-margin-bottom:12px;
+    display:flex;
+    gap:8px;
+    margin-bottom:12px;
 }
 
 .codigo-box input{
-flex:1;
-margin-bottom:0;
+    flex:1;
+    margin-bottom:0;
 }
 
 .scan-icon{
-width:55px;
-min-width:55px;
-padding:0;
-background:#28a745;
-font-size:22px;
-display:flex;
-align-items:center;
-justify-content:center;
+    width:55px;
+    min-width:55px;
+    padding:0;
+    background:#28a745;
+    font-size:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .alert{
-padding:12px;
-border-radius:8px;
-margin-bottom:10px;
-text-align:center;
-font-weight:bold;
-color:white;
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:10px;
+    text-align:center;
+    font-weight:bold;
+    color:white;
 }
 
 .sucesso{ background:#28a745; }
 .erro{ background:#dc3545; }
 
 #reader{
-margin-bottom:15px;
-border-radius:10px;
-overflow:hidden;
+    margin-bottom:15px;
+    border-radius:10px;
+    overflow:hidden;
 }
 
 @media (max-width: 768px){
-body{ padding:10px; }
-.box{ padding:15px; }
-input,select,button{ font-size:16px; padding:14px; }
-h2{ font-size:20px; }
+    body{ padding:10px; }
+    .box{ padding:15px; }
+    input,select,button{ font-size:16px; padding:14px; }
+    h2{ font-size:20px; }
 }
 
 a{ text-decoration:none; }
@@ -117,14 +115,12 @@ cursor:pointer;
 <div class="box">
 
 {% if request.args.get('sucesso') %}
-
 <div class="alert sucesso">
 ✅ Produto cadastrado com sucesso!
 </div>
 {% endif %}
 
 {% if request.args.get('erro') == 'endereco' %}
-
 <div class="alert erro">
 ❌ Esse endereço já está ocupado!
 </div>
@@ -135,37 +131,40 @@ cursor:pointer;
 <form method="POST">
 
 <input
-id="nome"
-name="nome"
-placeholder="Nome"
-required
- >
+    id="nome"
+    name="nome"
+    placeholder="Nome"
+    required
+>
 
 <div class="codigo-box">
 
 <input
-id="codigo"
-name="codigo"
-placeholder="Código"
-required
-onblur="buscarProduto()"
+    id="codigo"
+    name="codigo"
+    placeholder="Código"
+    required
+    onblur="buscarProduto()"
 >
 
 <button
-type="button"
-class="scan-icon"
-onclick="abrirCamera(); return false;"
-title="Ler código de barras"
-
+    type="button"
+    class="scan-icon"
+    onclick="abrirCamera(); return false;"
 >
-
-📷 </button>
+📷
+</button>
 
 </div>
 
 <div id="reader" style="display:none;"></div>
 
-<input type="number" name="quantidade" placeholder="Quantidade" required>
+<input
+    type="number"
+    name="quantidade"
+    placeholder="Quantidade"
+    required
+>
 
 <input
     id="validade"
@@ -225,43 +224,44 @@ title="Ler código de barras"
 
 let scanner;
 
+function mascaraData(input){
+    let v = input.value.replace(/\D/g, "");
+
+    if(v.length > 2){
+        v = v.replace(/^(\d{2})(\d)/, "$1/$2");
+    }
+
+    if(v.length > 4){
+        v = v.replace(/^(\d{2})\/(\d{2})(\d)/, "$1/$2/$3");
+    }
+
+    input.value = v;
+}
+
 async function buscarProduto(){
 
     let codigo = document.getElementById("codigo").value;
 
-    if(!codigo){
-        return;
-    }
+    if(!codigo) return;
 
     try{
-
-        let resposta = await fetch(
-            "/buscar-produto/" + codigo
-        );
-
+        let resposta = await fetch("/buscar-produto/" + codigo);
         let dados = await resposta.json();
 
         let nome = document.getElementById("nome");
 
         if(dados.encontrado){
-
             nome.value = dados.nome;
             nome.readOnly = true;
-
         }else{
-
             nome.value = "";
             nome.readOnly = false;
             nome.focus();
-
         }
 
     }catch(erro){
-
         console.log(erro);
-
     }
-
 }
 
 function abrirCamera(){
@@ -274,10 +274,7 @@ function abrirCamera(){
         { facingMode: "environment" },
         {
             fps: 10,
-            qrbox: {
-                width: 300,
-                height: 120
-            }
+            qrbox: { width: 300, height: 120 }
         },
         (codigo) => {
 
@@ -288,10 +285,8 @@ function abrirCamera(){
             document.getElementById("reader").style.display = "none";
 
             buscarProduto();
-
         }
     );
-
 }
 
 </script>
