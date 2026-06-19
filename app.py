@@ -308,20 +308,6 @@ def cadastrar():
             destino=endereco
         )
 
-    function mascaraData(input) {
-        let valor = input.value.replace(/\D/g, ""); // só números
-
-        if (valor.length > 2) {
-            valor = valor.replace(/^(\d{2})(\d)/, "$1/$2");
-        }
-
-        if (valor.length > 4) {
-            valor = valor.replace(/^(\d{2})\/(\d{2})(\d)/, "$1/$2/$3");
-        }
-
-        input.value = valor;
-    }
-
         db.session.add(historico)
 
         db.session.commit()
