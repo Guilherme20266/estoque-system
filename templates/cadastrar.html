@@ -167,7 +167,14 @@ title="Ler código de barras"
 
 <input type="number" name="quantidade" placeholder="Quantidade" required>
 
-<input name="validade" placeholder="DD/MM/AAAA">
+<input
+    id="validade"
+    name="validade"
+    placeholder="DD/MM/AAAA"
+    inputmode="numeric"
+    maxlength="10"
+    oninput="mascaraData(this)"
+>
 
 <select name="rua">
 <option value="A">A</option>
