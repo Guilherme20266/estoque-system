@@ -278,18 +278,27 @@ def cadastrar():
         ).first()
 
         if not catalogo:
-
             catalogo = CatalogoProduto(
                 codigo=request.form['codigo'],
                 nome=request.form['nome']
             )
-
             db.session.add(catalogo)
+
+        # ==========================
+        # VALIDAÇÃO DE QUANTIDADE
+        # ==========================
+        try:
+            quantidade = int(request.form['quantidade'])
+        except:
+            return redirect('/cadastrar?erro=quantidade')
+
+        if quantidade < 1 or quantidade > 1000:
+            return redirect('/cadastrar?erro=quantidade')
 
         produto = Produto(
             codigo=request.form['codigo'],
             nome=request.form['nome'],
-            quantidade=int(request.form['quantidade']),
+            quantidade=quantidade,
             validade=request.form['validade'],
             endereco=endereco
         )
@@ -303,13 +312,12 @@ def cadastrar():
             usuario=session.get('usuario'),
             acao="CADASTRO",
             produto=produto.nome,
-            quantidade=produto.quantidade,
+            quantidade=quantidade,
             origem="-",
             destino=endereco
         )
 
         db.session.add(historico)
-
         db.session.commit()
 
         return redirect('/cadastrar?sucesso=1')
