@@ -138,7 +138,7 @@ cursor:pointer;
 {% endif %}
 
 <div id="alerta-max">
-🚫 Quantidade máxima permitida é 300
+🚫 Quantidade máxima permitida é 1000
 </div>
 
 <h2>➕ Cadastrar Produto</h2>
@@ -229,8 +229,8 @@ function verificarQuantidade(){
     let q = document.querySelector('input[name="quantidade"]');
     let alerta = document.getElementById("alerta-max");
 
-    if(parseInt(q.value) > 300){
-        q.value = 300;
+    if(parseInt(q.value) > 1000){
+        q.value = 1000;
         alerta.style.display = "block";
     } else {
         alerta.style.display = "none";
