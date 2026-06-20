@@ -147,11 +147,40 @@ def admin():
 
 def operador_ou_admin():
     return session.get('perfil') in ['admin', 'operador']
-    
+
 
 def operador_ou_admin_ou_separacao():
     return session.get('perfil') in ['admin', 'operador', 'separacao']
 
+
+# ==========================
+# PERMISSÕES
+# ==========================
+
+def tem_permissao(permissao):
+
+    # Admin sempre tem acesso total
+    if session.get("perfil") == "admin":
+        return True
+
+    usuario = Usuario.query.filter_by(
+        usuario=session.get("usuario")
+    ).first()
+
+    if not usuario:
+        return False
+
+    try:
+        permissoes = json.loads(usuario.permissoes or "[]")
+    except:
+        permissoes = []
+
+    return permissao in permissoes
+
+
+# ==========================
+# STATUS DA VALIDADE
+# ==========================
 
 def calcular_status(validade):
 
@@ -859,6 +888,32 @@ def administracao():
         ultimo_historico=ultimo_historico,
         usuarios=usuarios,
         master=master
+    )
+
+@app.route('/usuarios/<int:id>/permissoes', methods=['GET', 'POST'])
+def permissoes(id):
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    usuario = Usuario.query.get_or_404(id)
+
+    if request.method == 'POST':
+
+        permissoes = request.form.getlist('permissoes')
+
+        usuario.permissoes = json.dumps(permissoes)
+
+        db.session.commit()
+
+        return redirect('/administracao')
+
+    permissoes_usuario = json.loads(usuario.permissoes or "[]")
+
+    return render_template(
+        'permissoes.html',
+        usuario=usuario,
+        permissoes_usuario=permissoes_usuario
     )
 
 @app.route('/criar-usuario', methods=['POST'])
