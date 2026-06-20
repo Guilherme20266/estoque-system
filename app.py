@@ -128,6 +128,10 @@ class Usuario(db.Model):
         nullable=False
     )
 
+    permissoes = db.Column(
+        db.Text,
+        default="[]"
+    )
 
 # ==========================
 # FUNÇÕES
