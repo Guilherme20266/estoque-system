@@ -1,0 +1,31 @@
+<h2>Permissões de {{ usuario.usuario }}</h2>
+
+<form method="POST">
+
+  <label>
+    <input type="checkbox" name="permissoes" value="ver_estoque"
+    {% if "ver_estoque" in permissoes_usuario %}checked{% endif %}>
+    Ver estoque
+  </label>
+
+  <br>
+
+  <label>
+    <input type="checkbox" name="permissoes" value="editar_estoque"
+    {% if "editar_estoque" in permissoes_usuario %}checked{% endif %}>
+    Editar estoque
+  </label>
+
+  <br>
+
+  <label>
+    <input type="checkbox" name="permissoes" value="ver_admin"
+    {% if "ver_admin" in permissoes_usuario %}checked{% endif %}>
+    Admin
+  </label>
+
+  <br><br>
+
+  <button type="submit">Salvar</button>
+
+</form>
