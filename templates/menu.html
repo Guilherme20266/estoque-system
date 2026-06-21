@@ -1,9 +1,10 @@
-
 {% extends "base.html" %}
 
 {% block title %}Menu{% endblock %}
 
 {% block style %}
+
+/* (mesmo CSS que você já tinha) */
 
 body{
     font-family:Arial,sans-serif;
@@ -20,7 +21,6 @@ body{
     max-width:520px;
 }
 
-/* topo estilo login */
 .topo{
     background:rgba(255,255,255,0.95);
     border-radius:16px;
@@ -30,7 +30,6 @@ body{
     box-shadow:0 10px 30px rgba(0,0,0,0.25);
 }
 
-/* logo */
 .logo{
     display:block;
     width:80px;
@@ -57,7 +56,6 @@ h1{
     color:#374151;
 }
 
-/* botões */
 .btn{
     width:100%;
     padding:15px;
@@ -76,12 +74,10 @@ h1{
     transform:translateY(-2px);
 }
 
-/* azul padrão */
 .padrao{
     background:linear-gradient(90deg,#3b82f6,#2563eb);
 }
 
-/* vermelho */
 .admin{
     background:linear-gradient(90deg,#ef4444,#dc2626);
 }
@@ -111,12 +107,13 @@ a{
         </div>
 
         <div class="usuario">
-            👤 {{ usuario }} | {{ perfil }}
+            👤 {{ usuario }}
         </div>
 
     </div>
 
-    {% if perfil in ["admin", "operador", "separacao"] %}
+    <!-- CADASTRAR -->
+    {% if "cadastrar_produto" in permissoes %}
     <a href="/cadastrar">
         <button class="btn padrao">
             ➕ Cadastrar Produto
@@ -124,13 +121,17 @@ a{
     </a>
     {% endif %}
 
+    <!-- CONSULTA (sempre liberado se você quiser manter fixo) -->
+    {% if "consultar" in permissoes or True %}
     <a href="/consulta">
         <button class="btn padrao">
             🔎 Consulta
         </button>
     </a>
+    {% endif %}
 
-    {% if perfil in ["admin", "operador", "separacao"] %}
+    <!-- INVENTÁRIO -->
+    {% if "inventario" in permissoes %}
     <a href="/inventario">
         <button class="btn padrao">
             📦 Inventário
@@ -138,7 +139,26 @@ a{
     </a>
     {% endif %}
 
-    {% if perfil in ["admin", "operador"] %}
+    <!-- MOVIMENTAÇÃO -->
+    {% if "movimentacao" in permissoes %}
+    <a href="/movimentacao">
+        <button class="btn padrao">
+            🔄 Movimentação
+        </button>
+    </a>
+    {% endif %}
+
+    <!-- TRANSFERÊNCIA -->
+    {% if "transferencia" in permissoes %}
+    <a href="/transferencia">
+        <button class="btn padrao">
+            🚚 Transferência
+        </button>
+    </a>
+    {% endif %}
+
+    <!-- HISTÓRICO -->
+    {% if "historico" in permissoes %}
     <a href="/historico">
         <button class="btn padrao">
             📜 Histórico
@@ -146,7 +166,8 @@ a{
     </a>
     {% endif %}
 
-    {% if perfil == "admin" %}
+    <!-- ADMIN -->
+    {% if "admin" in permissoes %}
     <a href="/administracao">
         <button class="btn admin">
             ⚙️ Administração
