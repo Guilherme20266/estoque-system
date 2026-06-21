@@ -1247,6 +1247,18 @@ def enviar_backup_drive(caminho_arquivo):
         media_body=media,
         fields="id"
     ).execute()
+
+@app.route('/migrar')
+def migrar():
+
+    try:
+        db.engine.execute(
+            "ALTER TABLE usuario ADD COLUMN permissoes TEXT DEFAULT '[]'"
+        )
+        return "OK - coluna criada"
+
+    except Exception as e:
+        return str(e)
     
 with app.app_context():
     db.create_all()
