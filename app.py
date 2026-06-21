@@ -1,15 +1,11 @@
 from flask import (
-    Flask, jsonify, render_template, request, redirect,
-    session, flash, Response, send_file, url_for
+    Flask, render_template, request, redirect,
+    session
 )
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
-from openpyxl import Workbook
-from io import BytesIO
 import os, json
-
 
 app = Flask(__name__)
 
@@ -26,20 +22,19 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # ==========================
-# PERMISSÕES PADRÃO (IGUAL HTML)
+# PERMISSÕES (PADRÃO DO SEU HTML)
 # ==========================
 PERMISSOES_PADRAO = [
-    "cadastrar_produto",
-    "consultar",
-    "inventario",
-    "movimentacao",
-    "transferencia",
-    "editar_produto",
-    "excluir_produto",
-    "historico",
-    "admin"
+    "CADASTRAR_PRODUTO",
+    "CONSULTA",
+    "INVENTARIO",
+    "MOVIMENTACAO",
+    "TRANSFERENCIA",
+    "EDITAR_PRODUTO",
+    "EXCLUIR_PRODUTO",
+    "HISTORICO",
+    "ADMIN"
 ]
-
 
 # ==========================
 # MODELOS
@@ -80,20 +75,20 @@ def logado():
 
 
 def tem_permissao(permissao):
-    usuario = session.get("usuario")
-    if not usuario:
-        return False
-
-    user = Usuario.query.filter_by(usuario=usuario).first()
+    user = Usuario.query.filter_by(usuario=session.get("usuario")).first()
     if not user:
         return False
 
+    permissoes = []
     try:
         permissoes = json.loads(user.permissoes or "[]")
     except:
         permissoes = []
 
-    # ADMIN só tem acesso se estiver na lista também
+    # ADMIN MASTER SEMPRE LIBERADO
+    if user.perfil == "admin":
+        return True
+
     return permissao in permissoes
 
 
@@ -119,6 +114,7 @@ def entrar():
 
     session["usuario"] = user.usuario
     session["perfil"] = user.perfil
+    session["permissoes"] = user.permissoes
     session.permanent = True
 
     return redirect("/menu")
@@ -138,11 +134,11 @@ def menu():
 
 
 # ==========================
-# CADASTRO
+# CADASTRAR
 # ==========================
 @app.route("/cadastrar", methods=["GET", "POST"])
 def cadastrar():
-    if not tem_permissao("cadastrar_produto"):
+    if not tem_permissao("CADASTRAR_PRODUTO"):
         return redirect("/menu")
 
     if request.method == "POST":
@@ -173,7 +169,7 @@ def cadastrar():
 # ==========================
 @app.route("/inventario")
 def inventario():
-    if not tem_permissao("inventario"):
+    if not tem_permissao("INVENTARIO"):
         return redirect("/menu")
 
     produtos = Produto.query.all()
@@ -185,7 +181,7 @@ def inventario():
 # ==========================
 @app.route("/movimentacao", methods=["GET", "POST"])
 def movimentacao():
-    if not tem_permissao("movimentacao"):
+    if not tem_permissao("MOVIMENTACAO"):
         return redirect("/menu")
 
     produtos = Produto.query.all()
@@ -210,7 +206,7 @@ def movimentacao():
 # ==========================
 @app.route("/transferencia", methods=["GET", "POST"])
 def transferencia():
-    if not tem_permissao("transferencia"):
+    if not tem_permissao("TRANSFERENCIA"):
         return redirect("/menu")
 
     if request.method == "POST":
@@ -226,7 +222,7 @@ def transferencia():
 # ==========================
 @app.route("/historico")
 def historico():
-    if not tem_permissao("historico"):
+    if not tem_permissao("HISTORICO"):
         return redirect("/menu")
 
     registros = Historico.query.order_by(Historico.id.desc()).all()
@@ -238,7 +234,7 @@ def historico():
 # ==========================
 @app.route("/excluir/<int:id>")
 def excluir(id):
-    if not tem_permissao("excluir_produto"):
+    if not tem_permissao("EXCLUIR_PRODUTO"):
         return redirect("/inventario")
 
     p = Produto.query.get_or_404(id)
@@ -253,7 +249,7 @@ def excluir(id):
 # ==========================
 @app.route("/administracao")
 def administracao():
-    if not tem_permissao("admin"):
+    if not tem_permissao("ADMIN"):
         return redirect("/menu")
 
     usuarios = Usuario.query.all()
@@ -265,7 +261,6 @@ def administracao():
 # ==========================
 @app.route("/usuarios/<int:id>/permissoes", methods=["GET", "POST"])
 def permissoes(id):
-
     if session.get("perfil") != "admin":
         return redirect("/menu")
 
@@ -284,16 +279,15 @@ def permissoes(id):
 # ==========================
 @app.route("/criar-usuario", methods=["POST"])
 def criar_usuario():
-
     if session.get("perfil") != "admin":
         return redirect("/menu")
 
     perfil = request.form["perfil"]
 
     permissoes = PERMISSOES_PADRAO if perfil == "admin" else [
-        "inventario",
-        "movimentacao",
-        "consultar"
+        "CONSULTA",
+        "INVENTARIO",
+        "MOVIMENTACAO"
     ]
 
     user = Usuario(
@@ -317,14 +311,10 @@ with app.app_context():
 
     admins = Usuario.query.filter_by(perfil="admin").all()
     for admin in admins:
-        if not admin.permissoes:
-            admin.permissoes = json.dumps(PERMISSOES_PADRAO)
+        admin.permissoes = json.dumps(PERMISSOES_PADRAO)
 
     db.session.commit()
 
 
-# ==========================
-# START
-# ==========================
 if __name__ == "__main__":
     app.run()
