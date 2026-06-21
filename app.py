@@ -361,8 +361,15 @@ def criar_usuario():
 # ==========================
 # INIT DB
 # ==========================
+
 with app.app_context():
-    db.create_all()
+    admin = Usuario.query.filter_by(perfil="admin").first()
+
+    if admin:
+        admin.permissoes = json.dumps(PERMISSOES_PADRAO)
+        db.session.commit()
+
+        print("Admin corrigido com permissões completas!")
 
 
 if __name__ == "__main__":
