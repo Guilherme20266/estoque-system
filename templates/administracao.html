@@ -25,24 +25,6 @@ body{
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.alert{
-    padding:12px;
-    border-radius:10px;
-    margin-bottom:15px;
-    font-weight:bold;
-}
-
-.alert-success{
-    background:#d4edda;
-    color:#155724;
-}
-
-.alert-error,
-.alert-danger{
-    background:#f8d7da;
-    color:#721c24;
-}
-
 .card{
     background:white;
     padding:15px;
@@ -51,38 +33,10 @@ body{
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.info{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    background:#f8f9fa;
-    padding:14px;
-    border-radius:8px;
-    margin-top:10px;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    color:white;
-    margin-top:10px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.menu{ background:#6c757d; }
-.criar{ background:#28a745; }
-.editar{ background:#007bff; }
-.excluir{ background:#dc3545; }
-.excel{ background:#28a745; }
-.backup{ background:#28a745; }
-
 .usuario{
-    border:1px solid #ddd;
-    padding:12px;
+    border:1px solid #e5e5e5;
     border-radius:10px;
+    padding:15px;
     margin-top:10px;
 }
 
@@ -95,6 +49,23 @@ button{
 .acoes-usuario a{
     flex:1;
 }
+
+button{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.menu{ background:#6c757d; }
+.criar{ background:#28a745; }
+.editar{ background:#007bff; }
+.excluir{ background:#dc3545; }
+
+small{ color:#666; }
 
 @media(max-width:600px){
     .acoes-usuario{
@@ -112,57 +83,9 @@ button{
     <h2>⚙️ Administração</h2>
 </div>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="alert alert-{{ category }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
 <a href="/menu">
     <button class="menu">🏠 Voltar ao Menu</button>
 </a>
-
-<!-- USUÁRIOS -->
-<div class="card">
-
-    <h3>👥 Usuários</h3>
-
-    {% for user in usuarios %}
-
-    <div class="usuario">
-
-        <b>{{ user.usuario }}</b><br>
-        <small>Perfil: {{ user.perfil }}</small>
-
-        {% if user.usuario != session.get('usuario') %}
-
-        <div class="acoes-usuario">
-
-            <a href="/editar-usuario/{{ user.id }}">
-                <button class="editar">✏️ Editar</button>
-            </a>
-
-            <a href="/usuarios/{{ user.id }}/permissoes">
-                <button class="menu">🔐 Permissões</button>
-            </a>
-
-            <a href="/excluir-usuario/{{ user.id }}">
-                <button class="excluir">🗑️ Excluir</button>
-            </a>
-
-        </div>
-
-        {% endif %}
-
-    </div>
-
-    {% endfor %}
-
-</div>
 
 <!-- CRIAR USUÁRIO -->
 <div class="card">
@@ -177,6 +100,36 @@ button{
         <button class="criar" type="submit">➕ Criar Usuário</button>
 
     </form>
+
+</div>
+
+<!-- USUÁRIOS -->
+<div class="card">
+
+    <h3>👥 Usuários</h3>
+
+    {% for user in usuarios %}
+
+    <div class="usuario">
+
+        <b>{{ user.usuario }}</b><br>
+        <small>ID: {{ user.id }}</small>
+
+        <div class="acoes-usuario">
+
+            <a href="/usuarios/{{ user.id }}/permissoes">
+                <button class="menu">🔐 Permissões</button>
+            </a>
+
+            <a href="/excluir-usuario/{{ user.id }}">
+                <button class="excluir">🗑️ Excluir</button>
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
 
 </div>
 
