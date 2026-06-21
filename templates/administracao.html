@@ -25,7 +25,6 @@ body{
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-/* 🔥 ALERTAS FLASK */
 .alert{
     padding:12px;
     border-radius:10px;
@@ -124,15 +123,14 @@ button{
 }
 
 .acoes-usuario button{
+    width:100%;
     margin-top:0;
 }
 
-h2,h3{ margin-top:0; }
-small{ color:#666; }
-a{ text-decoration:none; }
-
 @media(max-width:600px){
-    .acoes-usuario{ flex-direction:column; }
+    .acoes-usuario{
+        flex-direction:column;
+    }
 }
 
 {% endblock %}
@@ -159,230 +157,176 @@ a{ text-decoration:none; }
     <button class="menu">🏠 Voltar ao Menu</button>
 </a>
 
-    <!-- RELATÓRIO -->
-    <div class="card">
+<!-- RELATÓRIO -->
+<div class="card">
 
-        <h3>📊 Relatório do Sistema</h3>
+    <h3>📊 Relatório do Sistema</h3>
 
-        <div class="info">
-            📦 Produtos Cadastrados
-            <b>{{ total_produtos }}</b>
-        </div>
-
-        <div class="info">
-            👥 Usuários Cadastrados
-            <b>{{ total_usuarios }}</b>
-        </div>
-
-        <div class="info">
-            🔴 Produtos Urgentes
-            <b>{{ produtos_urgentes }}</b>
-        </div>
-
-        <div class="info">
-    📋 Movimentações Registradas
-    <b>{{ total_historico }}</b>
-</div>
-
-<div class="info">
-    🗄️ Banco de Dados
-    <b>Online</b>
-</div>
-
-{% if ultimo_historico %}
-<div class="info">
-    🕒 Última Ação
-    <b>{{ ultimo_historico.acao }}</b>
-</div>
-{% endif %}
-
+    <div class="info">
+        📦 Produtos Cadastrados
+        <b>{{ total_produtos }}</b>
     </div>
 
-    <!-- Ferramentas -->
+    <div class="info">
+        👥 Usuários Cadastrados
+        <b>{{ total_usuarios }}</b>
+    </div>
+
+    <div class="info">
+        🔴 Produtos Urgentes
+        <b>{{ produtos_urgentes }}</b>
+    </div>
+
+    <div class="info">
+        📋 Movimentações Registradas
+        <b>{{ total_historico }}</b>
+    </div>
+
+    <div class="info">
+        🗄️ Banco de Dados
+        <b>Online</b>
+    </div>
+
+    {% if ultimo_historico %}
+    <div class="info">
+        🕒 Última Ação
+        <b>{{ ultimo_historico.acao }}</b>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- FERRAMENTAS -->
 <div class="card">
 
     <h3>🛠️ Ferramentas</h3>
 
     <a href="/catalogo">
-        <button class="editar">
-            📦 Abrir Catálogo de Produtos
-        </button>
+        <button class="editar">📦 Abrir Catálogo</button>
     </a>
 
     <a href="/exportar-historico">
-        <button class="excel">
-            📥 Exportar Histórico (Excel)
-        </button>
+        <button class="excel">📥 Exportar Histórico</button>
     </a>
 
-    <button class="limpar" onclick="abrirModalLimpar()">
-        🗑️ Limpar Histórico
-    </button>
+    <button class="limpar" onclick="abrirModalLimpar()">🗑️ Limpar Histórico</button>
 
 </div>
 
-<!-- Segurança -->
+<!-- BACKUP -->
 <div class="card">
 
-    <h3>🔒 Segurança e Backup</h3>
+    <h3>🔒 Backup</h3>
 
     <a href="/criar-backup">
-        <button class="backup">
-            💾 Criar Backup Agora
-        </button>
+        <button class="backup">💾 Criar Backup</button>
     </a>
 
     <a href="/baixar-backup">
-        <button class="backup">
-            📥 Baixar Último Backup
-        </button>
+        <button class="backup">📥 Baixar Backup</button>
     </a>
 
-    <button class="menu" disabled>
-        ☁️ Restaurar Backup
-    </button>
+</div>
+
+<!-- CRIAR USUÁRIO -->
+<div class="card">
+
+    <h3>👤 Criar Usuário</h3>
+
+    <form action="/criar-usuario" method="POST">
+
+        <input type="text" name="usuario" placeholder="Usuário" required>
+        <input type="password" name="senha" placeholder="Senha" required>
+
+        <select name="perfil">
+            <option value="admin">Administrador</option>
+            <option value="operador">Operador</option>
+            <option value="separacao">Separação</option>
+            <option value="consulta">Consulta</option>
+        </select>
+
+        <button class="criar" type="submit">➕ Criar Usuário</button>
+
+    </form>
 
 </div>
 
-    <!-- CRIAR USUÁRIO -->
-    <div class="card">
+<!-- USUÁRIOS -->
+<div class="card">
 
-        <h3>👤 Criar Usuário</h3>
+    <h3>👥 Usuários</h3>
 
-        <form action="/criar-usuario" method="POST">
-
-            <input type="text" name="usuario" placeholder="Usuário" required>
-            <input type="password" name="senha" placeholder="Senha" required>
-
-            <select name="perfil">
-                <option value="admin">Administrador</option>
-                <option value="operador">Operador</option>
-                <option value="separacao">Separação</option>
-                <option value="consulta">Consulta</option>
-            </select>
-
-            <button class="criar" type="submit">➕ Criar Usuário</button>
-
-        </form>
-
+    {% if master %}
+    <div class="usuario master">
+        <b>👑 {{ master.usuario }}</b><br>
+        <small>Perfil: {{ master.perfil }}</small>
     </div>
+    {% endif %}
 
-    <!-- USUÁRIOS -->
-    <div class="card">
+    {% for user in usuarios %}
 
-        <h3>👥 Usuários Cadastrados</h3>
+    <div class="usuario">
 
-        {% if master %}
-        <div class="usuario master">
-            <b>👑 {{ master.usuario }}</b><br>
-            <small>Perfil: {{ master.perfil }}</small>
+        <b>{{ user.usuario }}</b><br>
+        <small>Perfil: {{ user.perfil }}</small>
+
+        {% if user.usuario != 'Guilherme$' %}
+
+        <div class="acoes-usuario">
+
+            <a href="/editar-usuario/{{ user.id }}">
+                <button class="editar">✏️ Editar</button>
+            </a>
+
+            <a href="/usuarios/{{ user.id }}/permissoes">
+                <button class="menu">🔐 Permissões</button>
+            </a>
+
+            <a href="/excluir-usuario/{{ user.id }}">
+                <button class="excluir">🗑️ Excluir</button>
+            </a>
+
         </div>
+
         {% endif %}
 
-        {% for user in usuarios %}
-
-        <div class="usuario">
-
-            <b>{{ user.usuario }}</b><br>
-            <small>Perfil: {{ user.perfil }}</small>
-
-            {% if user.usuario != 'Guilherme$' %}
-
-            <div class="acoes-usuario">
-
-                <a href="/editar-usuario/{{ user.id }}">
-                    <button class="editar">✏️ Editar</button>
-                </a>
-
-                <a href="/excluir-usuario/{{ user.id }}">
-                    <button class="excluir">🗑️ Excluir</button>
-                </a>
-
-            <div class="acoes-usuario">
-
-                <a href="/editar-usuario/{{ user.id }}">
-                    <button class="editar">✏️ Editar</button>
-                </a>
-
-                <a href="/usuarios/{{ user.id }}/permissoes">
-                    <button class="menu">🔐 Permissões</button>
-                </a>
-
-                <a href="/excluir-usuario/{{ user.id }}">
-                    <button class="excluir">🗑️ Excluir</button>
-                </a>
-   
-            </div>
-
-            {% endif %}
-
-        </div>
-
-        {% endfor %}
-
     </div>
+
+    {% endfor %}
 
 </div>
 
-<!-- MODAL CONFIRMAÇÃO -->
-<div id="modal-limpar" style="
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.6);
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-">
+</div>
 
-    <div style="
-        background:white;
-        padding:25px;
-        border-radius:12px;
-        width:320px;
-        text-align:center;
-        box-shadow:0 5px 20px rgba(0,0,0,0.3);
-    ">
+<!-- MODAL -->
+<div id="modal-limpar" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:9999;">
+
+    <div style="background:white;padding:25px;border-radius:12px;width:320px;text-align:center;">
 
         <h3>⚠️ Confirmação</h3>
-
         <p>Tem certeza que deseja apagar todo o histórico?</p>
 
         <form method="POST" action="/limpar-historico">
 
-            <button type="submit" class="excluir">
-                Sim, apagar
-            </button>
+            <button type="submit" class="excluir">Sim, apagar</button>
 
-            <button type="button" onclick="fecharModal()" style="
-                background:#6c757d;
-                color:white;
-                width:100%;
-                margin-top:10px;
-                padding:12px;
-                border:none;
-                border-radius:8px;
-                cursor:pointer;
-                font-weight:bold;
-            ">
+            <button type="button" onclick="fecharModal()" class="menu" style="margin-top:10px;">
                 Cancelar
             </button>
 
         </form>
 
     </div>
+
 </div>
 
 <script>
-function abrirModalLimpar() {
-    document.getElementById('modal-limpar').style.display = 'flex';
+function abrirModalLimpar(){
+    document.getElementById('modal-limpar').style.display='flex';
 }
 
-function fecharModal() {
-    document.getElementById('modal-limpar').style.display = 'none';
+function fecharModal(){
+    document.getElementById('modal-limpar').style.display='none';
 }
 </script>
 
