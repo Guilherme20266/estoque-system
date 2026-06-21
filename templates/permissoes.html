@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Permissões do Usuário{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="topo">
+        <h2>🔐 Permissões do usuário</h2>
+        <p><b>{{ usuario.usuario }}</b> ({{ usuario.perfil }})</p>
+    </div>
+
+    <form method="POST">
+
+        <div class="card">
+
+            <h3>📦 Módulos do sistema</h3>
+
+            <label>
+                <input type="checkbox" name="permissoes" value="cadastrar_produto"
+                {% if "cadastrar_produto" in permissoes %}checked{% endif %}>
+                Cadastrar Produto
+            </label><br><br>
+
+            <label>
+                <input type="checkbox" name="permissoes" value="inventario"
+                {% if "inventario" in permissoes %}checked{% endif %}>
+                Inventário
+            </label><br><br>
+
+            <label>
+                <input type="checkbox" name="permissoes" value="movimentacao"
+                {% if "movimentacao" in permissoes %}checked{% endif %}>
+                Movimentação
+            </label><br><br>
+
+            <label>
+                <input type="checkbox" name="permissoes" value="transferencia"
+                {% if "transferencia" in permissoes %}checked{% endif %}>
+                Transferência
+            </label><br><br>
+
+            <label>
+                <input type="checkbox" name="permissoes" value="historico"
+                {% if "historico" in permissoes %}checked{% endif %}>
+                Histórico
+            </label><br><br>
+
+            <label>
+                <input type="checkbox" name="permissoes" value="consultar"
+                {% if "consultar" in permissoes %}checked{% endif %}>
+                Consulta
+            </label><br><br>
+
+            <label>
+                <input type="checkbox" name="permissoes" value="excluir_produto"
+                {% if "excluir_produto" in permissoes %}checked{% endif %}>
+                Excluir Produto
+            </label><br><br>
+
+            <label>
+                <input type="checkbox" name="permissoes" value="catalogo"
+                {% if "catalogo" in permissoes %}checked{% endif %}>
+                Catálogo
+            </label><br><br>
+
+            <label>
+                <input type="checkbox" name="permissoes" value="admin"
+                {% if "admin" in permissoes %}checked{% endif %}>
+                Administração
+            </label><br><br>
+
+            <button type="submit" class="criar">💾 Salvar permissões</button>
+
+            <a href="/administracao">
+                <button type="button" class="menu">⬅ Voltar</button>
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
