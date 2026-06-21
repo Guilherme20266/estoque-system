@@ -89,25 +89,12 @@ def logado():
 
 
 def tem_permissao(permissao):
-
     user = Usuario.query.filter_by(usuario=session.get("usuario")).first()
     if not user:
         return False
 
-    # ADMIN SEMPRE TEM TUDO (ignora lista do banco)
     if user.perfil == "admin":
         return True
-
-    try:
-        permissoes = json.loads(user.permissoes or "[]")
-    except:
-        permissoes = []
-
-    return permissao in permissoes
-
-    user = Usuario.query.filter_by(usuario=session.get("usuario")).first()
-    if not user:
-        return False
 
     try:
         permissoes = json.loads(user.permissoes or "[]")
@@ -249,15 +236,13 @@ def movimentacao():
     produtos = Produto.query.all()
 
     if request.method == "POST":
-
         produto = Produto.query.get(request.form["produto_id"])
         qtd = int(request.form["quantidade"])
         acao = request.form["acao"]
 
         if acao == "entrada":
             produto.quantidade += qtd
-
-        if acao == "saida":
+        elif acao == "saida":
             produto.quantidade -= qtd
 
         db.session.commit()
@@ -274,10 +259,8 @@ def transferencia():
         return redirect("/menu")
 
     if request.method == "POST":
-
         produto = Produto.query.get(request.form["produto_id"])
         produto.endereco = request.form["novo_endereco"]
-
         db.session.commit()
 
     return render_template("transferencia.html")
@@ -319,7 +302,6 @@ def administracao():
         return redirect("/menu")
 
     usuarios = Usuario.query.all()
-
     return render_template("administracao.html", usuarios=usuarios)
 
 
@@ -328,7 +310,6 @@ def administracao():
 # ==========================
 @app.route("/usuarios/<int:id>/permissoes", methods=["GET", "POST"])
 def permissoes(id):
-
     if session.get("perfil") != "admin":
         return redirect("/menu")
 
@@ -347,7 +328,6 @@ def permissoes(id):
 # ==========================
 @app.route("/criar-usuario", methods=["POST"])
 def criar_usuario():
-
     if session.get("perfil") != "admin":
         return redirect("/menu")
 
@@ -373,18 +353,20 @@ def criar_usuario():
 
 
 # ==========================
-# INIT DB
+# INIT DB (CORRIGIDO)
 # ==========================
-
 with app.app_context():
     db.create_all()
 
     admins = Usuario.query.filter_by(perfil="admin").all()
+    for admin in admins:
+        admin.permissoes = json.dumps(PERMISSOES_PADRAO)
 
-for admin in admins:
-    admin.permissoes = json.dumps(PERMISSOES_PADRAO)
+    db.session.commit()
 
-db.session.commit()
 
+# ==========================
+# START
+# ==========================
 if __name__ == "__main__":
     app.run()
