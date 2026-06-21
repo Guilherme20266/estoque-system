@@ -1,6 +1,6 @@
 from flask import (
     Flask, render_template, request, redirect,
-    session, flash
+    session
 )
 
 from flask_sqlalchemy import SQLAlchemy
@@ -70,9 +70,7 @@ class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario = db.Column(db.String(100), unique=True)
     senha = db.Column(db.String(100))
-    perfil = db.Column(db.String(20))
     permissoes = db.Column(db.Text, default="[]", nullable=False)
-
 
 # ==========================
 # LOGIN HELPERS
@@ -83,12 +81,9 @@ def logado():
 
 def tem_permissao(permissao):
     user = Usuario.query.filter_by(usuario=session.get("usuario")).first()
+
     if not user:
         return False
-
-    # admin libera tudo
-    if user.perfil == "admin":
-        return True
 
     try:
         permissoes = json.loads(user.permissoes or "[]")
@@ -137,7 +132,6 @@ def entrar():
         return redirect("/")
 
     session["usuario"] = user.usuario
-    session["perfil"] = user.perfil
     session.permanent = True
 
     return redirect("/menu")
@@ -295,7 +289,6 @@ def administracao():
         return redirect("/menu")
 
     usuarios = Usuario.query.all()
-
     return render_template("administracao.html", usuarios=usuarios)
 
 
@@ -333,19 +326,11 @@ def criar_usuario():
 
     usuario = request.form["usuario"]
     senha = request.form["senha"]
-    perfil = request.form["perfil"]
-
-    permissoes = PERMISSOES_PADRAO if perfil == "admin" else [
-        "inventario",
-        "movimentacao",
-        "consultar"
-    ]
 
     user = Usuario(
         usuario=usuario,
         senha=senha,
-        perfil=perfil,
-        permissoes=json.dumps(permissoes)
+        permissoes=json.dumps(["inventario", "movimentacao"])
     )
 
     db.session.add(user)
