@@ -94,7 +94,8 @@ def tem_permissao(permissao):
         return False
 
     if user.perfil == "admin":
-        return True
+        permissoes = json.loads(user.permissoes or "[]")
+        return permissao in permissoes
 
     try:
         permissoes = json.loads(user.permissoes or "[]")
