@@ -1,13 +1,11 @@
 from flask import (
     Flask, render_template, request, redirect,
-    session, flash, Response
+    session, flash
 )
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
-from openpyxl import Workbook
-from io import BytesIO
 import os, json
 
 app = Flask(__name__)
@@ -73,7 +71,7 @@ class Usuario(db.Model):
     usuario = db.Column(db.String(100), unique=True)
     senha = db.Column(db.String(100))
     perfil = db.Column(db.String(20))
-    permissoes = db.Column(db.Text, default="[]")
+    permissoes = db.Column(db.Text, default="[]", nullable=False)
 
 
 # ==========================
@@ -88,6 +86,7 @@ def tem_permissao(permissao):
     if not user:
         return False
 
+    # admin libera tudo
     if user.perfil == "admin":
         return True
 
@@ -139,7 +138,6 @@ def entrar():
 
     session["usuario"] = user.usuario
     session["perfil"] = user.perfil
-    session["permissoes"] = user.permissoes
     session.permanent = True
 
     return redirect("/menu")
@@ -302,7 +300,7 @@ def administracao():
 
 
 # ==========================
-# PERMISSÕES USUÁRIO
+# PERMISSÕES
 # ==========================
 @app.route("/usuarios/<int:id>/permissoes", methods=["GET", "POST"])
 def permissoes(id):
@@ -317,7 +315,11 @@ def permissoes(id):
         db.session.commit()
         return redirect("/administracao")
 
-    return render_template("permissoes.html", usuario=user)
+    return render_template(
+        "permissoes.html",
+        usuario=user,
+        permissoes=json.loads(user.permissoes or "[]")
+    )
 
 
 # ==========================
@@ -331,8 +333,9 @@ def criar_usuario():
 
     usuario = request.form["usuario"]
     senha = request.form["senha"]
+    perfil = request.form["perfil"]
 
-    permissoes = [
+    permissoes = PERMISSOES_PADRAO if perfil == "admin" else [
         "inventario",
         "movimentacao",
         "consultar"
@@ -341,7 +344,7 @@ def criar_usuario():
     user = Usuario(
         usuario=usuario,
         senha=senha,
-        perfil="usuario",
+        perfil=perfil,
         permissoes=json.dumps(permissoes)
     )
 
@@ -357,9 +360,9 @@ def criar_usuario():
 with app.app_context():
     db.create_all()
 
-    admins = Usuario.query.filter_by(perfil="admin").all()
-    for admin in admins:
-        admin.permissoes = json.dumps(PERMISSOES_PADRAO)
+    for u in Usuario.query.all():
+        if not u.permissoes:
+            u.permissoes = json.dumps([])
 
     db.session.commit()
 
