@@ -1249,20 +1249,6 @@ def enviar_backup_drive(caminho_arquivo):
     ).execute()
 
 from sqlalchemy import text
-
-@app.route('/migrar')
-def migrar():
-
-    try:
-        db.session.execute(
-            text("ALTER TABLE usuario ADD COLUMN permissoes TEXT DEFAULT '[]'")
-        )
-        db.session.commit()
-
-        return "OK - coluna criada"
-
-    except Exception as e:
-        return str(e)
     
 with app.app_context():
     db.create_all()
