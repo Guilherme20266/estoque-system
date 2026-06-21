@@ -10,11 +10,6 @@ from openpyxl import Workbook
 from io import BytesIO
 import os, json
 
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
-
 
 app = Flask(__name__)
 
@@ -31,19 +26,20 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # ==========================
-# PERMISSÕES PADRÃO
+# PERMISSÕES PADRÃO (IGUAL HTML)
 # ==========================
 PERMISSOES_PADRAO = [
     "cadastrar_produto",
+    "consultar",
     "inventario",
     "movimentacao",
     "transferencia",
-    "historico",
-    "consultar",
+    "editar_produto",
     "excluir_produto",
-    "catalogo",
+    "historico",
     "admin"
 ]
+
 
 # ==========================
 # MODELOS
@@ -55,12 +51,6 @@ class Produto(db.Model):
     quantidade = db.Column(db.Integer, default=0)
     validade = db.Column(db.String(20))
     endereco = db.Column(db.String(50), unique=True, nullable=False)
-
-
-class CatalogoProduto(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    codigo = db.Column(db.String(50), unique=True)
-    nome = db.Column(db.String(200))
 
 
 class Historico(db.Model):
@@ -81,46 +71,30 @@ class Usuario(db.Model):
     perfil = db.Column(db.String(20))
     permissoes = db.Column(db.Text, default="[]")
 
+
 # ==========================
-# LOGIN HELPERS
+# HELPERS
 # ==========================
 def logado():
     return session.get("usuario")
 
 
 def tem_permissao(permissao):
-    user = Usuario.query.filter_by(usuario=session.get("usuario")).first()
-    if not user:
+    usuario = session.get("usuario")
+    if not usuario:
         return False
 
-    if user.perfil == "admin":
-        permissoes = json.loads(user.permissoes or "[]")
-        return permissao in permissoes
+    user = Usuario.query.filter_by(usuario=usuario).first()
+    if not user:
+        return False
 
     try:
         permissoes = json.loads(user.permissoes or "[]")
     except:
         permissoes = []
 
+    # ADMIN só tem acesso se estiver na lista também
     return permissao in permissoes
-
-
-# ==========================
-# STATUS VALIDADE
-# ==========================
-def calcular_status(validade):
-    try:
-        hoje = datetime.today()
-        data = datetime.strptime(validade, "%d/%m/%Y")
-        meses = (data.year - hoje.year) * 12 + data.month - hoje.month
-
-        if meses <= 4:
-            return "URGENTE", 1
-        elif meses <= 7:
-            return "ATENÇÃO", 2
-        return "OK", 3
-    except:
-        return "SEM_DATA", 4
 
 
 # ==========================
@@ -145,7 +119,6 @@ def entrar():
 
     session["usuario"] = user.usuario
     session["perfil"] = user.perfil
-    session["permissoes"] = user.permissoes
     session.permanent = True
 
     return redirect("/menu")
@@ -188,17 +161,6 @@ def cadastrar():
         )
 
         db.session.add(produto)
-
-        db.session.add(Historico(
-            data=str(datetime.now()),
-            usuario=session.get("usuario"),
-            acao="CADASTRO",
-            produto=produto.nome,
-            quantidade=produto.quantidade,
-            origem="-",
-            destino=endereco
-        ))
-
         db.session.commit()
 
         return redirect("/cadastrar?ok=1")
@@ -215,15 +177,7 @@ def inventario():
         return redirect("/menu")
 
     produtos = Produto.query.all()
-
-    lista = []
-    for p in produtos:
-        status, prioridade = calcular_status(p.validade)
-        lista.append({"produto": p, "status": status, "prioridade": prioridade})
-
-    lista.sort(key=lambda x: x["prioridade"])
-
-    return render_template("inventario.html", lista=lista)
+    return render_template("inventario.html", produtos=produtos)
 
 
 # ==========================
@@ -311,6 +265,7 @@ def administracao():
 # ==========================
 @app.route("/usuarios/<int:id>/permissoes", methods=["GET", "POST"])
 def permissoes(id):
+
     if session.get("perfil") != "admin":
         return redirect("/menu")
 
@@ -329,6 +284,7 @@ def permissoes(id):
 # ==========================
 @app.route("/criar-usuario", methods=["POST"])
 def criar_usuario():
+
     if session.get("perfil") != "admin":
         return redirect("/menu")
 
@@ -354,14 +310,15 @@ def criar_usuario():
 
 
 # ==========================
-# INIT DB (CORRIGIDO)
+# INIT DB
 # ==========================
 with app.app_context():
     db.create_all()
 
     admins = Usuario.query.filter_by(perfil="admin").all()
     for admin in admins:
-        admin.permissoes = json.dumps(PERMISSOES_PADRAO)
+        if not admin.permissoes:
+            admin.permissoes = json.dumps(PERMISSOES_PADRAO)
 
     db.session.commit()
 
