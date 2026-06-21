@@ -89,8 +89,21 @@ def logado():
 
 
 def tem_permissao(permissao):
-    if session.get("perfil") == "admin":
+
+    user = Usuario.query.filter_by(usuario=session.get("usuario")).first()
+    if not user:
+        return False
+
+    # ADMIN SEMPRE TEM TUDO (ignora lista do banco)
+    if user.perfil == "admin":
         return True
+
+    try:
+        permissoes = json.loads(user.permissoes or "[]")
+    except:
+        permissoes = []
+
+    return permissao in permissoes
 
     user = Usuario.query.filter_by(usuario=session.get("usuario")).first()
     if not user:
@@ -144,6 +157,7 @@ def entrar():
 
     session["usuario"] = user.usuario
     session["perfil"] = user.perfil
+    session["permissoes"] = user.permissoes
     session.permanent = True
 
     return redirect("/menu")
@@ -365,14 +379,12 @@ def criar_usuario():
 with app.app_context():
     db.create_all()
 
-    admin = Usuario.query.filter_by(perfil="admin").first()
+    admins = Usuario.query.filter_by(perfil="admin").all()
 
-    if admin:
-        admin.permissoes = json.dumps(PERMISSOES_PADRAO)
-        db.session.commit()
+for admin in admins:
+    admin.permissoes = json.dumps(PERMISSOES_PADRAO)
 
-        print("Admin corrigido com permissões completas!")
-
+db.session.commit()
 
 if __name__ == "__main__":
     app.run()
