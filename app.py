@@ -363,6 +363,8 @@ def criar_usuario():
 # ==========================
 
 with app.app_context():
+    db.create_all()
+
     admin = Usuario.query.filter_by(perfil="admin").first()
 
     if admin:
