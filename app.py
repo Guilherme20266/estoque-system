@@ -147,7 +147,20 @@ def logout():
 def menu():
     if not logado():
         return redirect("/")
-    return render_template("menu.html")
+
+    user = Usuario.query.filter_by(usuario=session.get("usuario")).first()
+
+    permissoes = []
+    try:
+        permissoes = json.loads(user.permissoes or "[]")
+    except:
+        permissoes = []
+
+    return render_template(
+        "menu.html",
+        usuario=user.usuario,
+        permissoes=permissoes
+    )
 
 
 # ==========================
