@@ -25,6 +25,28 @@ body{
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
+/* 🔥 ALERTAS FLASK */
+.alert{
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-weight:bold;
+    box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+
+.alert-success{
+    background:#d4edda;
+    color:#155724;
+    border:1px solid #c3e6cb;
+}
+
+.alert-error,
+.alert-danger{
+    background:#f8d7da;
+    color:#721c24;
+    border:1px solid #f5c6cb;
+}
+
 .card{
     background:white;
     padding:15px;
@@ -33,29 +55,40 @@ body{
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.usuario{
-    border:1px solid #e5e5e5;
-    border-radius:10px;
-    padding:15px;
-    margin-top:10px;
-}
-
-.acoes-usuario{
+.info{
     display:flex;
-    gap:8px;
+    justify-content:space-between;
+    align-items:center;
+    background:#f8f9fa;
+    padding:14px;
+    border-radius:8px;
     margin-top:10px;
+    font-size:16px;
 }
 
-.acoes-usuario a{
-    flex:1;
+.info b{
+    color:#007bff;
+    font-size:18px;
+}
+
+input,
+select{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin-top:10px;
+    box-sizing:border-box;
 }
 
 button{
     width:100%;
-    padding:10px;
+    padding:12px;
     border:none;
     border-radius:8px;
     color:white;
+    margin-top:10px;
+    font-size:15px;
     cursor:pointer;
     font-weight:bold;
 }
@@ -64,13 +97,42 @@ button{
 .criar{ background:#28a745; }
 .editar{ background:#007bff; }
 .excluir{ background:#dc3545; }
+.limpar{ background:#dc3545; }
+.excel { background: #28a745; }
+.backup { background: #28a745; }
 
+.usuario{
+    border:1px solid #e5e5e5;
+    border-radius:10px;
+    padding:15px;
+    margin-top:10px;
+}
+
+.master{
+    border-left:5px solid gold;
+    background:#fff8dc;
+}
+
+.acoes-usuario{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+}
+
+.acoes-usuario a{
+    flex:1;
+}
+
+.acoes-usuario button{
+    margin-top:0;
+}
+
+h2,h3{ margin-top:0; }
 small{ color:#666; }
+a{ text-decoration:none; }
 
 @media(max-width:600px){
-    .acoes-usuario{
-        flex-direction:column;
-    }
+    .acoes-usuario{ flex-direction:column; }
 }
 
 {% endblock %}
@@ -83,56 +145,231 @@ small{ color:#666; }
     <h2>⚙️ Administração</h2>
 </div>
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 <a href="/menu">
     <button class="menu">🏠 Voltar ao Menu</button>
 </a>
 
-<!-- CRIAR USUÁRIO -->
-<div class="card">
+    <!-- RELATÓRIO -->
+    <div class="card">
 
-    <h3>👤 Criar Usuário</h3>
+        <h3>📊 Relatório do Sistema</h3>
 
-    <form action="/criar-usuario" method="POST">
+        <div class="info">
+            📦 Produtos Cadastrados
+            <b>{{ total_produtos }}</b>
+        </div>
 
-        <input type="text" name="usuario" placeholder="Usuário" required>
-        <input type="password" name="senha" placeholder="Senha" required>
+        <div class="info">
+            👥 Usuários Cadastrados
+            <b>{{ total_usuarios }}</b>
+        </div>
 
-        <button class="criar" type="submit">➕ Criar Usuário</button>
+        <div class="info">
+            🔴 Produtos Urgentes
+            <b>{{ produtos_urgentes }}</b>
+        </div>
 
-    </form>
-
+        <div class="info">
+    📋 Movimentações Registradas
+    <b>{{ total_historico }}</b>
 </div>
 
-<!-- USUÁRIOS -->
-<div class="card">
+<div class="info">
+    🗄️ Banco de Dados
+    <b>Online</b>
+</div>
 
-    <h3>👥 Usuários</h3>
-
-    {% for user in usuarios %}
-
-    <div class="usuario">
-
-        <b>{{ user.usuario }}</b><br>
-        <small>ID: {{ user.id }}</small>
-
-        <div class="acoes-usuario">
-
-            <a href="/usuarios/{{ user.id }}/permissoes">
-                <button class="menu">🔐 Permissões</button>
-            </a>
-
-            <a href="/excluir-usuario/{{ user.id }}">
-                <button class="excluir">🗑️ Excluir</button>
-            </a>
-
-        </div>
+{% if ultimo_historico %}
+<div class="info">
+    🕒 Última Ação
+    <b>{{ ultimo_historico.acao }}</b>
+</div>
+{% endif %}
 
     </div>
 
-    {% endfor %}
+    <!-- Ferramentas -->
+<div class="card">
+
+    <h3>🛠️ Ferramentas</h3>
+
+    <a href="/catalogo">
+        <button class="editar">
+            📦 Abrir Catálogo de Produtos
+        </button>
+    </a>
+
+    <a href="/exportar-historico">
+        <button class="excel">
+            📥 Exportar Histórico (Excel)
+        </button>
+    </a>
+
+    <button class="limpar" onclick="abrirModalLimpar()">
+        🗑️ Limpar Histórico
+    </button>
 
 </div>
 
+<!-- Segurança -->
+<div class="card">
+
+    <h3>🔒 Segurança e Backup</h3>
+
+    <a href="/criar-backup">
+        <button class="backup">
+            💾 Criar Backup Agora
+        </button>
+    </a>
+
+    <a href="/baixar-backup">
+        <button class="backup">
+            📥 Baixar Último Backup
+        </button>
+    </a>
+
+    <button class="menu" disabled>
+        ☁️ Restaurar Backup
+    </button>
+
 </div>
+
+    <!-- CRIAR USUÁRIO -->
+    <div class="card">
+
+        <h3>👤 Criar Usuário</h3>
+
+        <form action="/criar-usuario" method="POST">
+
+            <input type="text" name="usuario" placeholder="Usuário" required>
+            <input type="password" name="senha" placeholder="Senha" required>
+
+            <select name="perfil">
+                <option value="admin">Administrador</option>
+                <option value="operador">Operador</option>
+                <option value="separacao">Separação</option>
+                <option value="consulta">Consulta</option>
+            </select>
+
+            <button class="criar" type="submit">➕ Criar Usuário</button>
+
+        </form>
+
+    </div>
+
+    <!-- USUÁRIOS -->
+    <div class="card">
+
+        <h3>👥 Usuários Cadastrados</h3>
+
+        {% if master %}
+        <div class="usuario master">
+            <b>👑 {{ master.usuario }}</b><br>
+            <small>Perfil: {{ master.perfil }}</small>
+        </div>
+        {% endif %}
+
+        {% for user in usuarios %}
+
+        <div class="usuario">
+
+            <b>{{ user.usuario }}</b><br>
+            <small>Perfil: {{ user.perfil }}</small>
+
+            {% if user.usuario != 'Guilherme$' %}
+
+            <div class="acoes-usuario">
+
+                <a href="/editar-usuario/{{ user.id }}">
+                    <button class="editar">✏️ Editar</button>
+                </a>
+
+                <a href="/excluir-usuario/{{ user.id }}">
+                    <button class="excluir">🗑️ Excluir</button>
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- MODAL CONFIRMAÇÃO -->
+<div id="modal-limpar" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+">
+
+    <div style="
+        background:white;
+        padding:25px;
+        border-radius:12px;
+        width:320px;
+        text-align:center;
+        box-shadow:0 5px 20px rgba(0,0,0,0.3);
+    ">
+
+        <h3>⚠️ Confirmação</h3>
+
+        <p>Tem certeza que deseja apagar todo o histórico?</p>
+
+        <form method="POST" action="/limpar-historico">
+
+            <button type="submit" class="excluir">
+                Sim, apagar
+            </button>
+
+            <button type="button" onclick="fecharModal()" style="
+                background:#6c757d;
+                color:white;
+                width:100%;
+                margin-top:10px;
+                padding:12px;
+                border:none;
+                border-radius:8px;
+                cursor:pointer;
+                font-weight:bold;
+            ">
+                Cancelar
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+function abrirModalLimpar() {
+    document.getElementById('modal-limpar').style.display = 'flex';
+}
+
+function fecharModal() {
+    document.getElementById('modal-limpar').style.display = 'none';
+}
+</script>
 
 {% endblock %}
