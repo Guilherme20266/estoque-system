@@ -1276,12 +1276,13 @@ def solicitacoes():
             Solicitacao.id.desc()
         ).all()
 
-  else:
-    solicitacoes = Solicitacao.query.filter(
-        Solicitacao.status=="PENDENTE"
-    ).order_by(
-        Solicitacao.id.desc()
-    ).all()
+     else:
+         
+         solicitacoes = Solicitacao.query.filter(
+            Solicitacao.status=="PENDENTE"
+         ).order_by(
+             Solicitacao.id.desc()
+         ).all()
 
     return render_template(
         "solicitacoes.html",
