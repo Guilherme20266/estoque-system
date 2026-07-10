@@ -1,22 +1,26 @@
+```html
 {% extends "base.html" %}
 
 {% block title %}Solicitações{% endblock %}
 
+
 {% block style %}
 
 body{
-    font-family: Arial, sans-serif;
+    font-family:Arial,sans-serif;
     margin:0;
     min-height:100vh;
     background:linear-gradient(135deg,#0f172a,#1e293b);
     color:white;
 }
 
+
 .container{
     width:90%;
     max-width:1100px;
     margin:40px auto;
 }
+
 
 .header{
     display:flex;
@@ -25,9 +29,11 @@ body{
     margin-bottom:30px;
 }
 
+
 .header h1{
     font-size:32px;
 }
+
 
 .btn-voltar{
     background:#334155;
@@ -38,121 +44,237 @@ body{
     transition:.3s;
 }
 
+
 .btn-voltar:hover{
     background:#475569;
 }
 
 
+
 .card{
+
     background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(10px);
+
+    backdrop-filter:blur(12px);
+
     border-radius:20px;
+
     padding:25px;
+
     margin-bottom:20px;
+
     box-shadow:0 10px 30px rgba(0,0,0,.3);
+
     border:1px solid rgba(255,255,255,.1);
+
 }
+
 
 
 .info{
+
     display:grid;
+
     grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
     gap:15px;
+
     margin-bottom:20px;
+
 }
+
 
 
 .item{
+
     background:#111827;
+
     padding:15px;
+
     border-radius:12px;
+
 }
+
 
 
 .item span{
+
     color:#94a3b8;
+
     font-size:13px;
+
 }
+
 
 
 .item strong{
+
     display:block;
+
     margin-top:5px;
+
     font-size:18px;
+
 }
 
-
-.acoes{
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-}
-
-
-button{
-    border:none;
-    padding:12px 20px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:bold;
-    transition:.3s;
-}
-
-
-.btn-ok{
-    background:#22c55e;
-    color:white;
-}
-
-
-.btn-ok:hover{
-    background:#16a34a;
-    transform:translateY(-2px);
-}
-
-
-.btn-nao{
-    background:#ef4444;
-    color:white;
-}
-
-
-.btn-nao:hover{
-    background:#dc2626;
-    transform:translateY(-2px);
-}
 
 
 .status{
+
     display:inline-block;
+
     padding:8px 15px;
+
     border-radius:20px;
-    background:#eab308;
-    color:#111;
+
     font-weight:bold;
+
 }
 
 
+
+.pendente{
+
+    background:#eab308;
+
+    color:#111;
+
+}
+
+
+.concluido{
+
+    background:#22c55e;
+
+    color:white;
+
+}
+
+
+.erro{
+
+    background:#ef4444;
+
+    color:white;
+
+}
+
+
+
+.acoes{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+
+
+button{
+
+    border:none;
+
+    padding:12px 20px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+
+
+.btn-ok{
+
+    background:#22c55e;
+
+    color:white;
+
+}
+
+
+
+.btn-ok:hover{
+
+    background:#16a34a;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+.btn-nao{
+
+    background:#ef4444;
+
+    color:white;
+
+}
+
+
+
+.btn-nao:hover{
+
+    background:#dc2626;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+.obs{
+
+    margin-top:15px;
+
+    padding:12px;
+
+    background:#020617;
+
+    border-radius:10px;
+
+    color:#cbd5e1;
+
+}
+
+
+
 .vazio{
+
     text-align:center;
+
     padding:50px;
+
     opacity:.7;
+
     font-size:20px;
+
 }
 
 
 {% endblock %}
 
 
+
 {% block content %}
+
 
 <div class="container">
 
 
 <div class="header">
 
+
 <h1>
-📦 Solicitações Pendentes
+📦 Solicitações
 </h1>
 
 
@@ -168,7 +290,9 @@ button{
 {% if solicitacoes %}
 
 
+
 {% for s in solicitacoes %}
+
 
 
 <div class="card">
@@ -178,40 +302,119 @@ button{
 
 
 <div class="item">
+
 <span>Produto</span>
-<strong>{{s.produto.nome}}</strong>
-</div>
 
-
-<div class="item">
-<span>Código</span>
-<strong>{{s.produto.codigo}}</strong>
-</div>
-
-
-<div class="item">
-<span>Quantidade</span>
-<strong>{{s.quantidade}}</strong>
-</div>
-
-
-<div class="item">
-<span>Endereço</span>
-<strong>{{s.endereco}}</strong>
-</div>
-
-
-<div class="item">
-<span>Status</span>
 <strong>
-<span class="status">
+{{s.produto}}
+</strong>
+
+</div>
+
+
+
+<div class="item">
+
+<span>Quantidade</span>
+
+<strong>
+{{s.quantidade}}
+</strong>
+
+</div>
+
+
+
+<div class="item">
+
+<span>Tipo</span>
+
+<strong>
+{{s.tipo}}
+</strong>
+
+</div>
+
+
+
+<div class="item">
+
+<span>Solicitante</span>
+
+<strong>
+{{s.solicitante}}
+</strong>
+
+</div>
+
+
+
+<div class="item">
+
+<span>Data</span>
+
+<strong>
+{{s.data}}
+</strong>
+
+</div>
+
+
+
+<div class="item">
+
+<span>Status</span>
+
+<strong>
+
+{% if s.status == "PENDENTE" %}
+
+<span class="status pendente">
 {{s.status}}
 </span>
+
+
+{% elif s.status == "CONCLUIDO" %}
+
+<span class="status concluido">
+{{s.status}}
+</span>
+
+
+{% else %}
+
+<span class="status erro">
+{{s.status}}
+</span>
+
+
+{% endif %}
+
+
 </strong>
+
 </div>
 
 
 </div>
+
+
+
+{% if s.observacao %}
+
+<div class="obs">
+
+<b>📝 Observação:</b>
+
+{{s.observacao}}
+
+</div>
+
+{% endif %}
+
+
+
+{% if s.status == "PENDENTE" and perfil in ['admin','operador'] %}
 
 
 
@@ -220,9 +423,13 @@ button{
 
 <form method="POST" action="/solicitacao/{{s.id}}/concluir">
 
+
 <button class="btn-ok">
+
 ✅ Produto Encontrado
+
 </button>
+
 
 </form>
 
@@ -230,28 +437,41 @@ button{
 
 <form method="POST" action="/solicitacao/{{s.id}}/nao-encontrado">
 
+
 <button class="btn-nao">
+
 ❌ Não Encontrado
+
 </button>
+
 
 </form>
 
 
+
 </div>
 
 
+
+{% endif %}
+
+
+
 </div>
+
 
 
 {% endfor %}
 
 
+
 {% else %}
+
 
 
 <div class="card vazio">
 
-Nenhuma solicitação pendente 🎉
+Nenhuma solicitação encontrada 🎉
 
 </div>
 
@@ -264,3 +484,4 @@ Nenhuma solicitação pendente 🎉
 
 
 {% endblock %}
+```
