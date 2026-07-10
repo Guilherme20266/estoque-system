@@ -1272,6 +1272,46 @@ def solicitacoes():
         solicitacoes=solicitacoes,
         perfil=perfil
     )
+
+@app.route('/nova-solicitacao', methods=['GET', 'POST'])
+def nova_solicitacao():
+
+    if not logado():
+        return redirect('/')
+
+    if request.method == 'POST':
+
+        solicitacao = Solicitacao(
+
+            produto=request.form['produto'],
+
+            quantidade=int(request.form['quantidade']),
+
+            tipo=request.form['tipo'],
+
+            observacao=request.form['observacao'],
+
+            status="PENDENTE",
+
+            solicitante=session.get('usuario'),
+
+            operador="",
+
+            data=datetime.now(
+                ZoneInfo("America/Sao_Paulo")
+            ).strftime("%d/%m/%Y %H:%M"),
+
+            finalizado_em=""
+        )
+
+        db.session.add(solicitacao)
+        db.session.commit()
+
+        flash("Solicitação enviada com sucesso!", "success")
+
+        return redirect('/solicitacoes')
+
+    return render_template("nova_solicitacao.html")
     
 with app.app_context():
     db.create_all()
