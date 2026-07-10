@@ -1438,6 +1438,53 @@ def nao_encontrado(id):
 
 
     return redirect('/solicitacoes')
+
+# ==========================
+# EXCLUIR SOLICITAÇÃO (ADMIN)
+# ==========================
+@app.route('/excluir-solicitacao/<int:id>', methods=['POST'])
+def excluir_solicitacao(id):
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+
+    solicitacao = Solicitacao.query.get_or_404(id)
+
+
+    db.session.add(
+        Historico(
+            data=datetime.now(
+                ZoneInfo("America/Sao_Paulo")
+            ).strftime("%d/%m/%Y %H:%M"),
+
+            usuario=session.get('usuario'),
+
+            acao="EXCLUSAO SOLICITACAO",
+
+            produto=solicitacao.produto,
+
+            quantidade=solicitacao.quantidade,
+
+            origem="SOLICITAÇÃO",
+
+            destino="EXCLUIDA"
+        )
+    )
+
+
+    db.session.delete(solicitacao)
+
+    db.session.commit()
+
+
+    flash(
+        "Solicitação excluída com sucesso!",
+        "success"
+    )
+
+
+    return redirect('/solicitacoes')
     
 with app.app_context():
     db.create_all()
