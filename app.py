@@ -1261,9 +1261,6 @@ def enviar_backup_drive(caminho_arquivo):
 # ==========================
 # SOLICITAÇÕES
 # ==========================
-# ==========================
-# SOLICITAÇÕES
-# ==========================
 @app.route('/solicitacoes')
 def solicitacoes():
 
