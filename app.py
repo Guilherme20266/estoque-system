@@ -269,10 +269,24 @@ def menu():
     if not session.get('usuario'):
         return redirect('/')
 
+    perfil = session.get("perfil")
+
+    if perfil == "separacao":
+        total_solicitacoes = Solicitacao.query.filter_by(
+            solicitante=session.get("usuario"),
+            status="PENDENTE"
+        ).count()
+
+    else:
+        total_solicitacoes = Solicitacao.query.filter_by(
+            status="PENDENTE"
+        ).count()
+
     return render_template(
         'menu.html',
         usuario=session.get('usuario'),
-        perfil=session.get('perfil')
+        perfil=perfil,
+        total_solicitacoes=total_solicitacoes
     )
 
 @app.route('/entrar', methods=['POST'])
