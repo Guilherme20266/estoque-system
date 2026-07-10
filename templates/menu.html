@@ -124,18 +124,26 @@ a{
     {% endif %}
 
     <a href="/consulta">
-        <button class="btn padrao">
-            🔎 Consulta
-        </button>
-    </a>
+    <button class="btn padrao">
+        🔎 Consulta
+    </button>
+</a>
 
-    {% if perfil in ["admin", "operador", "separacao"] %}
-    <a href="/inventario">
-        <button class="btn padrao">
-            📦 Inventário
-        </button>
-    </a>
-    {% endif %}
+{% if perfil in ["admin", "operador", "separacao"] %}
+<a href="/solicitacoes">
+    <button class="btn padrao">
+        📋 Solicitações
+    </button>
+</a>
+{% endif %}
+
+{% if perfil in ["admin", "operador", "separacao"] %}
+<a href="/inventario">
+    <button class="btn padrao">
+        📦 Inventário
+    </button>
+</a>
+{% endif %}
 
     {% if perfil in ["admin", "operador"] %}
     <a href="/historico">
