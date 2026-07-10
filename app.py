@@ -1282,7 +1282,8 @@ else:
     solicitacoes = Solicitacao.query.order_by(
         Solicitacao.id.desc()
     ).all()
-    return render_template(
+
+return render_template(
         "solicitacoes.html",
         solicitacoes=solicitacoes,
         perfil=perfil
