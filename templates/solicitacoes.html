@@ -1,37 +1,266 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title %}Solicitações{% endblock %}
+
+{% block style %}
+
+body{
+    font-family: Arial, sans-serif;
+    margin:0;
+    min-height:100vh;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+}
+
+.container{
+    width:90%;
+    max-width:1100px;
+    margin:40px auto;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.header h1{
+    font-size:32px;
+}
+
+.btn-voltar{
+    background:#334155;
+    color:white;
+    padding:12px 20px;
+    border-radius:10px;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.btn-voltar:hover{
+    background:#475569;
+}
+
+
+.card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+    border:1px solid rgba(255,255,255,.1);
+}
+
+
+.info{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+    margin-bottom:20px;
+}
+
+
+.item{
+    background:#111827;
+    padding:15px;
+    border-radius:12px;
+}
+
+
+.item span{
+    color:#94a3b8;
+    font-size:13px;
+}
+
+
+.item strong{
+    display:block;
+    margin-top:5px;
+    font-size:18px;
+}
+
+
+.acoes{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+
+button{
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.3s;
+}
+
+
+.btn-ok{
+    background:#22c55e;
+    color:white;
+}
+
+
+.btn-ok:hover{
+    background:#16a34a;
+    transform:translateY(-2px);
+}
+
+
+.btn-nao{
+    background:#ef4444;
+    color:white;
+}
+
+
+.btn-nao:hover{
+    background:#dc2626;
+    transform:translateY(-2px);
+}
+
+
+.status{
+    display:inline-block;
+    padding:8px 15px;
+    border-radius:20px;
+    background:#eab308;
+    color:#111;
+    font-weight:bold;
+}
+
+
+.vazio{
+    text-align:center;
+    padding:50px;
+    opacity:.7;
+    font-size:20px;
+}
+
+
+{% endblock %}
+
 
 {% block content %}
 
-<h2>Solicitações</h2>
+<div class="container">
 
-<a href="/nova-solicitacao">
-    <button>Nova Solicitação</button>
+
+<div class="header">
+
+<h1>
+📦 Solicitações Pendentes
+</h1>
+
+
+<a href="/menu" class="btn-voltar">
+⬅ Voltar
 </a>
 
-<hr>
-
-{% for s in solicitacoes %}
-
-<div style="border:1px solid #ccc;padding:15px;margin-bottom:15px;">
-
-    <strong>{{ s.produto }}</strong><br>
-
-    Quantidade: {{ s.quantidade }}<br>
-
-    Tipo: {{ s.tipo }}<br>
-
-    Status: {{ s.status }}<br>
-
-    Solicitante: {{ s.solicitante }}<br>
-
-    Observação: {{ s.observacao }}
 
 </div>
 
-{% else %}
 
-<p>Nenhuma solicitação encontrada.</p>
+
+{% if solicitacoes %}
+
+
+{% for s in solicitacoes %}
+
+
+<div class="card">
+
+
+<div class="info">
+
+
+<div class="item">
+<span>Produto</span>
+<strong>{{s.produto.nome}}</strong>
+</div>
+
+
+<div class="item">
+<span>Código</span>
+<strong>{{s.produto.codigo}}</strong>
+</div>
+
+
+<div class="item">
+<span>Quantidade</span>
+<strong>{{s.quantidade}}</strong>
+</div>
+
+
+<div class="item">
+<span>Endereço</span>
+<strong>{{s.endereco}}</strong>
+</div>
+
+
+<div class="item">
+<span>Status</span>
+<strong>
+<span class="status">
+{{s.status}}
+</span>
+</strong>
+</div>
+
+
+</div>
+
+
+
+<div class="acoes">
+
+
+<form method="POST" action="/solicitacao/{{s.id}}/concluir">
+
+<button class="btn-ok">
+✅ Produto Encontrado
+</button>
+
+</form>
+
+
+
+<form method="POST" action="/solicitacao/{{s.id}}/nao-encontrado">
+
+<button class="btn-nao">
+❌ Não Encontrado
+</button>
+
+</form>
+
+
+</div>
+
+
+</div>
+
 
 {% endfor %}
+
+
+{% else %}
+
+
+<div class="card vazio">
+
+Nenhuma solicitação pendente 🎉
+
+</div>
+
+
+{% endif %}
+
+
+
+</div>
+
 
 {% endblock %}
