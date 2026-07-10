@@ -1269,22 +1269,19 @@ def solicitacoes():
 
     perfil = session.get('perfil')
 
-    if perfil == "separacao":
+   if perfil == "separacao":
 
-        solicitacoes = Solicitacao.query.filter_by(
-            solicitante=session.get('usuario')
-        ).order_by(
-            Solicitacao.id.desc()
-        ).all()
+    solicitacoes = Solicitacao.query.filter_by(
+        solicitante=session.get('usuario')
+    ).order_by(
+        Solicitacao.id.desc()
+    ).all()
 
-    else:
+else:
 
-        solicitacoes = Solicitacao.query.filter(
-            Solicitacao.status == "PENDENTE"
-        ).order_by(
-            Solicitacao.id.desc()
-        ).all()
-
+    solicitacoes = Solicitacao.query.order_by(
+        Solicitacao.id.desc()
+    ).all()
     return render_template(
         "solicitacoes.html",
         solicitacoes=solicitacoes,
