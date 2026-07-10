@@ -130,6 +130,61 @@ class Usuario(db.Model):
 
 
 # ==========================
+# SOLICITAÇÕES
+# ==========================
+class Solicitacao(db.Model):
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    produto = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+    quantidade = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    tipo = db.Column(
+        db.String(30),
+        nullable=False
+    )  # Separar ou Abastecer
+
+    observacao = db.Column(
+        db.Text
+    )
+
+    status = db.Column(
+        db.String(30),
+        default="PENDENTE"
+    )
+
+    solicitante = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    operador = db.Column(
+        db.String(100),
+        default=""
+    )
+
+    data = db.Column(
+        db.String(30),
+        nullable=False
+    )
+
+    finalizado_em = db.Column(
+        db.String(30),
+        default=""
+    )
+
+
+# ==========================
 # FUNÇÕES
 # ==========================
 
