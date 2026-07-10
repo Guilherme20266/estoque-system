@@ -1276,10 +1276,12 @@ def solicitacoes():
             Solicitacao.id.desc()
         ).all()
 
-    else:
-        solicitacoes = Solicitacao.query.order_by(
-            Solicitacao.id.desc()
-        ).all()
+  else:
+    solicitacoes = Solicitacao.query.filter(
+        Solicitacao.status=="PENDENTE"
+    ).order_by(
+        Solicitacao.id.desc()
+    ).all()
 
     return render_template(
         "solicitacoes.html",
@@ -1326,6 +1328,114 @@ def nova_solicitacao():
         return redirect('/solicitacoes')
 
     return render_template("nova_solicitacao.html")
+
+# ==========================
+# FINALIZAR SOLICITAÇÃO
+# ==========================
+@app.route('/solicitacao/<int:id>/concluir', methods=['POST'])
+def concluir_solicitacao(id):
+
+    if not operador_ou_admin():
+        return redirect('/menu')
+
+    solicitacao = Solicitacao.query.get_or_404(id)
+
+    solicitacao.status = "CONCLUIDO"
+    solicitacao.operador = session.get('usuario')
+
+    solicitacao.finalizado_em = datetime.now(
+        ZoneInfo("America/Sao_Paulo")
+    ).strftime("%d/%m/%Y %H:%M")
+
+
+    db.session.add(
+        Historico(
+            data=datetime.now(
+                ZoneInfo("America/Sao_Paulo")
+            ).strftime("%d/%m/%Y %H:%M"),
+
+            usuario=session.get('usuario'),
+
+            acao="SOLICITACAO CONCLUIDA",
+
+            produto=solicitacao.produto,
+
+            quantidade=solicitacao.quantidade,
+
+            origem="SOLICITAÇÃO",
+
+            destino="ATENDIDA"
+        )
+    )
+
+
+    db.session.commit()
+
+
+    flash(
+        "Solicitação concluída com sucesso!",
+        "success"
+    )
+
+
+    return redirect('/solicitacoes')
+
+
+
+# ==========================
+# NÃO ENCONTRADO
+# ==========================
+@app.route('/solicitacao/<int:id>/nao-encontrado', methods=['POST'])
+def nao_encontrado(id):
+
+    if not operador_ou_admin():
+        return redirect('/menu')
+
+
+    solicitacao = Solicitacao.query.get_or_404(id)
+
+
+    solicitacao.status = "NAO ENCONTRADO"
+
+    solicitacao.operador = session.get('usuario')
+
+
+    solicitacao.finalizado_em = datetime.now(
+        ZoneInfo("America/Sao_Paulo")
+    ).strftime("%d/%m/%Y %H:%M")
+
+
+    db.session.add(
+        Historico(
+            data=datetime.now(
+                ZoneInfo("America/Sao_Paulo")
+            ).strftime("%d/%m/%Y %H:%M"),
+
+            usuario=session.get('usuario'),
+
+            acao="SOLICITACAO NAO ENCONTRADA",
+
+            produto=solicitacao.produto,
+
+            quantidade=solicitacao.quantidade,
+
+            origem="SOLICITAÇÃO",
+
+            destino="NÃO LOCALIZADO"
+        )
+    )
+
+
+    db.session.commit()
+
+
+    flash(
+        "Solicitação marcada como não encontrada!",
+        "error"
+    )
+
+
+    return redirect('/solicitacoes')
     
 with app.app_context():
     db.create_all()
