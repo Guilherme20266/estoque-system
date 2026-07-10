@@ -133,6 +133,9 @@ a{
 <a href="/solicitacoes">
     <button class="btn padrao">
         📋 Solicitações
+        {% if total_solicitacoes > 0 %}
+            ({{ total_solicitacoes }})
+        {% endif %}
     </button>
 </a>
 {% endif %}
