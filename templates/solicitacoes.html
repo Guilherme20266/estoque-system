@@ -4,6 +4,34 @@
 
 <h2>Solicitações</h2>
 
-<p>Módulo em construção...</p>
+<a href="/nova-solicitacao">
+    <button>Nova Solicitação</button>
+</a>
+
+<hr>
+
+{% for s in solicitacoes %}
+
+<div style="border:1px solid #ccc;padding:15px;margin-bottom:15px;">
+
+    <strong>{{ s.produto }}</strong><br>
+
+    Quantidade: {{ s.quantidade }}<br>
+
+    Tipo: {{ s.tipo }}<br>
+
+    Status: {{ s.status }}<br>
+
+    Solicitante: {{ s.solicitante }}<br>
+
+    Observação: {{ s.observacao }}
+
+</div>
+
+{% else %}
+
+<p>Nenhuma solicitação encontrada.</p>
+
+{% endfor %}
 
 {% endblock %}
