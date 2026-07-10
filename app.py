@@ -1243,6 +1243,35 @@ def enviar_backup_drive(caminho_arquivo):
         media_body=media,
         fields="id"
     ).execute()
+
+# ==========================
+# SOLICITAÇÕES
+# ==========================
+@app.route('/solicitacoes')
+def solicitacoes():
+
+    if not logado():
+        return redirect('/')
+
+    perfil = session.get('perfil')
+
+    if perfil == "separacao":
+        solicitacoes = Solicitacao.query.filter_by(
+            solicitante=session.get('usuario')
+        ).order_by(
+            Solicitacao.id.desc()
+        ).all()
+
+    else:
+        solicitacoes = Solicitacao.query.order_by(
+            Solicitacao.id.desc()
+        ).all()
+
+    return render_template(
+        "solicitacoes.html",
+        solicitacoes=solicitacoes,
+        perfil=perfil
+    )
     
 with app.app_context():
     db.create_all()
