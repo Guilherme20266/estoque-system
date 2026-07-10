@@ -1,42 +1,375 @@
+```html
 {% extends 'base.html' %}
+
+{% block title %}Nova Solicitação{% endblock %}
+
+
+{% block style %}
+
+body{
+
+    font-family:Arial,sans-serif;
+
+    margin:0;
+
+    min-height:100vh;
+
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+
+    color:white;
+
+}
+
+
+
+.container{
+
+    width:90%;
+
+    max-width:700px;
+
+    margin:40px auto;
+
+}
+
+
+
+.card{
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:20px;
+
+    padding:30px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+
+    border:1px solid rgba(255,255,255,.1);
+
+}
+
+
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+
+
+.header h1{
+
+    font-size:30px;
+
+}
+
+
+
+.btn-voltar{
+
+    background:#334155;
+
+    color:white;
+
+    padding:12px 20px;
+
+    border-radius:10px;
+
+    text-decoration:none;
+
+    transition:.3s;
+
+}
+
+
+
+.btn-voltar:hover{
+
+    background:#475569;
+
+}
+
+
+
+label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#cbd5e1;
+
+    font-weight:bold;
+
+}
+
+
+
+input,
+select,
+textarea{
+
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:12px;
+
+    background:#111827;
+
+    color:white;
+
+    font-size:16px;
+
+    box-sizing:border-box;
+
+    margin-bottom:20px;
+
+}
+
+
+
+textarea{
+
+    resize:none;
+
+}
+
+
+
+input:focus,
+select:focus,
+textarea:focus{
+
+    box-shadow:0 0 0 2px #2563eb;
+
+}
+
+
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+
+button:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+.info{
+
+    background:#020617;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    margin-bottom:25px;
+
+    color:#94a3b8;
+
+}
+
+
+
+@media(max-width:600px){
+
+    .container{
+
+        width:95%;
+
+        margin:20px auto;
+
+    }
+
+
+    .header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:15px;
+
+    }
+
+}
+
+
+{% endblock %}
+
+
 
 {% block content %}
 
-<h2>Nova Solicitação</h2>
+
+<div class="container">
+
+
+<div class="card">
+
+
+
+<div class="header">
+
+
+<h1>
+➕ Nova Solicitação
+</h1>
+
+
+<a href="/solicitacoes" class="btn-voltar">
+
+⬅ Voltar
+
+</a>
+
+
+</div>
+
+
+
+
+<div class="info">
+
+📦 Preencha os dados abaixo para enviar uma solicitação ao operador.
+
+</div>
+
+
 
 <form method="POST">
 
-    <label>Produto</label><br>
-    <input type="text" name="produto" required><br><br>
 
-    <label>Quantidade</label><br>
-    <input type="number" name="quantidade" min="1" required><br><br>
 
-    <label>Tipo</label><br>
+<label>
+Produto
+</label>
 
-    <select name="tipo">
 
-        <option value="Separar">Separar</option>
+<input 
+type="text"
+name="produto"
+placeholder="Digite o nome do produto"
+required>
 
-        <option value="Abastecer">Abastecer</option>
 
-    </select>
 
-    <br><br>
 
-    <label>Observação</label><br>
+<label>
+Quantidade
+</label>
 
-    <textarea
-        name="observacao"
-        rows="5"
-    ></textarea>
 
-    <br><br>
+<input 
+type="number"
+name="quantidade"
+min="1"
+placeholder="Quantidade desejada"
+required>
 
-    <button type="submit">
-        Enviar Solicitação
-    </button>
+
+
+
+
+<label>
+Tipo de Solicitação
+</label>
+
+
+<select name="tipo">
+
+
+<option value="Separar">
+📦 Separar
+</option>
+
+
+<option value="Abastecer">
+⬆️ Abastecer
+</option>
+
+
+</select>
+
+
+
+
+
+<label>
+Observação
+</label>
+
+
+<textarea
+name="observacao"
+rows="5"
+placeholder="Alguma informação adicional..."
+></textarea>
+
+
+
+
+
+<button type="submit">
+
+🚀 Enviar Solicitação
+
+</button>
+
+
+
 
 </form>
 
+
+
+</div>
+
+
+</div>
+
+
 {% endblock %}
+```
