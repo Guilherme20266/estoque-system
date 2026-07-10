@@ -1261,6 +1261,9 @@ def enviar_backup_drive(caminho_arquivo):
 # ==========================
 # SOLICITAÇÕES
 # ==========================
+# ==========================
+# SOLICITAÇÕES
+# ==========================
 @app.route('/solicitacoes')
 def solicitacoes():
 
@@ -1269,31 +1272,41 @@ def solicitacoes():
 
     perfil = session.get('perfil')
 
-   if perfil == "separacao":
 
-    solicitacoes = Solicitacao.query.filter_by(
-        solicitante=session.get('usuario')
-    ).order_by(
-        Solicitacao.id.desc()
-    ).all()
+    if perfil == "separacao":
 
-else:
+        solicitacoes = Solicitacao.query.filter_by(
+            solicitante=session.get('usuario')
+        ).order_by(
+            Solicitacao.id.desc()
+        ).all()
 
-    solicitacoes = Solicitacao.query.order_by(
-        Solicitacao.id.desc()
-    ).all()
 
-return render_template(
+    else:
+
+        solicitacoes = Solicitacao.query.order_by(
+            Solicitacao.id.desc()
+        ).all()
+
+
+    return render_template(
         "solicitacoes.html",
         solicitacoes=solicitacoes,
         perfil=perfil
     )
 
+
+
 @app.route('/nova-solicitacao', methods=['GET', 'POST'])
 def nova_solicitacao():
 
-    if not logado():
-        return redirect('/')
+    if session.get('perfil') not in [
+        'admin',
+        'operador',
+        'separacao'
+    ]:
+        return redirect('/menu')
+
 
     if request.method == 'POST':
 
@@ -1301,11 +1314,16 @@ def nova_solicitacao():
 
             produto=request.form['produto'],
 
-            quantidade=int(request.form['quantidade']),
+            quantidade=int(
+                request.form['quantidade']
+            ),
 
             tipo=request.form['tipo'],
 
-            observacao=request.form['observacao'],
+            observacao=request.form.get(
+                'observacao',
+                ''
+            ),
 
             status="PENDENTE",
 
@@ -1320,15 +1338,24 @@ def nova_solicitacao():
             finalizado_em=""
         )
 
+
         db.session.add(solicitacao)
+
         db.session.commit()
 
-        flash("Solicitação enviada com sucesso!", "success")
+
+        flash(
+            "Solicitação enviada com sucesso!",
+            "success"
+        )
+
 
         return redirect('/solicitacoes')
 
-    return render_template("nova_solicitacao.html")
 
+    return render_template(
+        "nova_solicitacao.html"
+    )
 # ==========================
 # FINALIZAR SOLICITAÇÃO
 # ==========================
