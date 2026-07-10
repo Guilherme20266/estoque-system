@@ -23,31 +23,98 @@ body{
 
 
 .header{
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
+
     margin-bottom:30px;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
 }
 
 
 .header h1{
+
     font-size:32px;
+
 }
+
+
+
+.top-buttons{
+
+    display:flex;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+
+}
+
+
+
+.btn{
+
+    color:white;
+
+    padding:12px 20px;
+
+    border-radius:10px;
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+
+
+.btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
 
 
 .btn-voltar{
+
     background:#334155;
-    color:white;
-    padding:12px 20px;
-    border-radius:10px;
-    text-decoration:none;
-    transition:.3s;
+
 }
+
 
 
 .btn-voltar:hover{
+
     background:#475569;
+
 }
+
+
+
+.btn-criar{
+
+    background:#2563eb;
+
+}
+
+
+
+.btn-criar:hover{
+
+    background:#1d4ed8;
+
+}
+
 
 
 
@@ -78,8 +145,6 @@ body{
     grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
 
     gap:15px;
-
-    margin-bottom:20px;
 
 }
 
@@ -113,7 +178,7 @@ body{
 
     margin-top:5px;
 
-    font-size:18px;
+    font-size:17px;
 
 }
 
@@ -142,6 +207,7 @@ body{
 }
 
 
+
 .concluido{
 
     background:#22c55e;
@@ -149,6 +215,7 @@ body{
     color:white;
 
 }
+
 
 
 .erro{
@@ -161,13 +228,32 @@ body{
 
 
 
+
+.obs{
+
+    margin-top:20px;
+
+    padding:15px;
+
+    background:#020617;
+
+    border-radius:12px;
+
+    color:#cbd5e1;
+
+}
+
+
+
 .acoes{
 
     display:flex;
 
-    gap:15px;
+    gap:10px;
 
     flex-wrap:wrap;
+
+    margin-top:20px;
 
 }
 
@@ -191,21 +277,19 @@ button{
 
 
 
-.btn-ok{
+button:hover{
 
-    background:#22c55e;
-
-    color:white;
+    transform:translateY(-2px);
 
 }
 
 
 
-.btn-ok:hover{
+.btn-ok{
 
-    background:#16a34a;
+    background:#22c55e;
 
-    transform:translateY(-2px);
+    color:white;
 
 }
 
@@ -221,27 +305,11 @@ button{
 
 
 
-.btn-nao:hover{
+.btn-delete{
 
-    background:#dc2626;
+    background:#7f1d1d;
 
-    transform:translateY(-2px);
-
-}
-
-
-
-.obs{
-
-    margin-top:15px;
-
-    padding:12px;
-
-    background:#020617;
-
-    border-radius:10px;
-
-    color:#cbd5e1;
+    color:white;
 
 }
 
@@ -253,9 +321,40 @@ button{
 
     padding:50px;
 
+    font-size:20px;
+
     opacity:.7;
 
-    font-size:20px;
+}
+
+
+
+@media(max-width:600px){
+
+    .container{
+
+        width:95%;
+
+        margin:20px auto;
+
+    }
+
+
+    .header h1{
+
+        font-size:25px;
+
+    }
+
+
+    button,
+    .btn{
+
+        width:100%;
+
+        text-align:center;
+
+    }
 
 }
 
@@ -270,6 +369,7 @@ button{
 <div class="container">
 
 
+
 <div class="header">
 
 
@@ -278,8 +378,27 @@ button{
 </h1>
 
 
-<a href="/menu" class="btn-voltar">
+
+<div class="top-buttons">
+
+
+
+{% if perfil == "separacao" %}
+
+<a href="/nova-solicitacao" class="btn btn-criar">
+
+➕ Nova Solicitação
+
+</a>
+
+{% endif %}
+
+
+
+<a href="/menu" class="btn btn-voltar">
+
 ⬅ Voltar
+
 </a>
 
 
@@ -287,7 +406,15 @@ button{
 
 
 
+</div>
+
+
+
+
+
 {% if solicitacoes %}
+
+
 
 
 
@@ -295,10 +422,13 @@ button{
 
 
 
+
 <div class="card">
 
 
+
 <div class="info">
+
 
 
 <div class="item">
@@ -361,11 +491,13 @@ button{
 
 
 
+
 <div class="item">
 
 <span>Status</span>
 
 <strong>
+
 
 {% if s.status == "PENDENTE" %}
 
@@ -393,32 +525,45 @@ button{
 
 </strong>
 
+
 </div>
 
 
+
 </div>
+
+
 
 
 
 {% if s.observacao %}
 
+
 <div class="obs">
 
-<b>📝 Observação:</b>
+📝 <b>Observação:</b>
 
 {{s.observacao}}
 
+
 </div>
+
 
 {% endif %}
 
 
 
-{% if s.status == "PENDENTE" and perfil in ['admin','operador'] %}
 
 
 
 <div class="acoes">
+
+
+
+
+
+{% if s.status == "PENDENTE" and perfil in ['admin','operador'] %}
+
 
 
 <form method="POST" action="/solicitacao/{{s.id}}/concluir">
@@ -432,6 +577,7 @@ button{
 
 
 </form>
+
 
 
 
@@ -449,7 +595,31 @@ button{
 
 
 
-</div>
+{% endif %}
+
+
+
+
+
+
+
+{% if perfil == "admin" %}
+
+
+
+<form method="POST" 
+action="/excluir-solicitacao/{{s.id}}"
+onsubmit="return confirm('Deseja realmente excluir esta solicitação?');">
+
+
+<button class="btn-delete">
+
+🗑 Excluir
+
+</button>
+
+
+</form>
 
 
 
@@ -457,11 +627,22 @@ button{
 
 
 
+
+
 </div>
 
 
 
+
+</div>
+
+
+
+
+
 {% endfor %}
+
+
 
 
 
@@ -476,11 +657,14 @@ Nenhuma solicitação encontrada 🎉
 </div>
 
 
+
 {% endif %}
 
 
 
+
 </div>
+
 
 
 {% endblock %}
