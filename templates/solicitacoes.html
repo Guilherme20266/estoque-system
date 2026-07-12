@@ -118,6 +118,21 @@ body{
 }
 
 
+.status-info{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    text-align:center;
+    font-weight:bold;
+    font-size:16px;
+}
+
+.status-info.andamento{
+    background:#2563eb;
+    color:#fff;
+}
+
+
 .btn:hover{
 
     transform:translateY(-2px);
@@ -757,10 +772,11 @@ onsubmit="return confirm('Deseja realmente excluir esta solicitação?');">
 
 {% if s.operador == session.usuario %}
 
-<span class="badge-status badge-meu">
-🟡 Em andamento por você
-</span>
+<div class="status-info andamento">
 
+    👷 Em andamento por você
+
+</div>
 
 {% elif s.operador %}
 
