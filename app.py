@@ -1283,11 +1283,29 @@ def solicitacoes():
         ).all()
 
 
-    else:
+   else:
 
-        solicitacoes = Solicitacao.query.order_by(
-            Solicitacao.id.desc()
-        ).all()
+    usuario = session.get("usuario")
+
+
+    solicitacoes = Solicitacao.query.order_by(
+        db.case(
+            (
+                Solicitacao.operador == usuario,
+                0
+            ),
+
+            (
+                Solicitacao.operador == "",
+                1
+            ),
+
+            else_=2
+        ),
+
+        Solicitacao.id.desc()
+
+    ).all()
 
 
     return render_template(
@@ -1305,79 +1323,40 @@ def em_andamento(id):
     if not logado():
         return redirect('/')
 
+
     if session.get("perfil") not in ["admin", "operador"]:
         return redirect('/solicitacoes')
 
+
     solicitacao = Solicitacao.query.get_or_404(id)
 
-    if solicitacao.status != "PENDENTE":
-        flash("Esta solicitação já foi assumida.", "error")
+
+    # Já assumida por outro operador
+    if solicitacao.operador and solicitacao.operador != session.get("usuario"):
+
+        flash(
+            f"Esta solicitação já está em andamento por {solicitacao.operador}.",
+            "error"
+        )
+
         return redirect('/solicitacoes')
 
+
     solicitacao.status = "EM ANDAMENTO"
+
     solicitacao.operador = session.get("usuario")
+
 
     db.session.commit()
 
-    flash("Você assumiu esta solicitação.", "success")
 
-    return redirect('/solicitacoes')
-
-@app.route('/nova-solicitacao', methods=['GET', 'POST'])
-def nova_solicitacao():
-
-    if session.get('perfil') not in [
-        'admin',
-        'operador',
-        'separacao'
-    ]:
-        return redirect('/menu')
+    flash(
+        "Você assumiu esta solicitação.",
+        "success"
+    )
 
 
-    if request.method == 'POST':
-
-        solicitacao = Solicitacao(
-
-            produto=request.form['produto'],
-
-            quantidade=int(
-                request.form['quantidade']
-            ),
-
-            tipo=request.form['tipo'],
-
-            observacao=request.form.get(
-                'observacao',
-                ''
-            ),
-
-            status="PENDENTE",
-
-            solicitante=session.get('usuario'),
-
-            operador="",
-
-            data=datetime.now(
-                ZoneInfo("America/Sao_Paulo")
-            ).strftime("%d/%m/%Y %H:%M"),
-
-            finalizado_em=""
-        )
-
-
-        db.session.add(solicitacao)
-
-        db.session.commit()
-
-
-        flash(
-            "Solicitação enviada com sucesso!",
-            "success"
-        )
-
-
-        return redirect('/solicitacoes')
-
+    return redirect('/solicitacoes")
 
     return render_template(
         "nova_solicitacao.html"
@@ -1555,41 +1534,6 @@ def excluir_solicitacao(id):
     return redirect('/solicitacoes')
 
 
-# ==========================
-# Assumir Solicitacao
-# ==========================
-
-from datetime import datetime
-
-
-@app.route('/assumir_solicitacao/<int:id>')
-def assumir_solicitacao(id):
-
-    if not logado():
-        return redirect('/')
-
-
-    solicitacao = Solicitacao.query.get_or_404(id)
-
-    usuario = session.get('usuario')
-
-
-    # se já foi assumida por outro
-    if solicitacao.operador and solicitacao.operador != usuario:
-        return redirect('/solicitacoes')
-
-
-    solicitacao.operador = usuario
-    solicitacao.status = "em_andamento"
-    solicitacao.data_assumida = datetime.now()
-
-
-    db.session.commit()
-
-
-    return redirect('/solicitacoes')
-
-    
 with app.app_context():
     db.create_all()
 
