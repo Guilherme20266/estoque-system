@@ -1528,27 +1528,6 @@ def excluir_solicitacao(id):
     return redirect('/solicitacoes')
 
 
-@app.route('/atualizar-banco')
-def atualizar_banco():
-
-    try:
-
-        db.session.execute(
-            db.text(
-                "ALTER TABLE solicitacao ADD COLUMN assumida_em VARCHAR(30) DEFAULT ''"
-            )
-        )
-
-        db.session.commit()
-
-        return "Banco atualizado com sucesso!"
-
-    except Exception as e:
-
-        db.session.rollback()
-
-        return f"Erro: {e}"
-
 with app.app_context():
     db.create_all()
 
