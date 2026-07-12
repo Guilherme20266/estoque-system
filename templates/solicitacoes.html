@@ -437,6 +437,21 @@ button:hover{
 {% endif %}
 
 
+{% if perfil == "admin" %}
+
+<form method="POST"
+      action="/excluir-todas-solicitacoes"
+      onsubmit="return confirm('Tem certeza que deseja excluir TODAS as solicitações? Esta ação não poderá ser desfeita.');">
+
+    <button class="btn btn-delete" type="submit">
+        🗑 Excluir Todas
+    </button>
+
+</form>
+
+{% endif %}
+
+
 
 <a href="/menu" class="btn btn-voltar">
 
