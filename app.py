@@ -1292,7 +1292,32 @@ def solicitacoes():
         perfil=perfil
     )
 
+# ==========================
+# EM ANDAMENTO
+# ==========================
+@app.route('/solicitacao/<int:id>/em-andamento', methods=['POST'])
+def em_andamento(id):
 
+    if not logado():
+        return redirect('/')
+
+    if session.get("perfil") not in ["admin", "operador"]:
+        return redirect('/solicitacoes')
+
+    solicitacao = Solicitacao.query.get_or_404(id)
+
+    if solicitacao.status != "PENDENTE":
+        flash("Esta solicitação já foi assumida.", "error")
+        return redirect('/solicitacoes')
+
+    solicitacao.status = "EM ANDAMENTO"
+    solicitacao.operador = session.get("usuario")
+
+    db.session.commit()
+
+    flash("Você assumiu esta solicitação.", "success")
+
+    return redirect('/solicitacoes')
 
 @app.route('/nova-solicitacao', methods=['GET', 'POST'])
 def nova_solicitacao():
