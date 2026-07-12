@@ -1296,7 +1296,7 @@ def solicitacoes():
                  ),
 
                  (
-                      solicitacao.operador == "",
+                      Solicitacao.operador == "",
                       1
                  ),
                  else_=2
@@ -1329,10 +1329,10 @@ def em_andamento(id):
 
 
     # Já assumida por outro operador
-    if solicitacao.operador and solicitacao.operador != session.get("usuario"):
+    if Solicitacao.operador and Solicitacao.operador != session.get("usuario"):
 
         flash(
-            f"Esta solicitação já está em andamento por {solicitacao.operador}.",
+            f"Esta solicitação já está em andamento por {Solicitacao.operador}.",
             "error"
         )
 
@@ -1341,7 +1341,7 @@ def em_andamento(id):
 
     solicitacao.status = "EM ANDAMENTO"
 
-    solicitacao.operador = session.get("usuario")
+    Solicitacao.operador = session.get("usuario")
 
 
     db.session.commit()
@@ -1367,7 +1367,7 @@ def concluir_solicitacao(id):
     solicitacao = Solicitacao.query.get_or_404(id)
 
     solicitacao.status = "CONCLUIDO"
-    solicitacao.operador = session.get('usuario')
+    Solicitacao.operador = session.get('usuario')
 
     solicitacao.finalizado_em = datetime.now(
         ZoneInfo("America/Sao_Paulo")
@@ -1423,7 +1423,7 @@ def nao_encontrado(id):
 
     solicitacao.status = "NAO ENCONTRADO"
 
-    solicitacao.operador = session.get('usuario')
+    Solicitacao.operador = session.get('usuario')
 
 
     solicitacao.finalizado_em = datetime.now(
