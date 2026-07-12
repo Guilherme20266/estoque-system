@@ -1271,92 +1271,118 @@ def solicitacoes():
     if not logado():
         return redirect('/')
 
-    perfil = session.get('perfil')
-
+    perfil = session.get("perfil")
+    usuario = session.get("usuario")
 
     if perfil == "separacao":
 
-        solicitacoes = Solicitacao.query.filter_by(
-            solicitante=session.get('usuario')
-        ).order_by(
-            Solicitacao.id.desc()
-        ).all()
-
+        solicitacoes = (
+            Solicitacao.query
+            .filter_by(solicitante=usuario)
+            .order_by(Solicitacao.id.desc())
+            .all()
+        )
 
     else:
 
-         usuario = session.get("usuario")
-
-
-         solicitacoes = Solicitacao.query.order_by(
-             db.case(
-                 (
-                      Solicitacao.operador == usuario,
-                      0
-                 ),
-
-                 (
-                      Solicitacao.operador == "",
-                      1
-                 ),
-                 else_=2
-              ),
-              Solicitacao.id.desc()
-         ).all()
-
+        solicitacoes = (
+            Solicitacao.query
+            .order_by(
+                db.case(
+                    (Solicitacao.operador == usuario, 0),
+                    (Solicitacao.operador == "", 1),
+                    else_=2
+                ),
+                Solicitacao.id.desc()
+            )
+            .all()
+        )
 
     return render_template(
         "solicitacoes.html",
         solicitacoes=solicitacoes,
-        perfil=perfil
+        perfil=perfil,
+        usuario=usuario
     )
+
+
+# ==========================
+# NOVA SOLICITAÇÃO
+# ==========================
+@app.route("/nova-solicitacao", methods=["GET", "POST"])
+def nova_solicitacao():
+
+    if not logado():
+        return redirect("/")
+
+    if session.get("perfil") not in ["admin", "separacao"]:
+        return redirect("/menu")
+
+    if request.method == "POST":
+
+        nova = Solicitacao(
+            produto=request.form["produto"],
+            quantidade=request.form["quantidade"],
+            tipo=request.form["tipo"],
+            observacao=request.form["observacao"],
+            solicitante=session.get("usuario"),
+            operador="",
+            status="PENDENTE",
+            data=datetime.now(
+                ZoneInfo("America/Sao_Paulo")
+            ).strftime("%d/%m/%Y %H:%M"),
+            finalizado_em=""
+        )
+
+        db.session.add(nova)
+        db.session.commit()
+
+        flash(
+            "Solicitação enviada com sucesso!",
+            "success"
+        )
+
+        return redirect("/solicitacoes")
+
+    return render_template("nova_solicitacao.html")
+
 
 # ==========================
 # EM ANDAMENTO
 # ==========================
-@app.route('/solicitacao/<int:id>/em-andamento', methods=['POST'])
+@app.route("/solicitacao/<int:id>/em-andamento", methods=["POST"])
 def em_andamento(id):
 
     if not logado():
-        return redirect('/')
-
+        return redirect("/")
 
     if session.get("perfil") not in ["admin", "operador"]:
-        return redirect('/solicitacoes')
-
+        return redirect("/solicitacoes")
 
     solicitacao = Solicitacao.query.get_or_404(id)
 
-
-    # Já assumida por outro operador
-    if Solicitacao.operador and Solicitacao.operador != session.get("usuario"):
-
+    if solicitacao.status != "PENDENTE":
         flash(
-            f"Esta solicitação já está em andamento por {Solicitacao.operador}.",
+            "Esta solicitação já foi assumida.",
             "error"
         )
-
-        return redirect('/solicitacoes')
-
+        return redirect("/solicitacoes")
 
     solicitacao.status = "EM ANDAMENTO"
-
-    Solicitacao.operador = session.get("usuario")
-
+    solicitacao.operador = session.get("usuario")
 
     db.session.commit()
-
 
     flash(
         "Você assumiu esta solicitação.",
         "success"
     )
 
+    return redirect("/solicitacoes")
 
-    return redirect('/solicitacoes')
 
 # ==========================
-# FINALIZAR SOLICITAÇÃO
+# CONCLUIR SOLICITAÇÃO
 # ==========================
 @app.route('/solicitacao/<int:id>/concluir', methods=['POST'])
 def concluir_solicitacao(id):
@@ -1366,46 +1392,43 @@ def concluir_solicitacao(id):
 
     solicitacao = Solicitacao.query.get_or_404(id)
 
-    solicitacao.status = "CONCLUIDO"
-    Solicitacao.operador = session.get('usuario')
+    if (
+        session.get("perfil") != "admin"
+        and solicitacao.operador != session.get("usuario")
+    ):
+        flash(
+            "Esta solicitação está em andamento por outro operador.",
+            "error"
+        )
+        return redirect('/solicitacoes')
 
+    solicitacao.status = "CONCLUIDO"
     solicitacao.finalizado_em = datetime.now(
         ZoneInfo("America/Sao_Paulo")
     ).strftime("%d/%m/%Y %H:%M")
-
 
     db.session.add(
         Historico(
             data=datetime.now(
                 ZoneInfo("America/Sao_Paulo")
             ).strftime("%d/%m/%Y %H:%M"),
-
             usuario=session.get('usuario'),
-
             acao="SOLICITACAO CONCLUIDA",
-
             produto=solicitacao.produto,
-
             quantidade=solicitacao.quantidade,
-
             origem="SOLICITAÇÃO",
-
             destino="ATENDIDA"
         )
     )
 
-
     db.session.commit()
-
 
     flash(
         "Solicitação concluída com sucesso!",
         "success"
     )
 
-
     return redirect('/solicitacoes')
-
 
 
 # ==========================
@@ -1417,56 +1440,55 @@ def nao_encontrado(id):
     if not operador_ou_admin():
         return redirect('/menu')
 
-
     solicitacao = Solicitacao.query.get_or_404(id)
 
+    if (
+        session.get("perfil") != "admin"
+        and solicitacao.operador != session.get("usuario")
+    ):
+        flash(
+            "Esta solicitação está em andamento por outro operador.",
+            "error"
+        )
+        return redirect('/solicitacoes')
 
     solicitacao.status = "NAO ENCONTRADO"
-
-    Solicitacao.operador = session.get('usuario')
-
 
     solicitacao.finalizado_em = datetime.now(
         ZoneInfo("America/Sao_Paulo")
     ).strftime("%d/%m/%Y %H:%M")
-
 
     db.session.add(
         Historico(
             data=datetime.now(
                 ZoneInfo("America/Sao_Paulo")
             ).strftime("%d/%m/%Y %H:%M"),
-
             usuario=session.get('usuario'),
-
             acao="SOLICITACAO NAO ENCONTRADA",
-
             produto=solicitacao.produto,
-
             quantidade=solicitacao.quantidade,
-
             origem="SOLICITAÇÃO",
-
             destino="NÃO LOCALIZADO"
         )
     )
 
-
     db.session.commit()
-
 
     flash(
         "Solicitação marcada como não encontrada!",
-        "error"
+        "success"
     )
-
 
     return redirect('/solicitacoes')
 
+
+# ==========================
+# EXCLUIR TODAS
+# ==========================
 @app.route('/excluir-todas-solicitacoes', methods=['POST'])
 def excluir_todas_solicitacoes():
 
-    if session.get('perfil') != 'admin':
+    if session.get("perfil") != "admin":
         return redirect('/menu')
 
     Solicitacao.query.delete()
@@ -1474,59 +1496,48 @@ def excluir_todas_solicitacoes():
     db.session.commit()
 
     flash(
-        "Todas as solicitações foram excluídas com sucesso!",
+        "Todas as solicitações foram excluídas!",
         "success"
     )
 
     return redirect('/solicitacoes')
 
+
 # ==========================
-# EXCLUIR SOLICITAÇÃO (ADMIN)
+# EXCLUIR SOLICITAÇÃO
 # ==========================
 @app.route('/excluir-solicitacao/<int:id>', methods=['POST'])
 def excluir_solicitacao(id):
 
-    if session.get('perfil') != 'admin':
+    if session.get("perfil") != "admin":
         return redirect('/menu')
 
-
     solicitacao = Solicitacao.query.get_or_404(id)
-
 
     db.session.add(
         Historico(
             data=datetime.now(
                 ZoneInfo("America/Sao_Paulo")
             ).strftime("%d/%m/%Y %H:%M"),
-
             usuario=session.get('usuario'),
-
             acao="EXCLUSAO SOLICITACAO",
-
             produto=solicitacao.produto,
-
             quantidade=solicitacao.quantidade,
-
             origem="SOLICITAÇÃO",
-
             destino="EXCLUIDA"
         )
     )
 
-
     db.session.delete(solicitacao)
 
     db.session.commit()
-
 
     flash(
         "Solicitação excluída com sucesso!",
         "success"
     )
 
-
     return redirect('/solicitacoes')
-
 
 with app.app_context():
     db.create_all()
