@@ -428,44 +428,29 @@ button:hover{
 </h1>
 
 
-
 <div class="top-buttons">
 
+    {% if perfil in ["admin", "separacao"] %}
+    <a href="/nova-solicitacao" class="btn btn-criar">
+        ➕ Nova Solicitação
+    </a>
+    {% endif %}
 
+    {% if perfil == "admin" %}
+    <form method="POST"
+          action="/excluir-todas-solicitacoes"
+          onsubmit="return confirm('Tem certeza que deseja excluir TODAS as solicitações? Esta ação não poderá ser desfeita.');">
 
-{% if perfil == "admin", "separacao" %}
+        <button type="submit" class="btn btn-delete">
+            🗑 Excluir Todas
+        </button>
 
-<a href="/nova-solicitacao" class="btn btn-criar">
+    </form>
+    {% endif %}
 
-➕ Nova Solicitação
-
-</a>
-
-{% endif %}
-
-
-{% if perfil == "admin" %}
-
-<form method="POST"
-      action="/excluir-todas-solicitacoes"
-      onsubmit="return confirm('Tem certeza que deseja excluir TODAS as solicitações? Esta ação não poderá ser desfeita.');">
-
-    <button class="btn btn-delete" type="submit">
-        🗑 Excluir Todas
-    </button>
-
-</form>
-
-{% endif %}
-
-
-
-<a href="/menu" class="btn btn-voltar">
-
-⬅ Voltar
-
-</a>
-
+    <a href="/menu" class="btn btn-voltar">
+        ⬅ Voltar
+    </a>
 
 </div>
 
