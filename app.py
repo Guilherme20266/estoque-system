@@ -1461,6 +1461,23 @@ def nao_encontrado(id):
 
     return redirect('/solicitacoes')
 
+@app.route('/excluir-todas-solicitacoes', methods=['POST'])
+def excluir_todas_solicitacoes():
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    Solicitacao.query.delete()
+
+    db.session.commit()
+
+    flash(
+        "Todas as solicitações foram excluídas com sucesso!",
+        "success"
+    )
+
+    return redirect('/solicitacoes')
+
 # ==========================
 # EXCLUIR SOLICITAÇÃO (ADMIN)
 # ==========================
