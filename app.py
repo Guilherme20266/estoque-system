@@ -1285,27 +1285,24 @@ def solicitacoes():
 
    else:
 
-    usuario = session.get("usuario")
+         usuario = session.get("usuario")
 
 
-    solicitacoes = Solicitacao.query.order_by(
-        db.case(
-            (
-                Solicitacao.operador == usuario,
-                0
-            ),
+         solicitacoes = Solicitacao.query.order_by(
+             db.case(
+                 (
+                      Solicitacao.operador == usuario,
+                      0
+                 ),
 
-            (
-                Solicitacao.operador == "",
-                1
-            ),
-
-            else_=2
-        ),
-
-        Solicitacao.id.desc()
-
-    ).all()
+                 (
+                      olicitacao.operador == "",
+                      1
+                 ),
+                 else_=2
+              ),
+              Solicitacao.id.desc()
+         ).all()
 
 
     return render_template(
