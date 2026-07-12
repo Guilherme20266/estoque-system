@@ -1283,7 +1283,7 @@ def solicitacoes():
         ).all()
 
 
-   else:
+    else:
 
          usuario = session.get("usuario")
 
@@ -1296,7 +1296,7 @@ def solicitacoes():
                  ),
 
                  (
-                      olicitacao.operador == "",
+                      solicitacao.operador == "",
                       1
                  ),
                  else_=2
@@ -1353,11 +1353,8 @@ def em_andamento(id):
     )
 
 
-    return redirect('/solicitacoes")
+    return redirect('/solicitacoes')
 
-    return render_template(
-        "nova_solicitacao.html"
-    )
 # ==========================
 # FINALIZAR SOLICITAÇÃO
 # ==========================
