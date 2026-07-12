@@ -342,13 +342,23 @@ body{
 .pendente{
     background:#facc15;
     color:#111;
-    animation:statusPulseYellow 1.3s ease-in-out infinite;
+    animation:blinkYellow 1.5s infinite;
 }
 
 .andamento{
     background:linear-gradient(90deg,#2563eb,#1d4ed8);
     color:#fff;
-    animation:statusPulseBlue 1.3s ease-in-out infinite;
+    animation:blinkBlue 1.5s infinite;
+}
+
+@keyframes blinkYellow{
+    0%,100%{opacity:1;}
+    50%{opacity:.55;}
+}
+
+@keyframes blinkBlue{
+    0%,100%{opacity:1;}
+    50%{opacity:.55;}
 }
 
 .concluido{
