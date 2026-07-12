@@ -720,6 +720,32 @@ onsubmit="return confirm('Deseja realmente excluir esta solicitação?');">
 
 
 
+{% if s.operador == session.usuario %}
+
+<span class="badge bg-warning">
+🟡 Em andamento por você
+</span>
+
+
+{% elif s.operador %}
+
+<span class="badge bg-danger">
+🔒 Em andamento por {{s.operador}}
+</span>
+
+
+{% else %}
+
+<span class="badge bg-success">
+🟢 Aguardando
+</span>
+
+
+{% endif %}
+
+
+
+
 
 </div>
 
