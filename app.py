@@ -152,7 +152,7 @@ class Solicitacao(db.Model):
     tipo = db.Column(
         db.String(30),
         nullable=False
-    )  # Separar ou Abastecer
+    )
 
     observacao = db.Column(
         db.Text
@@ -173,6 +173,11 @@ class Solicitacao(db.Model):
         default=""
     )
 
+    assumida_em = db.Column(
+        db.String(30),
+        default=""
+    )
+
     data = db.Column(
         db.String(30),
         nullable=False
@@ -182,7 +187,6 @@ class Solicitacao(db.Model):
         db.String(30),
         default=""
     )
-
 
 # ==========================
 # FUNÇÕES
@@ -1549,6 +1553,42 @@ def excluir_solicitacao(id):
 
 
     return redirect('/solicitacoes')
+
+
+# ==========================
+# Assumir Solicitacao
+# ==========================
+
+from datetime import datetime
+
+
+@app.route('/assumir_solicitacao/<int:id>')
+def assumir_solicitacao(id):
+
+    if not logado():
+        return redirect('/')
+
+
+    solicitacao = Solicitacao.query.get_or_404(id)
+
+    usuario = session.get('usuario')
+
+
+    # se já foi assumida por outro
+    if solicitacao.operador and solicitacao.operador != usuario:
+        return redirect('/solicitacoes')
+
+
+    solicitacao.operador = usuario
+    solicitacao.status = "em_andamento"
+    solicitacao.data_assumida = datetime.now()
+
+
+    db.session.commit()
+
+
+    return redirect('/solicitacoes')
+
     
 with app.app_context():
     db.create_all()
