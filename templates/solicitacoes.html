@@ -682,52 +682,53 @@ button:hover{
 
 
 
-{% if s.status == "PENDENTE" and perfil in ['admin','operador'] %}
+{% if perfil in ['admin','operador'] %}
 
-    
-<form method="POST"
-      action="/solicitacao/{{ s.id }}/em-andamento">
+    {% if s.status == "PENDENTE" %}
 
-    <button class="btn-andamento">
+        <form method="POST" action="/solicitacao/{{ s.id }}/em-andamento">
 
-        ▶ Em andamento
+            <button class="btn-andamento">
+                ▶ Assumir Solicitação
+            </button>
 
-    </button>
+        </form>
 
-</form>
+    {% elif s.status == "EM ANDAMENTO" %}
 
+        {% if s.operador == usuario %}
 
-<form method="POST" action="/solicitacao/{{s.id}}/concluir">
+            <div class="status-info andamento">
+                👷 Em andamento por você
+            </div>
 
+            <form method="POST" action="/solicitacao/{{ s.id }}/concluir">
 
-<button class="btn-ok">
+                <button class="btn-ok">
+                    ✅ Produto Encontrado
+                </button>
 
-✅ Produto Encontrado
+            </form>
 
-</button>
+            <form method="POST" action="/solicitacao/{{ s.id }}/nao-encontrado">
 
+                <button class="btn-nao">
+                    ❌ Não Encontrado
+                </button>
 
-</form>
+            </form>
 
+        {% else %}
 
+            <div class="status-info andamento">
+                🔒 Em andamento por {{ s.operador }}
+            </div>
 
+        {% endif %}
 
-<form method="POST" action="/solicitacao/{{s.id}}/nao-encontrado">
-
-
-<button class="btn-nao">
-
-❌ Não Encontrado
-
-</button>
-
-
-</form>
-
-
+    {% endif %}
 
 {% endif %}
-
 
 
 
@@ -758,53 +759,16 @@ onsubmit="return confirm('Deseja realmente excluir esta solicitação?');">
 
 
 
-
-{% if s.operador == session.usuario %}
-
-<div class="status-info andamento">
-
-    👷 Em andamento por você
-
-</div>
-
-{% elif s.operador %}
-
-<span class="badge-status badge-outro">
-🔒 Em andamento por {{s.operador}}
-</span>
-
-
-{% else %}
-
-<span class="badge-status badge-livre">
-🟢 Aguardando operador
-</span>
-
-
-{% endif %}
-
-
-
-
 </div>
 
 
-
-
 </div>
-
-
-
 
 
 {% endfor %}
 
-
-
-
-
+    
 {% else %}
-
 
 
 <div class="card vazio">
@@ -814,15 +778,11 @@ Nenhuma solicitação encontrada 🎉
 </div>
 
 
-
 {% endif %}
-
 
 
 
 </div>
 
 
-
 {% endblock %}
-```
