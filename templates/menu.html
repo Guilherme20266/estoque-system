@@ -123,22 +123,22 @@ a{
     </a>
     {% endif %}
 
+    {% if perfil in ["admin", "operador", "separacao"] %}
+    <a href="/solicitacoes">
+        <button class="btn padrao">
+            📋 Solicitações
+            {% if total_solicitacoes > 0 %}
+                ({{ total_solicitacoes }})
+            {% endif %}
+        </button>
+     </a>
+     {% endif
+
     <a href="/consulta">
     <button class="btn padrao">
         🔎 Consulta
     </button>
 </a>
-
-{% if perfil in ["admin", "operador", "separacao"] %}
-<a href="/solicitacoes">
-    <button class="btn padrao">
-        📋 Solicitações
-        {% if total_solicitacoes > 0 %}
-            ({{ total_solicitacoes }})
-        {% endif %}
-    </button>
-</a>
-{% endif %}
 
 {% if perfil in ["admin", "operador", "separacao"] %}
 <a href="/inventario">
