@@ -1314,13 +1314,43 @@ def contar_solicitacoes():
 
     if not logado():
         return {
-            "total": 0
+            "pendentes": 0,
+            "andamento": 0,
+            "concluidas": 0,
+            "ids": []
         }
 
-    total = Solicitacao.query.count()
+
+    pendentes = Solicitacao.query.filter_by(
+        status="PENDENTE"
+    ).count()
+
+
+    andamento = Solicitacao.query.filter_by(
+        status="EM ANDAMENTO"
+    ).count()
+
+
+    concluidas = Solicitacao.query.filter(
+        Solicitacao.status.in_(
+            ["CONCLUIDO", "NAO ENCONTRADO"]
+        )
+    ).count()
+
+
+    ids = [
+        s.id
+        for s in Solicitacao.query.order_by(
+            Solicitacao.id.desc()
+        ).all()
+    ]
+
 
     return {
-        "total": total
+        "pendentes": pendentes,
+        "andamento": andamento,
+        "concluidas": concluidas,
+        "ids": ids
     }
 
 
