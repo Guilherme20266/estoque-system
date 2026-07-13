@@ -669,7 +669,8 @@ card-andamento
 
 data-status="{{ s.status }}"
 data-produto="{{ s.produto|lower }}"
-data-solicitante="{{ s.solicitante|lower }}">
+data-solicitante="{{ s.solicitante|lower }}"
+data-tipo="{{ s.tipo|lower }}">
 
 
 <div class="info">
@@ -961,11 +962,13 @@ function aplicarFiltros(){
         let produto = card.dataset.produto || "";
         let solicitante = card.dataset.solicitante || "";
         let status = card.dataset.status;
+        let tipo = card.dataset.tipo || "";
 
         let pesquisaOk =
-            produto.includes(texto) ||
-            solicitante.includes(texto);
-
+            roduto.includes(texto) ||
+            olicitante.includes(texto) ||
+            tipo.includes(texto);
+        
         let statusOk =
             filtroStatus === "TODOS" ||
             status === filtroStatus;
@@ -993,11 +996,61 @@ fetch("/api/solicitacoes/count")
 
 });
 
-setInterval(()=>{
+<script>
+
+let estadoAtual = "";
+let filtroStatus = "TODOS";
+
+window.onload = function(){
+
+    let pesquisa = localStorage.getItem("pesquisaSolicitacao");
+
+    if(pesquisa){
+        document.getElementById("pesquisaSolicitacao").value = pesquisa;
+    }
+
+    let filtro = localStorage.getItem("filtroStatus") || "TODOS";
+
+    let botao = [...document.querySelectorAll(".filtro-btn")]
+        .find(btn => {
+
+            if(filtro === "TODOS") return btn.textContent.includes("Todas");
+            if(filtro === "PENDENTE") return btn.textContent.includes("Pendentes");
+            if(filtro === "EM ANDAMENTO") return btn.textContent.includes("Em andamento");
+            if(filtro === "CONCLUIDO") return btn.textContent.includes("Concluídas");
+
+        });
+
+    if(botao){
+        filtrarSolicitacoes(filtro, botao);
+    }else{
+        aplicarFiltros();
+    }
+
+}
+
+function atualizarContadores(data){
+
+    document.getElementById("count-pendente").innerText = data.pendentes;
+    document.getElementById("count-andamento").innerText = data.andamento;
+    document.getElementById("count-concluido").innerText = data.concluidas;
+
+}
+
+fetch("/api/solicitacoes/count")
+.then(r => r.json())
+.then(data => {
+
+    estadoAtual = JSON.stringify(data);
+    atualizarContadores(data);
+
+});
+
+setInterval(() => {
 
     fetch("/api/solicitacoes/count")
-    .then(response=>response.json())
-    .then(data=>{
+    .then(response => response.json())
+    .then(data => {
 
         atualizarContadores(data);
 
@@ -1008,8 +1061,14 @@ setInterval(()=>{
             let som = document.getElementById("novoPedidoSom");
 
             if(som){
-                som.play().catch(()=>{});
+                som.play().catch(() => {});
             }
+
+            localStorage.setItem("filtroStatus", filtroStatus);
+            localStorage.setItem(
+                "pesquisaSolicitacao",
+                document.getElementById("pesquisaSolicitacao").value
+            );
 
             location.reload();
 
@@ -1019,8 +1078,6 @@ setInterval(()=>{
 
     });
 
-},10000);
+}, 10000);
 
 </script>
-
-{% endblock %}
