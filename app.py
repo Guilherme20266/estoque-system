@@ -1307,6 +1307,24 @@ def solicitacoes():
 
 
 # ==========================
+# API CONTADOR SOLICITAÇÕES
+# ==========================
+@app.route('/api/solicitacoes/count')
+def contar_solicitacoes():
+
+    if not logado():
+        return {
+            "total": 0
+        }
+
+    total = Solicitacao.query.count()
+
+    return {
+        "total": total
+    }
+
+
+# ==========================
 # NOVA SOLICITAÇÃO
 # ==========================
 @app.route("/nova-solicitacao", methods=["GET", "POST"])
