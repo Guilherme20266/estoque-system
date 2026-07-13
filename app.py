@@ -1367,6 +1367,44 @@ def contar_solicitacoes():
 
     })
 
+@app.route("/api/solicitacoes")
+def api_solicitacoes():
+
+    if not logado():
+        return jsonify([])
+
+    perfil = session.get("perfil")
+    usuario = session.get("usuario")
+
+    if perfil == "separacao":
+        lista = (
+            Solicitacao.query
+            .filter_by(solicitante=usuario)
+            .order_by(Solicitacao.id.desc())
+            .all()
+        )
+    else:
+        lista = (
+            Solicitacao.query
+            .order_by(Solicitacao.id.desc())
+            .all()
+        )
+
+    return jsonify([
+        {
+            "id": s.id,
+            "produto": s.produto,
+            "quantidade": s.quantidade,
+            "tipo": s.tipo,
+            "solicitante": s.solicitante,
+            "operador": s.operador,
+            "status": s.status,
+            "data": s.data,
+            "observacao": s.observacao
+        }
+        for s in lista
+    ])
+
 # ==========================
 # NOVA SOLICITAÇÃO
 # ==========================
