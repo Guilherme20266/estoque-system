@@ -175,6 +175,35 @@ body{
 }
 
 
+.pesquisa-box{
+    width:100%;
+    margin-bottom:20px;
+}
+
+#pesquisaSolicitacao{
+    width:100%;
+    height:55px;
+    border:none;
+    outline:none;
+    border-radius:14px;
+    padding:0 18px;
+    font-size:16px;
+    background:#111827;
+    color:#fff;
+    box-sizing:border-box;
+    border:2px solid transparent;
+    transition:.25s;
+}
+
+#pesquisaSolicitacao::placeholder{
+    color:#94a3b8;
+}
+
+#pesquisaSolicitacao:focus{
+    border-color:#3b82f6;
+}
+
+
 .status-info{
     width:100%;
     padding:14px;
@@ -573,6 +602,16 @@ button:hover{
 </button>
 
 </div>
+
+
+<div class="pesquisa-box">
+    <input
+        type="text"
+        id="pesquisaSolicitacao"
+        placeholder="🔎 Pesquisar por produto ou solicitante..."
+        onkeyup="pesquisarSolicitacoes()"
+    >
+</div>
     
 
 <div class="top-buttons">
@@ -624,13 +663,13 @@ button:hover{
 
 {% if s.status == 'PENDENTE' %}
 card-pendente
-
 {% elif s.status == 'EM ANDAMENTO' %}
 card-andamento
-
 {% endif %}"
 
-data-status="{{s.status}}">
+data-status="{{ s.status }}"
+data-produto="{{ s.produto|lower }}"
+data-solicitante="{{ s.solicitante|lower }}">
 
 
 <div class="info">
@@ -890,7 +929,12 @@ Nenhuma solicitação encontrada 🎉
 
 <script>
 
+let estadoAtual = "";
+let filtroStatus = "TODOS";
+
 function filtrarSolicitacoes(status, botao){
+
+    filtroStatus = status;
 
     document.querySelectorAll(".filtro-btn").forEach(btn=>{
         btn.classList.remove("filtro-ativo");
@@ -898,101 +942,85 @@ function filtrarSolicitacoes(status, botao){
 
     botao.classList.add("filtro-ativo");
 
+    aplicarFiltros();
+}
+
+function pesquisarSolicitacoes(){
+    aplicarFiltros();
+}
+
+function aplicarFiltros(){
+
+    let texto = document
+        .getElementById("pesquisaSolicitacao")
+        .value
+        .toLowerCase();
+
     document.querySelectorAll(".solicitacao-card").forEach(card=>{
 
-        if(status==="TODOS"){
-            card.style.display="";
-            return;
-        }
+        let produto = card.dataset.produto || "";
+        let solicitante = card.dataset.solicitante || "";
+        let status = card.dataset.status;
 
-        if(card.dataset.status===status){
-            card.style.display="";
-        }else{
-            card.style.display="none";
-        }
+        let pesquisaOk =
+            produto.includes(texto) ||
+            solicitante.includes(texto);
+
+        let statusOk =
+            filtroStatus === "TODOS" ||
+            status === filtroStatus;
+
+        card.style.display = (pesquisaOk && statusOk) ? "" : "none";
 
     });
 
 }
 
-</script>
-    
-
-
-<script>
-
-let estadoAtual = "";
-
-
 function atualizarContadores(data){
 
     document.getElementById("count-pendente").innerText = data.pendentes;
-
     document.getElementById("count-andamento").innerText = data.andamento;
-
     document.getElementById("count-concluido").innerText = data.concluidas;
 
 }
-
-
 
 fetch("/api/solicitacoes/count")
 .then(r=>r.json())
 .then(data=>{
 
     estadoAtual = JSON.stringify(data);
-
     atualizarContadores(data);
 
 });
 
-
-
 setInterval(()=>{
 
-
     fetch("/api/solicitacoes/count")
-
     .then(response=>response.json())
-
     .then(data=>{
-
 
         atualizarContadores(data);
 
-
         let novoEstado = JSON.stringify(data);
-
 
         if(novoEstado !== estadoAtual){
 
-
             let som = document.getElementById("novoPedidoSom");
 
-
             if(som){
-
-                som.play()
-                .catch(()=>{});
-
+                som.play().catch(()=>{});
             }
-
 
             location.reload();
 
         }
 
-
         estadoAtual = novoEstado;
-
 
     });
 
-
 },10000);
 
-
 </script>
-
 
 {% endblock %}
