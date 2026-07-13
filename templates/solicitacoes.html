@@ -620,7 +620,16 @@ button:hover{
 
 
 
-<div class="card solicitacao-card"
+<div class="card solicitacao-card
+
+{% if s.status == 'PENDENTE' %}
+card-pendente
+
+{% elif s.status == 'EM ANDAMENTO' %}
+card-andamento
+
+{% endif %}"
+
 data-status="{{s.status}}">
 
 
@@ -985,31 +994,21 @@ setInterval(()=>{
         );
 
 
-        if(novoTotal > quantidadeAtual){
-
-            let som = document.getElementById("novoPedidoSom");
-
-            som.play()
-            .catch(()=>{});
-
-        }
-
-
         if(novoTotal !== quantidadeAtual){
 
-    if(novoTotal > quantidadeAtual){
+              if(novoTotal > quantidadeAtual){
 
-        let som = document.getElementById("novoPedidoSom");
+                  let som = document.getElementById("novoPedidoSom");
 
-        som.play().catch(()=>{});
+                  om.play().catch(()=>{});
 
-    }
+              }
 
-    location.reload();
+              location.reload();
 
-}
+         }
 
-quantidadeAtual = novoTotal;
+         quantidadeAtual = novoTotal;
 
 
     });
