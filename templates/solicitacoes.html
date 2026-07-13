@@ -893,65 +893,28 @@ Nenhuma solicitação encontrada 🎉
 let estadoAtual = "";
 
 
+function atualizarContadores(data){
+
+    document.getElementById("count-pendente").innerText = data.pendentes;
+
+    document.getElementById("count-andamento").innerText = data.andamento;
+
+    document.getElementById("count-concluido").innerText = data.concluidas;
+
+}
+
+
+
 fetch("/api/solicitacoes/count")
 .then(r=>r.json())
 .then(data=>{
 
     estadoAtual = JSON.stringify(data);
 
-});
-
-
-setInterval(()=>{
-
-
-fetch("/api/solicitacoes/count")
-
-.then(response=>response.json())
-
-.then(data=>{
-
-
-    let novoEstado = JSON.stringify(data);
-
-
-    if(novoEstado !== estadoAtual){
-
-
-        let som = document.getElementById("novoPedidoSom");
-
-
-        if(som){
-
-            som.play()
-            .catch(()=>{});
-
-        }
-
-
-        location.reload();
-
-
-    }
-
-
-    estadoAtual = novoEstado;
-
+    atualizarContadores(data);
 
 });
 
-
-},10000);
-
-
-</script>
-
-
-<script>
-
-let quantidadeAtual = Number(
-    document.getElementById("totalSolicitacoes")?.value || 0
-);
 
 
 setInterval(()=>{
@@ -959,15 +922,18 @@ setInterval(()=>{
 
     fetch("/api/solicitacoes/count")
 
-    .then(response => response.json())
+    .then(response=>response.json())
 
-    .then(data => {
-
-
-        let novoTotal = data.total;
+    .then(data=>{
 
 
-        if(novoTotal > quantidadeAtual){
+        atualizarContadores(data);
+
+
+        let novoEstado = JSON.stringify(data);
+
+
+        if(novoEstado !== estadoAtual){
 
 
             let som = document.getElementById("novoPedidoSom");
@@ -986,18 +952,8 @@ setInterval(()=>{
         }
 
 
-        quantidadeAtual = novoTotal;
+        estadoAtual = novoEstado;
 
-
-    })
-
-
-    .catch(error=>{
-
-        console.log(
-            "Erro ao atualizar solicitações:",
-            error
-        );
 
     });
 
@@ -1006,7 +962,6 @@ setInterval(()=>{
 
 
 </script>
-
 
 </div>
 
