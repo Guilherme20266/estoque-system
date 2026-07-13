@@ -612,7 +612,7 @@ button:hover{
 {% if solicitacoes %}
 
 
-
+<input type="hidden" id="totalSolicitacoes" value="{{ solicitacoes|length }}">
 
 
 {% for s in solicitacoes %}
@@ -873,6 +873,12 @@ Nenhuma solicitação encontrada 🎉
 {% endif %}
 
 
+<audio id="novoPedidoSom">
+    <source src="/static/sounds/alerta.mp3" type="audio/mpeg">
+</audio>
+    
+
+
 <script>
 
 function filtrarSolicitacoes(status, botao){
@@ -952,6 +958,64 @@ window.onload=function(){
 
 }
 
+
+
+</script>
+
+
+<script>
+
+let quantidadeAtual = Number(
+    document.getElementById("totalSolicitacoes")?.value || 0
+);
+    
+setInterval(()=>{
+
+    fetch("/solicitacoes")
+    .then(response=>response.text())
+    .then(html=>{
+
+
+        let pagina = document.createElement("div");
+        pagina.innerHTML = html;
+
+
+        let novoTotal = Number(
+            pagina.querySelector("#totalSolicitacoes")?.value || 0
+        );
+
+
+        if(novoTotal > quantidadeAtual){
+
+            let som = document.getElementById("novoPedidoSom");
+
+            som.play()
+            .catch(()=>{});
+
+        }
+
+
+        if(novoTotal !== quantidadeAtual){
+
+    if(novoTotal > quantidadeAtual){
+
+        let som = document.getElementById("novoPedidoSom");
+
+        som.play().catch(()=>{});
+
+    }
+
+    location.reload();
+
+}
+
+quantidadeAtual = novoTotal;
+
+
+    });
+
+
+},10000);
 
 </script>
 
