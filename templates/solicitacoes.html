@@ -977,15 +977,16 @@ window.onload=function(){
 let quantidadeAtual = Number(
     document.getElementById("totalSolicitacoes")?.value || 0
 );
-    
-setInterval(()=>{
+
+
+setInterval(function(){
 
     fetch("/solicitacoes")
-    .then(response=>response.text())
-    .then(html=>{
+    .then(response => response.text())
+    .then(html => {
 
 
-        let pagina = document.createElement("div");
+        let pagina = document.createElement("html");
         pagina.innerHTML = html;
 
 
@@ -994,27 +995,36 @@ setInterval(()=>{
         );
 
 
-        if(novoTotal !== quantidadeAtual){
-
-              if(novoTotal > quantidadeAtual){
-
-                  let som = document.getElementById("novoPedidoSom");
-
-                  om.play().catch(()=>{});
-
-              }
-
-              location.reload();
-
-         }
-
-         quantidadeAtual = novoTotal;
+        console.log("Atual:", quantidadeAtual, "Novo:", novoTotal);
 
 
+        if(novoTotal > quantidadeAtual){
+
+            let som = document.getElementById("novoPedidoSom");
+
+            if(som){
+                som.play().catch(error=>{
+                    console.log("Som bloqueado pelo navegador");
+                });
+            }
+
+
+            location.reload();
+
+        }
+
+
+        quantidadeAtual = novoTotal;
+
+
+    })
+    .catch(error=>{
+        console.log("Erro atualização:", error);
     });
 
 
 },10000);
+
 
 </script>
 
