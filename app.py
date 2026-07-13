@@ -1338,19 +1338,10 @@ def contar_solicitacoes():
     ).count()
 
 
-    ids = [
-        s.id
-        for s in Solicitacao.query.order_by(
-            Solicitacao.id.desc()
-        ).all()
-    ]
-
-
     return {
         "pendentes": pendentes,
         "andamento": andamento,
-        "concluidas": concluidas,
-        "ids": ids
+        "concluidas": concluidas
     }
 
 
