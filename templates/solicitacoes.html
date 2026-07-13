@@ -924,77 +924,9 @@ Nenhuma solicitação encontrada 🎉
 </div>
 
 <audio id="novoPedidoSom">
-    <source src="/static/sounds/alerta.mp3" type="audio/mpeg">
+    <source src="/statiac/sounds/alerta.mp3" type="audio/mpeg">
 </audio>
 
-
-<script>
-
-let estadoAtual = "";
-let filtroStatus = "TODOS";
-
-function filtrarSolicitacoes(status, botao){
-
-    filtroStatus = status;
-
-    document.querySelectorAll(".filtro-btn").forEach(btn=>{
-        btn.classList.remove("filtro-ativo");
-    });
-
-    botao.classList.add("filtro-ativo");
-
-    aplicarFiltros();
-}
-
-function pesquisarSolicitacoes(){
-    aplicarFiltros();
-}
-
-function aplicarFiltros(){
-
-    let texto = document
-        .getElementById("pesquisaSolicitacao")
-        .value
-        .toLowerCase();
-
-    document.querySelectorAll(".solicitacao-card").forEach(card=>{
-
-        let produto = card.dataset.produto || "";
-        let solicitante = card.dataset.solicitante || "";
-        let status = card.dataset.status;
-        let tipo = card.dataset.tipo || "";
-
-        let pesquisaOk =
-            roduto.includes(texto) ||
-            solicitante.includes(texto) ||
-            tipo.includes(texto);
-        
-        let statusOk =
-            filtroStatus === "TODOS" ||
-            status === filtroStatus;
-
-        card.style.display = (pesquisaOk && statusOk) ? "" : "none";
-
-    });
-
-}
-
-function atualizarContadores(data){
-
-    document.getElementById("count-pendente").innerText = data.pendentes;
-    document.getElementById("count-andamento").innerText = data.andamento;
-    document.getElementById("count-concluido").innerText = data.concluidas;
-
-}
-
-fetch("/api/solicitacoes/count")
-.then(r=>r.json())
-.then(data=>{
-
-    estadoAtual = JSON.stringify(data);
-    atualizarContadores(data);
-
-});
 
 <script>
 
@@ -1007,7 +939,7 @@ window.onload = function(){
 
     if(pesquisa){
         document.getElementById("pesquisaSolicitacao").value = pesquisa;
-    }
+    };
 
     let filtro = localStorage.getItem("filtroStatus") || "TODOS";
 
