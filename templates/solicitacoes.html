@@ -6,6 +6,51 @@
 {% block style %}
 
 
+.filtros-status{
+    display:flex;
+    gap:12px;
+    width:100%;
+    margin-bottom:25px;
+    flex-wrap:wrap;
+}
+
+.filtro-btn{
+    flex:1;
+    min-width:180px;
+    height:55px;
+    border-radius:14px;
+    font-size:16px;
+    font-weight:bold;
+    color:white;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.filtro-btn:hover{
+    transform:translateY(-3px);
+}
+
+.filtro-todos{
+    background:#475569;
+}
+
+.filtro-pendente{
+    background:#ca8a04;
+}
+
+.filtro-andamento{
+    background:#2563eb;
+}
+
+.filtro-concluido{
+    background:#16a34a;
+}
+
+.filtro-ativo{
+    box-shadow:0 0 0 3px white;
+}
+
+
 .card-pendente{
     animation:pulseYellow 1.8s infinite;
     border:1px solid rgba(250,204,21,.45);
@@ -507,6 +552,27 @@ button:hover{
 
 
 <h2> 📦 Solicitações </h2>
+
+
+<div class="filtros-status">
+
+<button class="filtro-btn filtro-todos filtro-ativo" onclick="filtrarSolicitacoes('TODOS', this)">
+📦 Todas
+</button>
+
+<button class="filtro-btn filtro-pendente" onclick="filtrarSolicitacoes('PENDENTE', this)">
+🟡 Pendentes (<span id="count-pendente">0</span>)
+</button>
+
+<button class="filtro-btn filtro-andamento" onclick="filtrarSolicitacoes('EM ANDAMENTO', this)">
+🔵 Em andamento (<span id="count-andamento">0</span>)
+</button>
+
+<button class="filtro-btn filtro-concluido" onclick="filtrarSolicitacoes('CONCLUIDO', this)">
+🟢 Concluídas (<span id="count-concluido">0</span>)
+</button>
+
+</div>
     
 
 <div class="top-buttons">
@@ -554,14 +620,8 @@ button:hover{
 
 
 
-<div class="card
-{% if s.status == 'PENDENTE' %}
-card-pendente
-{% elif s.status == 'EM ANDAMENTO' %}
-card-andamento
-{% endif %}
-">
-
+<div class="card solicitacao-card"
+data-status="{{s.status}}">
 
 
 <div class="info">
@@ -811,6 +871,89 @@ Nenhuma solicitação encontrada 🎉
 
 
 {% endif %}
+
+
+<script>
+
+function filtrarSolicitacoes(status, botao){
+
+    let cards = document.querySelectorAll(".solicitacao-card");
+
+    let pendentes = 0;
+    let andamento = 0;
+    let concluido = 0;
+
+
+    cards.forEach(card=>{
+
+        let cardStatus = card.dataset.status;
+
+
+        if(cardStatus === "PENDENTE"){
+            pendentes++;
+        }
+
+
+        if(cardStatus === "EM ANDAMENTO"){
+            andamento++;
+        }
+
+
+        if(cardStatus === "CONCLUIDO" || cardStatus === "NAO ENCONTRADO"){
+            concluido++;
+        }
+
+
+        if(status === "TODOS"){
+            card.style.display="block";
+        }
+
+        else if(status === cardStatus){
+            card.style.display="block";
+        }
+
+        else if(status === "CONCLUIDO" && 
+        (cardStatus === "CONCLUIDO" || cardStatus === "NAO ENCONTRADO")){
+            card.style.display="block";
+        }
+
+        else{
+            card.style.display="none";
+        }
+
+
+    });
+
+
+    document.getElementById("count-pendente").innerText = pendentes;
+    document.getElementById("count-andamento").innerText = andamento;
+    document.getElementById("count-concluido").innerText = concluido;
+
+
+
+    document.querySelectorAll(".filtro-btn")
+    .forEach(btn=>{
+        btn.classList.remove("filtro-ativo");
+    });
+
+
+    botao.classList.add("filtro-ativo");
+
+}
+
+
+
+window.onload=function(){
+
+    filtrarSolicitacoes(
+        "TODOS",
+        document.querySelector(".filtro-todos")
+    );
+
+}
+
+
+</script>
 
 
 </div>
