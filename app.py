@@ -1309,41 +1309,63 @@ def solicitacoes():
 # ==========================
 # API CONTADOR SOLICITAÇÕES
 # ==========================
-@app.route('/api/solicitacoes/count')
+@app.route("/api/solicitacoes/count")
 def contar_solicitacoes():
 
     if not logado():
-        return {
-            "pendentes": 0,
-            "andamento": 0,
-            "concluidas": 0,
-            "ids": []
-        }
+        return jsonify({
+            "pendentes":0,
+            "andamento":0,
+            "concluidas":0,
+            "total":0
+        })
 
 
-    pendentes = Solicitacao.query.filter_by(
-        status="PENDENTE"
-    ).count()
+    perfil = session.get("perfil")
+    usuario = session.get("usuario")
 
 
-    andamento = Solicitacao.query.filter_by(
-        status="EM ANDAMENTO"
-    ).count()
+    if perfil == "separacao":
+
+        lista = Solicitacao.query.filter_by(
+            solicitante=usuario
+        ).all()
+
+    else:
+
+        lista = Solicitacao.query.all()
 
 
-    concluidas = Solicitacao.query.filter(
-        Solicitacao.status.in_(
-            ["CONCLUIDO", "NAO ENCONTRADO"]
-        )
-    ).count()
+
+    pendentes = 0
+    andamento = 0
+    concluidas = 0
 
 
-    return {
+    for s in lista:
+
+        if s.status == "PENDENTE":
+            pendentes += 1
+
+        elif s.status == "EM ANDAMENTO":
+            andamento += 1
+
+        elif s.status in ["CONCLUIDO","NAO ENCONTRADO"]:
+            concluidas += 1
+
+
+
+    return jsonify({
+
         "pendentes": pendentes,
-        "andamento": andamento,
-        "concluidas": concluidas
-    }
 
+        "andamento": andamento,
+
+        "concluidas": concluidas,
+
+        "total": len(lista)
+
+    })
 
 # ==========================
 # NOVA SOLICITAÇÃO
