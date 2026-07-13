@@ -928,11 +928,68 @@ Nenhuma solicitação encontrada 🎉
 </audio>
 
 
+
 <script>
 
 let estadoAtual = "";
 let filtroStatus = "TODOS";
 
+
+function filtrarSolicitacoes(status, botao){
+
+    filtroStatus = status;
+
+    document.querySelectorAll(".filtro-btn").forEach(btn=>{
+        btn.classList.remove("filtro-ativo");
+    });
+
+    botao.classList.add("filtro-ativo");
+
+    aplicarFiltros();
+}
+
+
+function pesquisarSolicitacoes(){
+    aplicarFiltros();
+}
+
+
+function aplicarFiltros(){
+
+    let texto = document
+        .getElementById("pesquisaSolicitacao")
+        .value
+        .toLowerCase();
+
+
+    document.querySelectorAll(".solicitacao-card").forEach(card=>{
+
+        let produto = card.dataset.produto || "";
+        let solicitante = card.dataset.solicitante || "";
+        let tipo = card.dataset.tipo || "";
+        let status = card.dataset.status;
+
+
+        let pesquisaOk =
+            produto.includes(texto) ||
+            solicitante.includes(texto) ||
+            tipo.includes(texto);
+
+
+        let statusOk =
+            filtroStatus === "TODOS" ||
+            status === filtroStatus;
+
+
+        card.style.display =
+            (pesquisaOk && statusOk)
+            ? ""
+            : "none";
+
+    });
+
+}
+     
 window.onload = function(){
 
     let pesquisa = localStorage.getItem("pesquisaSolicitacao");
