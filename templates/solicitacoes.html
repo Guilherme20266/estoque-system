@@ -890,83 +890,58 @@ Nenhuma solicitação encontrada 🎉
 
 <script>
 
-function filtrarSolicitacoes(status, botao){
-
-    let cards = document.querySelectorAll(".solicitacao-card");
-
-    let pendentes = 0;
-    let andamento = 0;
-    let concluido = 0;
+let estadoAtual = "";
 
 
-    cards.forEach(card=>{
+fetch("/api/solicitacoes/count")
+.then(r=>r.json())
+.then(data=>{
 
-        let cardStatus = card.dataset.status;
+    estadoAtual = JSON.stringify(data);
+
+});
 
 
-        if(cardStatus === "PENDENTE"){
-            pendentes++;
+setInterval(()=>{
+
+
+fetch("/api/solicitacoes/count")
+
+.then(response=>response.json())
+
+.then(data=>{
+
+
+    let novoEstado = JSON.stringify(data);
+
+
+    if(novoEstado !== estadoAtual){
+
+
+        let som = document.getElementById("novoPedidoSom");
+
+
+        if(som){
+
+            som.play()
+            .catch(()=>{});
+
         }
 
 
-        if(cardStatus === "EM ANDAMENTO"){
-            andamento++;
-        }
+        location.reload();
 
 
-        if(cardStatus === "CONCLUIDO" || cardStatus === "NAO ENCONTRADO"){
-            concluido++;
-        }
+    }
 
 
-        if(status === "TODOS"){
-            card.style.display="block";
-        }
-
-        else if(status === cardStatus){
-            card.style.display="block";
-        }
-
-        else if(status === "CONCLUIDO" && 
-        (cardStatus === "CONCLUIDO" || cardStatus === "NAO ENCONTRADO")){
-            card.style.display="block";
-        }
-
-        else{
-            card.style.display="none";
-        }
+    estadoAtual = novoEstado;
 
 
-    });
+});
 
 
-    document.getElementById("count-pendente").innerText = pendentes;
-    document.getElementById("count-andamento").innerText = andamento;
-    document.getElementById("count-concluido").innerText = concluido;
-
-
-
-    document.querySelectorAll(".filtro-btn")
-    .forEach(btn=>{
-        btn.classList.remove("filtro-ativo");
-    });
-
-
-    botao.classList.add("filtro-ativo");
-
-}
-
-
-
-window.onload=function(){
-
-    filtrarSolicitacoes(
-        "TODOS",
-        document.querySelector(".filtro-todos")
-    );
-
-}
-
+},10000);
 
 
 </script>
