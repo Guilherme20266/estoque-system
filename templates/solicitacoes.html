@@ -979,33 +979,30 @@ let quantidadeAtual = Number(
 );
 
 
-setInterval(function(){
-
-    fetch("/solicitacoes")
-    .then(response => response.text())
-    .then(html => {
+setInterval(()=>{
 
 
-        let pagina = document.createElement("html");
-        pagina.innerHTML = html;
+    fetch("/api/solicitacoes/count")
+
+    .then(response => response.json())
+
+    .then(data => {
 
 
-        let novoTotal = Number(
-            pagina.querySelector("#totalSolicitacoes")?.value || 0
-        );
-
-
-        console.log("Atual:", quantidadeAtual, "Novo:", novoTotal);
+        let novoTotal = data.total;
 
 
         if(novoTotal > quantidadeAtual){
 
+
             let som = document.getElementById("novoPedidoSom");
 
+
             if(som){
-                som.play().catch(error=>{
-                    console.log("Som bloqueado pelo navegador");
-                });
+
+                som.play()
+                .catch(()=>{});
+
             }
 
 
@@ -1018,8 +1015,15 @@ setInterval(function(){
 
 
     })
+
+
     .catch(error=>{
-        console.log("Erro atualização:", error);
+
+        console.log(
+            "Erro ao atualizar solicitações:",
+            error
+        );
+
     });
 
 
