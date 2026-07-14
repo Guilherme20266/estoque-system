@@ -192,6 +192,10 @@ class Solicitacao(db.Model):
 # FUNÇÕES
 # ==========================
 
+# ==========================
+# FUNÇÕES
+# ==========================
+
 def logado():
     return session.get('usuario')
 
@@ -200,14 +204,16 @@ def admin():
     return session.get('perfil') == 'admin'
 
 
-def operador_ou_admin():
+def admin_ou_operador():
     return session.get('perfil') in ['admin', 'operador']
-    
 
-def operador_ou_admin_ou_separacao():
+
+def pode_separacao():
     return session.get('perfil') in ['admin', 'operador', 'separacao']
 
 
+def pode_consultar():
+    return session.get('perfil') in ['admin', 'operador', 'separacao', 'consulta']
 def calcular_status(validade):
 
     try:
@@ -327,7 +333,7 @@ def logout():
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
 
-    if not operador_ou_admin_ou_separacao():
+    if not admin_ou_operador():
         return redirect('/menu')
 
     if request.method == 'POST':
@@ -403,8 +409,8 @@ def cadastrar():
 @app.route('/inventario')
 def inventario():
 
-    if not operador_ou_admin_ou_separacao():
-        return redirect('/')
+    if not admin():
+        return redirect('/menu')
 
     produtos = Produto.query.all()
 
@@ -435,7 +441,7 @@ def inventario():
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
 
-    if not operador_ou_admin_ou_separacao():
+    if not admin():
         return redirect('/menu')
 
     produto = Produto.query.get_or_404(id)
@@ -485,7 +491,7 @@ def editar(id):
 @app.route('/movimentacao', methods=['GET', 'POST'])
 def movimentacao():
 
-    if not operador_ou_admin_ou_separacao():
+    if not operador_ou_admin()():
         return redirect('/menu')
 
     busca = request.args.get("busca", "")
@@ -591,7 +597,7 @@ def movimentacao():
 @app.route('/transferencia', methods=['GET', 'POST'])
 def transferencia():
 
-    if not operador_ou_admin_ou_separacao():
+    if not admin_ou_operador():
         return redirect('/menu')
 
     busca = request.args.get("busca", "")
@@ -665,7 +671,7 @@ def transferencia():
 @app.route('/historico')
 def historico():
 
-    if not operador_ou_admin():
+    if not admin_ou_operador():
         return redirect('/menu')
 
     busca = request.args.get('busca', '')
@@ -1486,7 +1492,7 @@ def em_andamento(id):
 @app.route('/solicitacao/<int:id>/concluir', methods=['POST'])
 def concluir_solicitacao(id):
 
-    if not operador_ou_admin():
+    if not admin_ou_operador():
         return redirect('/menu')
 
     solicitacao = Solicitacao.query.get_or_404(id)
@@ -1536,7 +1542,7 @@ def concluir_solicitacao(id):
 @app.route('/solicitacao/<int:id>/nao-encontrado', methods=['POST'])
 def nao_encontrado(id):
 
-    if not operador_ou_admin():
+    if not admin_ou_operador():
         return redirect('/menu')
 
     solicitacao = Solicitacao.query.get_or_404(id)
