@@ -115,7 +115,7 @@ a{
 
     </div>
 
-    {% if perfil in ["admin", "operador", "separacao"] %}
+    {% if perfil in ["admin", "operador"] %}
     <a href="/cadastrar">
         <button class="btn padrao">
             ➕ Cadastrar Produto
@@ -148,7 +148,7 @@ a{
     </button>
 </a>
 
-{% if perfil in ["admin", "operador", "separacao"] %}
+ {% if perfil == "admin" %}
 <a href="/inventario">
     <button class="btn padrao">
         📦 Inventário
@@ -156,7 +156,7 @@ a{
 </a>
 {% endif %}
 
-    {% if perfil in ["admin", "operador"] %}
+     {% if perfil == "admin" %}
     <a href="/historico">
         <button class="btn padrao">
             📜 Histórico
