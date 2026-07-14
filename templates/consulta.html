@@ -157,14 +157,19 @@ onclick="abrirCamera()"
 
 {% for item in lista %}
 
-<div class="card
+<div class="card produto-card
 {% if item.status == 'URGENTE' %}
 urgente
 {% elif item.status == 'ATENCAO' %}
 atencao
 {% else %}
 ok
-{% endif %}
+{% endif %}"
+
+data-busca="
+{{ item.produto.nome|lower }}
+{{ item.produto.codigo|lower }}
+{{ item.produto.endereco|lower }}
 ">
 
 {% if item.status == 'URGENTE' %}
@@ -231,6 +236,26 @@ document.getElementById("formBusca").submit();
 );
 
 }
+
+const campoBusca = document.getElementById("busca");
+
+campoBusca.addEventListener("input", function(){
+
+    let texto = this.value.toLowerCase();
+
+    document.querySelectorAll(".produto-card").forEach(card=>{
+
+        let dados = card.dataset.busca;
+
+        if(dados.includes(texto)){
+            card.style.display = "";
+        }else{
+            card.style.display = "none";
+        }
+
+    });
+
+});
 
 </script>
 
