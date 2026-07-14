@@ -1293,7 +1293,7 @@ def solicitacoes():
                     (Solicitacao.operador == "", 1),
                     else_=2
                 ),
-                Solicitacao.id.desc()
+                Solicitacao.id.asc()
             )
             .all()
         )
