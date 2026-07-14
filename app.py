@@ -188,9 +188,6 @@ class Solicitacao(db.Model):
         default=""
     )
 
-# ==========================
-# FUNÇÕES
-# ==========================
 
 # ==========================
 # FUNÇÕES
@@ -486,12 +483,12 @@ def editar(id):
 
     return render_template('editar.html', produto=produto)
 # ==========================
-# MOVIMENTAÇÃO
+# SEPARACAO
 # ==========================
 @app.route('/separacao', methods=['GET', 'POST'])
 def separacao():
 
-    if not operador_ou_admin()():
+    if not operador_ou_admin():
         return redirect('/menu')
 
     busca = request.args.get("busca", "")
