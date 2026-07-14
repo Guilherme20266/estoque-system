@@ -124,6 +124,14 @@ a{
     {% endif %}
 
     {% if perfil in ["admin", "operador", "separacao"] %}
+    <a href="/movimentacao">
+        <button class="btn padrao">
+           📦 Separar
+        </button>
+     </a>
+     {% endif %}
+
+    {% if perfil in ["admin", "operador", "separacao"] %}
     <a href="/solicitacoes">
         <button class="btn padrao">
             📋 Solicitações
