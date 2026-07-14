@@ -488,7 +488,7 @@ def editar(id):
 @app.route('/separacao', methods=['GET', 'POST'])
 def separacao():
 
-    if not operador_ou_admin():
+    if not pode_separacao():
         return redirect('/menu')
 
     busca = request.args.get("busca", "")
