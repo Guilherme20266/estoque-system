@@ -488,8 +488,8 @@ def editar(id):
 # ==========================
 # MOVIMENTAÇÃO
 # ==========================
-@app.route('/movimentacao', methods=['GET', 'POST'])
-def movimentacao():
+@app.route('/separacao', methods=['GET', 'POST'])
+def separacao():
 
     if not operador_ou_admin()():
         return redirect('/menu')
@@ -521,7 +521,7 @@ def movimentacao():
         produto = Produto.query.get(produto_id)
 
         if not produto:
-            return redirect('/movimentacao')
+            return redirect('/separacao')
 
         acao = request.form['acao']
         quantidade = int(request.form['quantidade'])
@@ -547,7 +547,7 @@ def movimentacao():
 
             flash(f"✔ Entrada: +{quantidade} unidades em {produto.endereco}", "success")
 
-            return redirect('/movimentacao?produto_id=' + str(produto.id))
+            return redirect('/separacao?produto_id=' + str(produto.id))
 
         # ==========================
         # SAÍDA
@@ -577,16 +577,16 @@ def movimentacao():
 
                 flash(f"🚨 ESTOQUE ZERADO: {nome} removido do endereço {endereco}", "error")
 
-                return redirect('/movimentacao')
+                return redirect('/separacao')
 
             db.session.commit()
 
             flash(f"✔ Saída: -{quantidade} unidades de {produto.endereco}", "success")
 
-            return redirect('/movimentacao?produto_id=' + str(produto.id))
+            return redirect('/separacao?produto_id=' + str(produto.id))
 
     return render_template(
-        'movimentacao.html',
+        'separacao.html',
         produtos=produtos,
         busca=busca,
         produto_selecionado=produto_selecionado
