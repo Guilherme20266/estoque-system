@@ -1642,7 +1642,6 @@ def excluir_solicitacao(id):
     return redirect('/solicitacoes')
 
 with app.app_context():
-    CatalogoProduto.query.delete()
     db.session.commit()
 
 if __name__ == '__main__':
