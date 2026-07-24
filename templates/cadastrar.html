@@ -3,7 +3,6 @@
 {% block title %}Cadastrar{% endblock %}
 
 {% block head %}
-<script src="https://unpkg.com/html5-qrcode"></script>
 {% endblock %}
 
 {% block style %}
@@ -147,16 +146,6 @@ cursor:pointer;
 
 <input id="nome" name="nome" placeholder="Nome" required>
 
-<div class="codigo-box">
-
-<input id="codigo" name="codigo" placeholder="Código" required onblur="buscarProduto()">
-
-<button type="button" class="scan-icon" onclick="abrirCamera(); return false;">📷</button>
-
-</div>
-
-<div id="reader" style="display:none;"></div>
-
 <input
     type="number"
     name="quantidade"
@@ -251,55 +240,7 @@ function mascaraData(input){
     input.value = v;
 }
 
-async function buscarProduto(){
-
-    let codigo = document.getElementById("codigo").value;
-
-    if(!codigo) return;
-
-    try{
-        let resposta = await fetch("/buscar-produto/" + codigo);
-        let dados = await resposta.json();
-
-        let nome = document.getElementById("nome");
-
-        if(dados.encontrado){
-            nome.value = dados.nome;
-            nome.readOnly = true;
-        }else{
-            nome.value = "";
-            nome.readOnly = false;
-            nome.focus();
-        }
-
-    }catch(erro){
-        console.log(erro);
-    }
-}
-
-function abrirCamera(){
-
-    document.getElementById("reader").style.display = "block";
-
-    scanner = new Html5Qrcode("reader");
-
-    scanner.start(
-        { facingMode: "environment" },
-        {
-            fps: 10,
-            qrbox: { width: 300, height: 120 }
-        },
-        (codigo) => {
-
-            document.getElementById("codigo").value = codigo;
-
-            scanner.stop();
-
-            document.getElementById("reader").style.display = "none";
-
-            buscarProduto();
-        }
-    );
+);
 }
 
 </script>
