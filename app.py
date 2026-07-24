@@ -1644,5 +1644,8 @@ def excluir_solicitacao(id):
 with app.app_context():
     db.create_all()
 
+    Produto.query.delete()
+    db.session.commit()
+
 if __name__ == '__main__':
     app.run()
