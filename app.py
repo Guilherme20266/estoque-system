@@ -879,7 +879,6 @@ def administracao():
     # ==========================
     total_produtos = Produto.query.count()
     total_enderecos = Produto.query.count()
-    total_historico = Historico.query.count()
     total_usuarios = Usuario.query.count()
 
     produtos_urgentes = sum(
@@ -925,10 +924,8 @@ def administracao():
         'administracao.html',
         total_produtos=total_produtos,
         total_enderecos=total_enderecos,
-        total_historico=total_historico,
         total_usuarios=total_usuarios,
         produtos_urgentes=produtos_urgentes,
-        ultimo_historico=ultimo_historico,
         usuarios=usuarios,
         master=master
     )
