@@ -162,41 +162,24 @@ a{ text-decoration:none; }
     <!-- RELATÓRIO -->
     <div class="card">
 
-        <h3>📊 Relatório do Sistema</h3>
+    <h3>📊 Relatório do Sistema</h3>
 
-        <div class="info">
-            📦 Produtos Cadastrados
-            <b>{{ total_produtos }}</b>
-        </div>
-
-        <div class="info">
-            👥 Usuários Cadastrados
-            <b>{{ total_usuarios }}</b>
-        </div>
-
-        <div class="info">
-            🔴 Produtos Urgentes
-            <b>{{ produtos_urgentes }}</b>
-        </div>
-
-        <div class="info">
-    📋 Movimentações Registradas
-    <b>{{ total_historico }}</b>
-</div>
-
-<div class="info">
-    🗄️ Banco de Dados
-    <b>Online</b>
-</div>
-
-{% if ultimo_historico %}
-<div class="info">
-    🕒 Última Ação
-    <b>{{ ultimo_historico.acao }}</b>
-</div>
-{% endif %}
-
+    <div class="info">
+        <span>📦 Produtos Cadastrados</span>
+        <b>{{ total_produtos }}</b>
     </div>
+
+    <div class="info">
+        <span>👥 Usuários Cadastrados</span>
+        <b>{{ total_usuarios }}</b>
+    </div>
+
+    <div class="info">
+        <span>🚨 Produtos Urgentes</span>
+        <b>{{ produtos_urgentes }}</b>
+    </div>
+
+</div>
 
     <!-- Ferramentas -->
 <div class="card">
