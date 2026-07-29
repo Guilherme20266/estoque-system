@@ -1213,7 +1213,6 @@ def administracao():
         print(
             "ID:", u.id,
             "USUARIO:", u.usuario,
-            "SENHA:", u.senha,
             "PERFIL:", u.perfil
         )
 
