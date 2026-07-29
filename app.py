@@ -212,7 +212,6 @@ def notificacoes():
     ).all()
 
 
-    # marca automaticamente como lida
     agora = datetime.now(
         ZoneInfo("America/Sao_Paulo")
     )
@@ -228,6 +227,7 @@ def notificacoes():
             n.lida = True
             n.lida_por = session.get('usuario')
             n.lida_em = agora
+
             alterou = True
 
 
@@ -256,7 +256,8 @@ def notificacoes():
         'notificacoes.html',
         notificacoes=lista,
         pode_criar=pode_criar,
-        usuarios=usuarios
+        usuarios=usuarios,
+        perfil=session.get('perfil')
     )
 
 
