@@ -1989,17 +1989,16 @@ with app.app_context():
         ADD COLUMN IF NOT EXISTS criada_em TIMESTAMP
     """))
 
-    db.session.commit()
+    try:
+        db.session.execute(text("""
+            ALTER TABLE produto
+            DROP CONSTRAINT IF EXISTS produto_endereco_key;
+        """))
 
+    except Exception:
+        db.session.rollback()
 
-try:
-    db.session.execute(text("""
-        ALTER TABLE produto
-        DROP CONSTRAINT IF EXISTS produto_endereco_key;
-    """))
     db.session.commit()
-except:
-    db.session.rollback()
 
     db.create_all()
 
