@@ -135,7 +135,6 @@ class Notificacao(db.Model):
 @app.route('/enviar_notificacao', methods=['POST'])
 def enviar_notificacao():
 
-    # somente admin e operador pode enviar
     if session.get('perfil') not in ['admin','operador']:
         return redirect('/menu')
 
@@ -144,7 +143,7 @@ def enviar_notificacao():
 
 
     notificacao = Notificacao(
-        titulo="Notificação",
+        titulo=request.form.get('titulo'),
         mensagem=request.form.get('mensagem'),
         urgencia=request.form.get('urgencia','media'),
         usuario_id=usuario_id,
