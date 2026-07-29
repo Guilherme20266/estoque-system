@@ -51,6 +51,162 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+
+# ==========================
+# NOTIFICACOES
+# ==========================
+class Notificacao(db.Model):
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    titulo = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    mensagem = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    urgencia = db.Column(
+        db.String(20),
+        default="media"
+    )
+
+    usuario_id = db.Column(
+        db.Integer,
+        db.ForeignKey('usuario.id'),
+        nullable=False
+    )
+
+    lida = db.Column(
+        db.Boolean,
+        default=False
+    )
+
+    criada_em = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+
+# ==========================
+# ENVIAR NOTIFICACAO
+# ==========================
+@app.route('/enviar_notificacao', methods=['POST'])
+def enviar_notificacao():
+
+    # somente admin pode enviar
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+
+    usuario_id = request.form.get('usuario_id')
+
+
+    notificacao = Notificacao(
+        titulo=request.form.get('titulo'),
+        mensagem=request.form.get('mensagem'),
+        urgencia=request.form.get('urgencia', 'media'),
+        usuario_id=usuario_id
+    )
+
+
+    db.session.add(notificacao)
+    db.session.commit()
+
+
+    flash(
+        "Notificação enviada com sucesso!",
+        "success"
+    )
+
+
+    return redirect('/administracao')
+
+
+
+# ==========================
+# CONTADOR DE NOTIFICACOES
+# ==========================
+@app.route('/api/notificacoes/count')
+def notificacoes_count():
+
+    if 'usuario_id' not in session:
+        return jsonify({
+            "total": 0
+        })
+
+
+    usuario_id = session['usuario_id']
+
+
+    total = Notificacao.query.filter_by(
+        usuario_id=usuario_id,
+        lida=False
+    ).count()
+
+
+    return jsonify({
+        "total": total
+    })
+
+
+
+# ==========================
+# LISTAR NOTIFICACOES
+# ==========================
+@app.route('/notificacoes')
+def notificacoes():
+
+    if 'usuario_id' not in session:
+        return redirect('/')
+
+
+    usuario_id = session['usuario_id']
+
+
+    lista = Notificacao.query.filter_by(
+        usuario_id=usuario_id
+    ).order_by(
+        Notificacao.criada_em.desc()
+    ).all()
+
+
+    return render_template(
+        'notificacoes.html',
+        notificacoes=lista
+    )
+
+
+
+# ==========================
+# MARCAR COMO LIDA
+# ==========================
+@app.route('/notificacao/<int:id>/ler')
+def ler_notificacao(id):
+
+    if 'usuario_id' not in session:
+        return redirect('/')
+
+
+    notificacao = Notificacao.query.get(id)
+
+
+    if notificacao:
+
+        notificacao.lida = True
+
+        db.session.commit()
+
+
+    return redirect('/notificacoes')
+
 # ==========================
 # PRODUTOS
 # ==========================
@@ -126,6 +282,12 @@ class Usuario(db.Model):
     perfil = db.Column(
         db.String(20),
         nullable=False
+    )
+
+    notificacoes = db.relationship(
+        'Notificacao',
+         backref='usuario',
+         lazy=True
     )
 
 
@@ -270,30 +432,55 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/menu')
 def menu():
 
     if not session.get('usuario'):
         return redirect('/')
 
+
     perfil = session.get("perfil")
 
+
+    # ==========================
+    # CONTADOR SOLICITAÇÕES
+    # ==========================
     if perfil == "separacao":
+
         total_solicitacoes = Solicitacao.query.filter_by(
             solicitante=session.get("usuario"),
             status="PENDENTE"
         ).count()
 
     else:
+
         total_solicitacoes = Solicitacao.query.filter_by(
             status="PENDENTE"
         ).count()
+
+
+
+    # ==========================
+    # CONTADOR NOTIFICAÇÕES
+    # ==========================
+    total_notificacoes = 0
+
+    if session.get('usuario_id'):
+
+        total_notificacoes = Notificacao.query.filter_by(
+            usuario_id=session.get('usuario_id'),
+            lida=False
+        ).count()
+
+
 
     return render_template(
         'menu.html',
         usuario=session.get('usuario'),
         perfil=perfil,
-        total_solicitacoes=total_solicitacoes
+        total_solicitacoes=total_solicitacoes,
+        total_notificacoes=total_notificacoes
     )
 
 @app.route('/entrar', methods=['POST'])
@@ -307,12 +494,17 @@ def entrar():
         senha=senha
     ).first()
 
+
     if not user:
         return redirect('/')
 
+
     session.permanent = True
+
     session['usuario'] = user.usuario
     session['perfil'] = user.perfil
+    session['usuario_id'] = user.id   # necessário para notificações
+
 
     return redirect('/menu')
 
