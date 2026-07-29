@@ -88,6 +88,36 @@ h1{
 }
 
 
+.form-card{
+    background:white;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:18px;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+
+input,
+textarea,
+select{
+
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:8px;
+    border:1px solid #d1d5db;
+    box-sizing:border-box;
+    font-size:14px;
+
+}
+
+
+textarea{
+    resize:none;
+    height:90px;
+}
+
+
 .btn{
     width:100%;
     padding:15px;
@@ -97,6 +127,17 @@ h1{
     background:#2563eb;
     color:white;
     font-weight:bold;
+    cursor:pointer;
+}
+
+
+.btn-criar{
+    background:#16a34a;
+}
+
+
+.btn-voltar{
+    background:#475569;
 }
 
 
@@ -122,74 +163,214 @@ a{
     </div>
 
 
-    {% if notificacoes %}
+
+    <!-- ==========================
+         CRIAR NOTIFICAÇÃO
+    =========================== -->
+
+    {% if pode_criar %}
+
+    <div class="form-card">
+
+        <h3>
+            ✏️ Criar Notificação
+        </h3>
 
 
-        {% for n in notificacoes %}
-
-        <div class="card {{ n.urgencia }}">
+        <form action="/enviar_notificacao" method="POST">
 
 
-            <div class="titulo">
-                {{ n.titulo }}
-            </div>
+            <select name="usuario_id" required>
+
+                <option value="">
+                    Selecionar usuário
+                </option>
 
 
-            <div class="mensagem">
-                {{ n.mensagem }}
-            </div>
+                {% for u in usuarios %}
+
+                <option value="{{u.id}}">
+                    {{u.usuario}}
+                </option>
+
+                {% endfor %}
 
 
-            <div class="data">
-                {{ n.criada_em.strftime('%d/%m/%Y %H:%M') }}
-            </div>
+            </select>
 
 
-            {% if not n.lida %}
 
-            <a href="/notificacao/{{ n.id }}/ler">
-
-                <button class="btn">
-                    Marcar como lida
-                </button>
-
-            </a>
-
-            {% endif %}
+            <input
+                type="text"
+                name="titulo"
+                placeholder="Título da notificação"
+                required
+            >
 
 
-        </div>
 
-        {% endfor %}
+            <textarea
+                name="mensagem"
+                placeholder="Digite a mensagem"
+                required></textarea>
 
 
-    {% else %}
+
+            <select name="urgencia">
 
 
-        <div class="card">
+                <option value="baixa">
+                    🟢 Baixa
+                </option>
 
-            <div class="titulo">
-                Nenhuma notificação
-            </div>
 
-            <div class="mensagem">
-                Você não possui novas notificações.
-            </div>
+                <option value="media">
+                    🟡 Média
+                </option>
 
-        </div>
+
+                <option value="alta">
+                    🟠 Alta
+                </option>
+
+
+                <option value="critica">
+                    🔴 Crítica
+                </option>
+
+
+            </select>
+
+
+
+            <button class="btn btn-criar">
+
+                🔔 Enviar Notificação
+
+            </button>
+
+
+        </form>
+
+
+    </div>
 
 
     {% endif %}
 
 
 
+
+
+    <!-- ==========================
+         LISTA NOTIFICAÇÕES
+    =========================== -->
+
+
+    {% if notificacoes %}
+
+
+        {% for n in notificacoes %}
+
+
+        <div class="card {{ n.urgencia }}">
+
+
+            <div class="titulo">
+
+                {{ n.titulo }}
+
+            </div>
+
+
+
+            <div class="mensagem">
+
+                {{ n.mensagem }}
+
+            </div>
+
+
+
+            <div class="data">
+
+                {{ n.criada_em.strftime('%d/%m/%Y %H:%M') }}
+
+            </div>
+
+
+
+            {% if not n.lida %}
+
+
+            <a href="/notificacao/{{ n.id }}/ler">
+
+
+                <button class="btn">
+
+                    ✅ Marcar como lida
+
+                </button>
+
+
+            </a>
+
+
+            {% endif %}
+
+
+
+        </div>
+
+
+        {% endfor %}
+
+
+
+    {% else %}
+
+
+
+        <div class="card">
+
+
+            <div class="titulo">
+
+                Nenhuma notificação
+
+            </div>
+
+
+
+            <div class="mensagem">
+
+                Você não possui notificações.
+
+            </div>
+
+
+        </div>
+
+
+
+    {% endif %}
+
+
+
+
+
     <a href="/menu">
 
-        <button class="btn">
+
+        <button class="btn btn-voltar">
+
             ⬅ Voltar
+
         </button>
 
+
     </a>
+
 
 
 </div>
