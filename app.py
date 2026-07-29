@@ -1817,14 +1817,27 @@ def concluir_solicitacao(id):
         endereco=solicitacao.observacao
     ).first()
 
-    if produto:
+        if produto:
 
         endereco = produto.endereco
 
-        # Remove o produto do estoque, liberando o endereço
-        db.session.delete(produto)
+        # Se for laje, mantém o produto no endereço
+        if endereco.lower().startswith("laje"):
 
-        mensagem = f"✅ Solicitação concluída! Endereço {endereco} limpo com sucesso."
+            mensagem = (
+                f"✅ Solicitação concluída! "
+                f"Produto da {endereco} mantido no estoque."
+            )
+
+        else:
+
+            # Endereços normais são removidos
+            db.session.delete(produto)
+
+            mensagem = (
+                f"✅ Solicitação concluída! "
+                f"Endereço {endereco} limpo com sucesso."
+            )
 
     else:
 
