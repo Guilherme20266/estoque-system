@@ -1419,11 +1419,17 @@ def nova_solicitacao():
 
     if request.method == "POST":
 
+        endereco = (
+            f"{request.form['rua']}-"
+            f"{request.form['coluna']}-"
+            f"{request.form['nivel']}"
+        )
+
         nova = Solicitacao(
             produto=request.form["produto"],
             quantidade=request.form["quantidade"],
             tipo=request.form["tipo"],
-            observacao=request.form["observacao"],
+            observacao=endereco,
             solicitante=session.get("usuario"),
             operador="",
             status="PENDENTE",
