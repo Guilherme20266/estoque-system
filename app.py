@@ -28,10 +28,6 @@ import io
 import os
 import json
 
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
 
 app = Flask(__name__)
 
@@ -1404,6 +1400,9 @@ def limpar_historico():
     flash("Histórico apagado com sucesso!", "success")
     return redirect('/administracao')
 
+# ==========================
+# CRIAR BACKUP
+# ==========================
 @app.route('/criar-backup')
 def criar_backup():
 
@@ -1455,16 +1454,34 @@ def criar_backup():
 
     }
 
+
     pasta = "backups"
-    os.makedirs(pasta, exist_ok=True)
+
+    os.makedirs(
+        pasta,
+        exist_ok=True
+    )
+
 
     nome_arquivo = datetime.now(
         ZoneInfo("America/Sao_Paulo")
-    ).strftime("backup_%Y%m%d_%H%M%S.json")
+    ).strftime(
+        "backup_%Y%m%d_%H%M%S.json"
+    )
 
-    caminho = os.path.join(pasta, nome_arquivo)
 
-    with open(caminho, "w", encoding="utf-8") as f:
+    caminho = os.path.join(
+        pasta,
+        nome_arquivo
+    )
+
+
+    with open(
+        caminho,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
         json.dump(
             backup,
             f,
@@ -1472,94 +1489,81 @@ def criar_backup():
             indent=4
         )
 
-    try:
-        enviar_backup_drive(caminho)
 
-        flash(
-            "Backup criado e enviado ao Google Drive com sucesso!",
-            "success"
-        )
+    return send_file(
+        caminho,
+        as_attachment=True,
+        download_name=nome_arquivo
+    )
 
-    except Exception as e:
-        print(e)
 
-        flash(
-            f"Erro ao enviar backup: {e}",
-            "error"
-        )
 
-    return redirect('/administracao')
+# ==========================
+# BAIXAR ÚLTIMO BACKUP
+# ==========================
 @app.route('/baixar-backup')
 def baixar_backup():
 
     if session.get('perfil') != 'admin':
         return redirect('/menu')
 
+
     pasta = "backups"
 
+
     if not os.path.exists(pasta):
+        flash(
+            "Nenhum backup encontrado.",
+            "error"
+        )
         return redirect('/administracao')
+
 
     arquivos = sorted(
         os.listdir(pasta),
         reverse=True
     )
 
+
     if not arquivos:
+        flash(
+            "Nenhum backup encontrado.",
+            "error"
+        )
         return redirect('/administracao')
+
 
     ultimo = os.path.join(
         pasta,
         arquivos[0]
     )
 
+
     return send_file(
         ultimo,
-        as_attachment=True
+        as_attachment=True,
+        download_name=arquivos[0]
     )
 
+
+
+# ==========================
+# BACKUP AUTOMÁTICO
+# ==========================
 @app.route('/backup-automatico')
 def backup_automatico():
 
     chave = request.args.get("key")
 
+
     if chave != os.getenv("BACKUP_KEY"):
         return "Acesso negado", 403
 
+
     criar_backup()
 
+
     return "Backup executado com sucesso"
-def enviar_backup_drive(caminho_arquivo):
-
-    token = json.loads(os.getenv("GOOGLE_TOKEN"))
-
-    creds = Credentials.from_authorized_user_info(token)
-
-    if creds.expired and creds.refresh_token:
-        creds.refresh(Request())
-
-    drive = build(
-        "drive",
-        "v3",
-        credentials=creds
-    )
-
-    arquivo = {
-        "name": os.path.basename(caminho_arquivo),
-        "parents": [os.getenv("GOOGLE_DRIVE_FOLDER_ID")]
-    }
-
-    media = MediaFileUpload(
-        caminho_arquivo,
-        mimetype="application/json",
-        resumable=True
-    )
-
-    drive.files().create(
-        body=arquivo,
-        media_body=media,
-        fields="id"
-    ).execute()
 
 # ==========================
 # SOLICITAÇÕES
