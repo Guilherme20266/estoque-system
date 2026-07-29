@@ -634,7 +634,7 @@ def cadastrar():
 
         # Se for Laje, usa apenas o nome da laje
         if rua.startswith("Laje"):
-            endereco = rua
+            endereco = rua.strip().replace(" ", "-")
         else:
             endereco = (
                 f"{rua}-"
@@ -1723,7 +1723,7 @@ def nova_solicitacao():
 
         # Se for uma laje, usa somente o nome
         if rua.startswith("Laje"):
-            endereco = rua
+            endereco = rua.strip().replace(" ", "-")
         else:
             endereco = (
                 f"{rua}-"
