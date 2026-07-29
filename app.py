@@ -1929,9 +1929,33 @@ def excluir_solicitacao(id):
 
     return redirect('/solicitacoes')
 
+from sqlalchemy import text
+
 with app.app_context():
-    db.create_all()
+
+    db.session.execute(text("""
+        ALTER TABLE notificacao
+        ADD COLUMN IF NOT EXISTS enviado_por VARCHAR(100)
+    """))
+
+    db.session.execute(text("""
+        ALTER TABLE notificacao
+        ADD COLUMN IF NOT EXISTS lida_por VARCHAR(100)
+    """))
+
+    db.session.execute(text("""
+        ALTER TABLE notificacao
+        ADD COLUMN IF NOT EXISTS lida_em TIMESTAMP
+    """))
+
+    db.session.execute(text("""
+        ALTER TABLE notificacao
+        ADD COLUMN IF NOT EXISTS criada_em TIMESTAMP
+    """))
+
     db.session.commit()
+
+    db.create_all()
 
 
 if __name__ == '__main__':
