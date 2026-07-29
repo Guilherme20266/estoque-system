@@ -17,7 +17,6 @@ body{
     background:linear-gradient(135deg,#0f172a,#1e293b);
 }
 
-
 .box{
     width:90%;
     max-width:520px;
@@ -30,34 +29,26 @@ body{
     padding:20px;
     text-align:center;
     margin-bottom:18px;
-    box-shadow:0 10px 30px rgba(0,0,0,.25);
 }
 
 
-h1{
-    margin:0;
-    color:#111827;
-}
-
-
-.card{
+.card,
+.form-card{
     background:white;
     border-radius:12px;
     padding:15px;
     margin-bottom:12px;
-    box-shadow:0 5px 15px rgba(0,0,0,.2);
 }
 
 
 .titulo{
     font-weight:bold;
-    font-size:16px;
+    font-size:17px;
 }
 
 
 .mensagem{
-    margin-top:8px;
-    color:#374151;
+    margin-top:10px;
 }
 
 
@@ -68,32 +59,27 @@ h1{
 }
 
 
+.enviado{
+    margin-top:10px;
+    font-size:13px;
+    color:#2563eb;
+}
+
+
 .baixa{
     border-left:6px solid #22c55e;
 }
-
 
 .media{
     border-left:6px solid #eab308;
 }
 
-
 .alta{
     border-left:6px solid #f97316;
 }
 
-
 .critica{
     border-left:6px solid #dc2626;
-}
-
-
-.form-card{
-    background:white;
-    border-radius:12px;
-    padding:15px;
-    margin-bottom:18px;
-    box-shadow:0 5px 15px rgba(0,0,0,.2);
 }
 
 
@@ -104,21 +90,18 @@ select{
     width:100%;
     padding:12px;
     margin-top:10px;
-    border-radius:8px;
-    border:1px solid #d1d5db;
     box-sizing:border-box;
-    font-size:14px;
 
 }
 
 
 textarea{
-    resize:none;
     height:90px;
 }
 
 
 .btn{
+
     width:100%;
     padding:15px;
     margin-top:15px;
@@ -127,7 +110,7 @@ textarea{
     background:#2563eb;
     color:white;
     font-weight:bold;
-    cursor:pointer;
+
 }
 
 
@@ -136,241 +119,165 @@ textarea{
 }
 
 
-.btn-voltar{
-    background:#475569;
-}
-
-
-a{
-    text-decoration:none;
-}
-
 {% endblock %}
 
 
 
 {% block content %}
 
+
 <div class="box">
 
 
-    <div class="topo">
+<div class="topo">
 
-        <h1>
-            🔔 Notificações
-        </h1>
+<h1>
+🔔 Notificações
+</h1>
 
-    </div>
+</div>
 
 
 
-    <!-- ==========================
-         CRIAR NOTIFICAÇÃO
-    =========================== -->
+{% if pode_criar %}
 
-    {% if pode_criar %}
+<div class="form-card">
 
-    <div class="form-card">
 
-        <h3>
-            ✏️ Criar Notificação
-        </h3>
+<h3>
+Criar Notificação
+</h3>
 
 
-        <form action="/enviar_notificacao" method="POST">
+<form action="/enviar_notificacao" method="POST">
 
 
-            <select name="usuario_id" required>
+<select name="usuario_id" required>
 
-                <option value="">
-                    Selecionar usuário
-                </option>
+<option>
+Selecionar usuário
+</option>
 
 
-                {% for u in usuarios %}
+{% for u in usuarios %}
 
-                <option value="{{u.id}}">
-                    {{u.usuario}}
-                </option>
+<option value="{{u.id}}">
+{{u.usuario}}
+</option>
 
-                {% endfor %}
+{% endfor %}
 
+</select>
 
-            </select>
 
+<input
+name="titulo"
+placeholder="Título"
+required>
 
 
-            <input
-                type="text"
-                name="titulo"
-                placeholder="Título da notificação"
-                required
-            >
+<textarea
+name="mensagem"
+placeholder="Mensagem"
+required></textarea>
 
 
+<select name="urgencia">
 
-            <textarea
-                name="mensagem"
-                placeholder="Digite a mensagem"
-                required></textarea>
+<option value="baixa">
+🟢 Baixa
+</option>
 
+<option value="media">
+🟡 Média
+</option>
 
+<option value="alta">
+🟠 Alta
+</option>
 
-            <select name="urgencia">
+<option value="critica">
+🔴 Crítica
+</option>
 
+</select>
 
-                <option value="baixa">
-                    🟢 Baixa
-                </option>
 
+<button class="btn btn-criar">
+🔔 Enviar
+</button>
 
-                <option value="media">
-                    🟡 Média
-                </option>
 
+</form>
 
-                <option value="alta">
-                    🟠 Alta
-                </option>
 
+</div>
 
-                <option value="critica">
-                    🔴 Crítica
-                </option>
+{% endif %}
 
 
-            </select>
 
 
 
-            <button class="btn btn-criar">
+{% for n in notificacoes %}
 
-                🔔 Enviar Notificação
 
-            </button>
+<div class="card {{n.urgencia}}">
 
 
-        </form>
+<div class="titulo">
+{{n.titulo}}
+</div>
 
 
-    </div>
+<div class="mensagem">
+{{n.mensagem}}
+</div>
 
 
-    {% endif %}
+<div class="enviado">
+📨 Enviado por: {{n.enviado_por}}
+</div>
 
 
+<div class="data">
 
+{{n.criada_em.strftime('%d/%m/%Y %H:%M')}}
 
+<br>
 
-    <!-- ==========================
-         LISTA NOTIFICAÇÕES
-    =========================== -->
+{% if n.lida %}
+✅ Lida em:
+{{n.lida_em.strftime('%d/%m/%Y %H:%M')}}
+{% endif %}
 
+</div>
 
-    {% if notificacoes %}
 
+</div>
 
-        {% for n in notificacoes %}
 
+{% else %}
 
-        <div class="card {{ n.urgencia }}">
 
+<div class="card">
 
-            <div class="titulo">
+Nenhuma notificação
 
-                {{ n.titulo }}
+</div>
 
-            </div>
 
+{% endfor %}
 
 
-            <div class="mensagem">
 
-                {{ n.mensagem }}
+<a href="/menu">
 
-            </div>
+<button class="btn">
+⬅ Voltar
+</button>
 
-
-
-            <div class="data">
-
-                {{ n.criada_em.strftime('%d/%m/%Y %H:%M') }}
-
-            </div>
-
-
-
-            {% if not n.lida %}
-
-
-            <a href="/notificacao/{{ n.id }}/ler">
-
-
-                <button class="btn">
-
-                    ✅ Marcar como lida
-
-                </button>
-
-
-            </a>
-
-
-            {% endif %}
-
-
-
-        </div>
-
-
-        {% endfor %}
-
-
-
-    {% else %}
-
-
-
-        <div class="card">
-
-
-            <div class="titulo">
-
-                Nenhuma notificação
-
-            </div>
-
-
-
-            <div class="mensagem">
-
-                Você não possui notificações.
-
-            </div>
-
-
-        </div>
-
-
-
-    {% endif %}
-
-
-
-
-
-    <a href="/menu">
-
-
-        <button class="btn btn-voltar">
-
-            ⬅ Voltar
-
-        </button>
-
-
-    </a>
-
+</a>
 
 
 </div>
