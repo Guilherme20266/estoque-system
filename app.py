@@ -63,36 +63,70 @@ class Notificacao(db.Model):
         primary_key=True
     )
 
+
+    # TÍTULO
     titulo = db.Column(
         db.String(150),
         nullable=False
     )
 
+
+    # MENSAGEM
     mensagem = db.Column(
         db.Text,
         nullable=False
     )
 
+
+    # NÍVEL DE URGÊNCIA
     urgencia = db.Column(
         db.String(20),
         default="media"
     )
 
+
+    # USUÁRIO QUE RECEBEU
     usuario_id = db.Column(
         db.Integer,
         db.ForeignKey('usuario.id'),
         nullable=False
     )
 
+
+    # USUÁRIO QUE ENVIOU
+    enviado_por = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+
+    # STATUS DA LEITURA
     lida = db.Column(
         db.Boolean,
         default=False
     )
 
+
+    # QUEM LEU
+    lida_por = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
+
+    # DATA QUE FOI LIDA
+    lida_em = db.Column(
+        db.DateTime,
+        nullable=True
+    )
+
+
+    # DATA DE CRIAÇÃO
     criada_em = db.Column(
         db.DateTime,
         default=datetime.utcnow
     )
+
 
 
 # ==========================
@@ -113,8 +147,9 @@ def enviar_notificacao():
         titulo=request.form.get('titulo'),
         mensagem=request.form.get('mensagem'),
         urgencia=request.form.get('urgencia', 'media'),
-        usuario_id=usuario_id
-    )
+        usuario_id=usuario_id,
+        enviado_por=session.get('usuario')
+   )
 
 
     db.session.add(notificacao)
