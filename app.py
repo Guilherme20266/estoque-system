@@ -1507,6 +1507,27 @@ def concluir_solicitacao(id):
         )
         return redirect('/solicitacoes')
 
+    # Procura o produto pelo endereço informado na solicitação
+    produto = Produto.query.filter_by(
+        endereco=solicitacao.observacao
+    ).first()
+
+    if produto:
+
+        endereco = produto.endereco
+
+        # Remove o produto do estoque, liberando o endereço
+        db.session.delete(produto)
+
+        mensagem = f"✅ Solicitação concluída! Endereço {endereco} limpo com sucesso."
+
+    else:
+
+        mensagem = (
+            f"ℹ️ Solicitação concluída! O endereço "
+            f"{solicitacao.observacao} já estava vazio."
+        )
+
     solicitacao.status = "CONCLUIDO"
     solicitacao.finalizado_em = datetime.now(
         ZoneInfo("America/Sao_Paulo")
@@ -1529,7 +1550,7 @@ def concluir_solicitacao(id):
     db.session.commit()
 
     flash(
-        "Solicitação concluída com sucesso!",
+        mensagem,
         "success"
     )
 
