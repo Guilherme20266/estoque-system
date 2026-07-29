@@ -630,26 +630,26 @@ def cadastrar():
 
     if request.method == 'POST':
 
-    rua = request.form["rua"]
+        rua = request.form["rua"]
 
-    if rua.startswith("Laje"):
-        endereco = rua
-    else:
-        endereco = (
-            f"{rua}-"
-            f"{request.form['coluna']}-"
-            f"{request.form['nivel']}"
-        )
+        # Se for Laje, usa apenas o nome da laje
+        if rua.startswith("Laje"):
+            endereco = rua
+        else:
+            endereco = (
+                f"{rua}-"
+                f"{request.form['coluna']}-"
+                f"{request.form['nivel']}"
+            )
 
-        if not endereco.startswith("Laje"):
-
+            # Só verifica endereço duplicado para os racks
             existe = Produto.query.filter_by(
-               endereco=endereco
+                endereco=endereco
             ).first()
 
-         if existe:
-               return redirect('/cadastrar?erro=endereco')
-             
+            if existe:
+                return redirect('/cadastrar?erro=endereco')
+
         # SALVA NO CATÁLOGO
         catalogo = CatalogoProduto.query.filter_by(
             codigo=request.form['codigo']
@@ -662,9 +662,7 @@ def cadastrar():
             )
             db.session.add(catalogo)
 
-        # ==========================
         # VALIDAÇÃO DE QUANTIDADE
-        # ==========================
         try:
             quantidade = int(request.form['quantidade'])
         except:
