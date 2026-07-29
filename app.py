@@ -259,7 +259,7 @@ def notificacoes():
 
 
     if alterou:
-    db.session.commit()
+        db.session.commit()
 
 
 
