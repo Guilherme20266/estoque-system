@@ -94,6 +94,12 @@ textarea{
 }
 
 
+.titulo{
+    font-weight:bold;
+    font-size:18px;
+}
+
+
 .btn{
 
     width:100%;
@@ -148,7 +154,7 @@ Criar Notificação
 
 <select name="usuario_id" required>
 
-<option>
+<option value="">
 Selecionar usuário
 </option>
 
@@ -162,6 +168,12 @@ Selecionar usuário
 {% endfor %}
 
 </select>
+
+
+<input
+name="titulo"
+placeholder="Título da notificação"
+required>
 
 
 <textarea
@@ -212,6 +224,9 @@ required></textarea>
 
 <div class="card {{n.urgencia}}">
 
+<div class="titulo">
+{{n.titulo}}
+</div>
 
 <div class="mensagem">
 {{n.mensagem}}
