@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}
+Notificações
+{% endblock %}
+
+
+{% block style %}
+
+body{
+    font-family:Arial,sans-serif;
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+}
+
+
+.box{
+    width:90%;
+    max-width:520px;
+}
+
+
+.topo{
+    background:white;
+    border-radius:16px;
+    padding:20px;
+    text-align:center;
+    margin-bottom:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+
+h1{
+    margin:0;
+    color:#111827;
+}
+
+
+.card{
+    background:white;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+
+.titulo{
+    font-weight:bold;
+    font-size:16px;
+}
+
+
+.mensagem{
+    margin-top:8px;
+    color:#374151;
+}
+
+
+.data{
+    margin-top:10px;
+    font-size:12px;
+    color:#6b7280;
+}
+
+
+.baixa{
+    border-left:6px solid #22c55e;
+}
+
+
+.media{
+    border-left:6px solid #eab308;
+}
+
+
+.alta{
+    border-left:6px solid #f97316;
+}
+
+
+.critica{
+    border-left:6px solid #dc2626;
+}
+
+
+.btn{
+    width:100%;
+    padding:15px;
+    margin-top:15px;
+    border:none;
+    border-radius:12px;
+    background:#2563eb;
+    color:white;
+    font-weight:bold;
+}
+
+
+a{
+    text-decoration:none;
+}
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="box">
+
+
+    <div class="topo">
+
+        <h1>
+            🔔 Notificações
+        </h1>
+
+    </div>
+
+
+    {% if notificacoes %}
+
+
+        {% for n in notificacoes %}
+
+        <div class="card {{ n.urgencia }}">
+
+
+            <div class="titulo">
+                {{ n.titulo }}
+            </div>
+
+
+            <div class="mensagem">
+                {{ n.mensagem }}
+            </div>
+
+
+            <div class="data">
+                {{ n.criada_em.strftime('%d/%m/%Y %H:%M') }}
+            </div>
+
+
+            {% if not n.lida %}
+
+            <a href="/notificacao/{{ n.id }}/ler">
+
+                <button class="btn">
+                    Marcar como lida
+                </button>
+
+            </a>
+
+            {% endif %}
+
+
+        </div>
+
+        {% endfor %}
+
+
+    {% else %}
+
+
+        <div class="card">
+
+            <div class="titulo">
+                Nenhuma notificação
+            </div>
+
+            <div class="mensagem">
+                Você não possui novas notificações.
+            </div>
+
+        </div>
+
+
+    {% endif %}
+
+
+
+    <a href="/menu">
+
+        <button class="btn">
+            ⬅ Voltar
+        </button>
+
+    </a>
+
+
+</div>
+
+
+{% endblock %}
