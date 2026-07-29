@@ -185,8 +185,13 @@ cursor:pointer;
 <option value="O">O</option>
 <option value="P">P</option>
 <option value="Q">Q</option>
+<option value="Laje 1">Laje 1</option>
+<option value="Laje 2">Laje 2</option>
+<option value="Laje 3">Laje 3</option>
+<option value="Laje 4">Laje 4</option>
 </select>
 
+<div id="grupo-coluna">
 <select name="coluna">
 
     <option value="">Selecione a Coluna</option>
@@ -195,11 +200,13 @@ cursor:pointer;
 <option value="{{i}}">{{i}}</option>
 {% endfor %}
 </select>
+</div>
 
+<div id="grupo-nivel">
 <select name="nivel">
 
     <option value="">Selecione o Nível</option>
-    
+
 <option value="1">1</option>
 <option value="2">2</option>
 <option value="3">3</option>
@@ -207,6 +214,7 @@ cursor:pointer;
 <option value="5">5</option>
 <option value="6">6</option>
 </select>
+</div>
 
 <button type="submit">Salvar</button>
 
@@ -246,6 +254,35 @@ function mascaraData(input){
 
     input.value = v;
 }
+
+// ==========================
+// ESCONDER COLUNA E NÍVEL NAS LAJES
+// ==========================
+
+const rua = document.querySelector('select[name="rua"]');
+const coluna = document.querySelector('select[name="coluna"]');
+const nivel = document.querySelector('select[name="nivel"]');
+
+function atualizarLaje(){
+
+    if(rua.value.startsWith("Laje")){
+
+        coluna.parentElement.style.display = "none";
+        nivel.parentElement.style.display = "none";
+
+    }else{
+
+        coluna.parentElement.style.display = "";
+        nivel.parentElement.style.display = "";
+
+    }
+
+}
+
+rua.addEventListener("change", atualizarLaje);
+
+atualizarLaje();
+
 
 </script>
 
