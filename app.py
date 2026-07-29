@@ -1719,8 +1719,13 @@ def nova_solicitacao():
 
     if request.method == "POST":
 
+    rua = request.form["rua"]
+
+    if rua.startswith("Laje"):
+        endereco = rua
+    else:
         endereco = (
-            f"{request.form['rua']}-"
+            f"{rua}-"
             f"{request.form['coluna']}-"
             f"{request.form['nivel']}"
         )
