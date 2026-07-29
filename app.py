@@ -1727,7 +1727,7 @@ def nova_solicitacao():
 
         nova = Solicitacao(
             produto=request.form["produto"],
-            quantidade=request.form["quantidade"],
+            quantidade=1,
             tipo=request.form["tipo"],
             observacao=endereco,
             solicitante=session.get("usuario"),
