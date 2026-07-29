@@ -326,9 +326,8 @@ class Produto(db.Model):
 
     endereco = db.Column(
         db.String(20),
-        unique=True,
         nullable=False
-    )
+     )
 
 
 # ==========================
@@ -631,19 +630,26 @@ def cadastrar():
 
     if request.method == 'POST':
 
+    rua = request.form["rua"]
+
+    if rua.startswith("Laje"):
+        endereco = rua
+    else:
         endereco = (
-            f"{request.form['rua']}-"
+            f"{rua}-"
             f"{request.form['coluna']}-"
             f"{request.form['nivel']}"
         )
 
-        existe = Produto.query.filter_by(
-            endereco=endereco
-        ).first()
+        if not endereco.startswith("Laje"):
 
-        if existe:
-            return redirect('/cadastrar?erro=endereco')
+            existe = Produto.query.filter_by(
+               endereco=endereco
+            ).first()
 
+         if existe:
+               return redirect('/cadastrar?erro=endereco')
+             
         # SALVA NO CATÁLOGO
         catalogo = CatalogoProduto.query.filter_by(
             codigo=request.form['codigo']
@@ -1986,6 +1992,16 @@ with app.app_context():
     """))
 
     db.session.commit()
+
+
+try:
+    db.session.execute(text("""
+        ALTER TABLE produto
+        DROP CONSTRAINT IF EXISTS produto_endereco_key;
+    """))
+    db.session.commit()
+except:
+    db.session.rollback()
 
     db.create_all()
 
