@@ -203,14 +203,42 @@ def notificacoes():
 
 
     usuario_id = session['usuario_id']
+    usuario = session.get('usuario')
+    perfil = session.get('perfil')
 
 
-    lista = Notificacao.query.filter_by(
-        usuario_id=usuario_id
-    ).order_by(
-        Notificacao.criada_em.desc()
-    ).all()
+    # ==========================
+    # BUSCA NOTIFICAÇÕES
+    # ==========================
 
+    if perfil in ['admin', 'operador']:
+
+        # Mostra recebidas + enviadas
+        lista = Notificacao.query.filter(
+            db.or_(
+                Notificacao.usuario_id == usuario_id,
+                Notificacao.enviado_por == usuario
+            )
+        ).order_by(
+            Notificacao.criada_em.desc()
+        ).all()
+
+
+    else:
+
+        # Separação vê somente o que recebeu
+        lista = Notificacao.query.filter_by(
+            usuario_id=usuario_id
+        ).order_by(
+            Notificacao.criada_em.desc()
+        ).all()
+
+
+
+    # ==========================
+    # MARCAR COMO LIDA
+    # SOMENTE QUANDO RECEBEU
+    # ==========================
 
     agora = datetime.now(
         ZoneInfo("America/Sao_Paulo")
@@ -222,13 +250,17 @@ def notificacoes():
 
     for n in lista:
 
-        if not n.lida or not n.lida_em:
+        # Não marca notificações enviadas pelo próprio usuário
+        if n.usuario_id == usuario_id:
 
-            n.lida = True
-            n.lida_por = session.get('usuario')
-            n.lida_em = agora
+            if not n.lida:
 
-            alterou = True
+                n.lida = True
+                n.lida_por = usuario
+                n.lida_em = agora
+
+                alterou = True
+
 
 
     if alterou:
@@ -236,7 +268,11 @@ def notificacoes():
 
 
 
-    pode_criar = session.get('perfil') in [
+    # ==========================
+    # PERMISSÃO DE CRIAR
+    # ==========================
+
+    pode_criar = perfil in [
         "admin",
         "operador"
     ]
@@ -244,10 +280,11 @@ def notificacoes():
 
     usuarios = []
 
+
     if pode_criar:
 
         usuarios = Usuario.query.filter(
-            Usuario.usuario != session.get('usuario')
+            Usuario.usuario != usuario
         ).all()
 
 
@@ -257,7 +294,7 @@ def notificacoes():
         notificacoes=lista,
         pode_criar=pode_criar,
         usuarios=usuarios,
-        perfil=session.get('perfil')
+        perfil=perfil
     )
 
 @app.route('/limpar-notificacoes', methods=['POST'])
