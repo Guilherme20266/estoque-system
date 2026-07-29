@@ -127,7 +127,7 @@ def enviar_notificacao():
     )
 
 
-    return redirect('/administracao')
+    return redirect('/Notificacao')
 
 
 
