@@ -162,7 +162,7 @@ def enviar_notificacao():
     )
 
 
-    return redirect('/Notificacao')
+    return redirect('/notificacoes')
 
 
 
@@ -226,6 +226,7 @@ def notificacoes():
         if not n.lida:
 
             n.lida = True
+            n.lida_por = session.get('usuario')
             n.lida_em = agora
             alterou = True
 
@@ -258,27 +259,6 @@ def notificacoes():
         usuarios=usuarios
     )
 
-# ==========================
-# MARCAR COMO LIDA
-# ==========================
-@app.route('/notificacao/<int:id>/ler')
-def ler_notificacao(id):
-
-    if 'usuario_id' not in session:
-        return redirect('/')
-
-
-    notificacao = Notificacao.query.get(id)
-
-
-    if notificacao:
-
-        notificacao.lida = True
-
-        db.session.commit()
-
-
-    return redirect('/notificacoes')
 
 # ==========================
 # PRODUTOS
