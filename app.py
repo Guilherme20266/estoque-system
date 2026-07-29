@@ -1718,16 +1718,18 @@ def nova_solicitacao():
         return redirect("/menu")
 
     if request.method == "POST":
+
         rua = request.form["rua"]
 
-    if rua.startswith("Laje"):
-        endereco = rua
-    else:
-        endereco = (
-            f"{rua}-"
-            f"{request.form['coluna']}-"
-            f"{request.form['nivel']}"
-        )
+        # Se for uma laje, usa somente o nome
+        if rua.startswith("Laje"):
+            endereco = rua
+        else:
+            endereco = (
+                f"{rua}-"
+                f"{request.form['coluna']}-"
+                f"{request.form['nivel']}"
+            )
 
         nova = Solicitacao(
             produto=request.form["produto"],
@@ -1754,7 +1756,6 @@ def nova_solicitacao():
         return redirect("/solicitacoes")
 
     return render_template("nova_solicitacao.html")
-
 
 # ==========================
 # EM ANDAMENTO
