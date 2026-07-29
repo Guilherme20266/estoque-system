@@ -253,7 +253,11 @@ required></textarea>
 <br>
 
 📅 Data:
-{{n.lida_em.strftime('%d/%m/%Y %H:%M')}}
+{% if n.lida_em %}
+    {{ n.lida_em.strftime('%d/%m/%Y %H:%M') }}
+{% else %}
+    -
+{% endif %}
 
 {% endif %}
 </div>
