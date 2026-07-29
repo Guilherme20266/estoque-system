@@ -1860,7 +1860,7 @@ def concluir_solicitacao(id):
             acao="SOLICITACAO CONCLUIDA",
             produto=solicitacao.produto,
             quantidade=solicitacao.quantidade,
-            rigem=solicitacao.observacao,
+            origem=solicitacao.observacao,
             destino="ATENDIDA"
         )
     )
