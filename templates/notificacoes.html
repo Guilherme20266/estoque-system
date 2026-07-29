@@ -278,6 +278,20 @@ Nenhuma notificação
 
 <a href="/menu">
 
+{% if perfil == 'admin' %}
+
+<form action="/limpar-notificacoes" method="POST">
+
+<button class="btn" style="background:#dc2626">
+
+🗑 Limpar todas notificações
+
+</button>
+
+</form>
+
+{% endif %}
+
 <button class="btn">
 ⬅ Voltar
 </button>
