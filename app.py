@@ -143,12 +143,13 @@ def enviar_notificacao():
     usuario_id = request.form.get('usuario_id')
 
 
-    notificacao = Notificacao(
-        mensagem=request.form.get('mensagem'),
-        urgencia=request.form.get('urgencia', 'media'),
-        usuario_id=usuario_id,
-        enviado_por=session.get('usuario')
-   )
+notificacao = Notificacao(
+    titulo="Notificação",
+    mensagem=request.form.get('mensagem'),
+    urgencia=request.form.get('urgencia','media'),
+    usuario_id=usuario_id,
+    enviado_por=session.get('usuario')
+)
 
 
     db.session.add(notificacao)
@@ -235,35 +236,31 @@ def notificacoes():
 
 
     # ==========================
-    # MARCAR COMO LIDA
-    # SOMENTE QUANDO RECEBEU
-    # ==========================
+# MARCAR COMO LIDA
+# SOMENTE QUEM RECEBEU
+# ==========================
 
-    agora = datetime.now(
-        ZoneInfo("America/Sao_Paulo")
-    )
+agora = datetime.now(
+    ZoneInfo("America/Sao_Paulo")
+)
+
+alterou = False
 
 
-    alterou = False
+for n in lista:
 
+    # usuário que recebeu abriu a notificação
+    if n.usuario_id == usuario_id and not n.lida:
 
-    for n in lista:
+        n.lida = True
+        n.lida_em = agora
 
-        # Não marca notificações enviadas pelo próprio usuário
-        if n.usuario_id == usuario_id:
-
-            if not n.lida:
-
-                n.lida = True
-                n.lida_por = usuario
-                n.lida_em = agora
-
-                alterou = True
+        alterou = True
 
 
 
-    if alterou:
-        db.session.commit()
+if alterou:
+    db.session.commit()
 
 
 
