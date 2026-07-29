@@ -247,10 +247,15 @@ required></textarea>
 <br>
 
 {% if n.lida %}
-✅ Lida em:
-{{n.lida_em.strftime('%d/%m/%Y %H:%M')}}
-{% endif %}
 
+✅ Lida por: {{n.lida_por}}
+
+<br>
+
+📅 Data:
+{{n.lida_em.strftime('%d/%m/%Y %H:%M')}}
+
+{% endif %}
 </div>
 
 
