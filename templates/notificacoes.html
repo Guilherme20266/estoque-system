@@ -242,24 +242,37 @@ required></textarea>
 
 <div class="data">
 
+📅 Enviada em:
 {{n.criada_em.strftime('%d/%m/%Y %H:%M')}}
 
-<br>
+
+{% if perfil != 'separacao' %}
+
+<br><br>
 
 {% if n.lida %}
 
-✅ Lida por: {{n.lida_por}}
+✅ Lida
+
+{% else %}
+
+⏳ Não lida
+
+{% endif %}
+
+
+{% if n.lida_em %}
 
 <br>
 
-📅 Data:
-{% if n.lida_em %}
-    {{ n.lida_em.strftime('%d/%m/%Y %H:%M') }}
-{% else %}
-    Não lida
-{% endif %}
+📅 Lida em:
+{{ n.lida_em.strftime('%d/%m/%Y %H:%M') }}
 
 {% endif %}
+
+
+{% endif %}
+
 </div>
 
 
@@ -277,7 +290,6 @@ Nenhuma notificação
 
 
 {% endfor %}
-
 
 
 <a href="/menu">
