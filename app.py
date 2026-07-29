@@ -144,11 +144,11 @@ def enviar_notificacao():
 
 
     notificacao = Notificacao(
-         titulo="Notificação",
-         mensagem=request.form.get('mensagem'),
-         urgencia=request.form.get('urgencia','media'),
-         usuario_id=usuario_id,
-         enviado_por=session.get('usuario')
+        titulo="Notificação",
+        mensagem=request.form.get('mensagem'),
+        urgencia=request.form.get('urgencia','media'),
+        usuario_id=usuario_id,
+        enviado_por=session.get('usuario')
     )
 
 
