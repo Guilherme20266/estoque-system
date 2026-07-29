@@ -96,7 +96,7 @@ class Notificacao(db.Model):
     # USUÁRIO QUE ENVIOU
     enviado_por = db.Column(
         db.String(100),
-        nullable=False
+        nullable=True
     )
 
 
