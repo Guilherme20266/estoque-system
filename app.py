@@ -1719,7 +1719,7 @@ def nova_solicitacao():
 
     if request.method == "POST":
 
-    rua = request.form["rua"]
+        rua = request.form["rua"]
 
     if rua.startswith("Laje"):
         endereco = rua
