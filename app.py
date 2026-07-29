@@ -1817,7 +1817,7 @@ def concluir_solicitacao(id):
         endereco=solicitacao.observacao
     ).first()
 
-        if produto:
+    if produto:
 
         endereco = produto.endereco
 
