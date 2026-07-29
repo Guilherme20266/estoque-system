@@ -222,7 +222,7 @@ def notificacoes():
 
     for n in lista:
 
-        if not n.lida:
+        if not n.lida or not n.lida_em:
 
             n.lida = True
             n.lida_por = session.get('usuario')
