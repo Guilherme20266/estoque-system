@@ -212,22 +212,51 @@ def notificacoes():
     ).all()
 
 
+    # marca automaticamente como lida
+    agora = datetime.now(
+        ZoneInfo("America/Sao_Paulo")
+    )
+
+
+    alterou = False
+
+
+    for n in lista:
+
+        if not n.lida:
+
+            n.lida = True
+            n.lida_em = agora
+            alterou = True
+
+
+    if alterou:
+        db.session.commit()
+
+
+
+    pode_criar = session.get('perfil') in [
+        "admin",
+        "operador"
+    ]
+
+
     usuarios = []
 
-    if session.get('perfil') in ['admin', 'operador']:
-        usuarios = Usuario.query.order_by(
-            Usuario.usuario.asc()
+    if pode_criar:
+
+        usuarios = Usuario.query.filter(
+            Usuario.usuario != session.get('usuario')
         ).all()
+
 
 
     return render_template(
         'notificacoes.html',
         notificacoes=lista,
-        usuarios=usuarios,
-        pode_criar=session.get('perfil') in ['admin','operador']
+        pode_criar=pode_criar,
+        usuarios=usuarios
     )
-
-
 
 # ==========================
 # MARCAR COMO LIDA
