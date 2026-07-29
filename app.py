@@ -235,30 +235,30 @@ def notificacoes():
 
 
     # ==========================
-# MARCAR COMO LIDA
-# SOMENTE QUEM RECEBEU
-# ==========================
+    # MARCAR COMO LIDA
+    # SOMENTE QUEM RECEBEU
+    # ==========================
 
-agora = datetime.now(
-    ZoneInfo("America/Sao_Paulo")
-)
+    agora = datetime.now(
+        ZoneInfo("America/Sao_Paulo")
+    )
 
-alterou = False
-
-
-for n in lista:
-
-    # usuário que recebeu abriu a notificação
-    if n.usuario_id == usuario_id and not n.lida:
-
-        n.lida = True
-        n.lida_em = agora
-
-        alterou = True
+    alterou = False
 
 
+    for n in lista:
 
-if alterou:
+        # usuário que recebeu abriu a notificação
+        if n.usuario_id == usuario_id and not n.lida:
+
+            n.lida = True
+            n.lida_em = agora
+
+            alterou = True
+
+
+
+    if alterou:
     db.session.commit()
 
 
