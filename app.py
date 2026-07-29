@@ -1718,7 +1718,6 @@ def nova_solicitacao():
         return redirect("/menu")
 
     if request.method == "POST":
-
         rua = request.form["rua"]
 
     if rua.startswith("Laje"):
