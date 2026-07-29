@@ -101,8 +101,8 @@ class Notificacao(db.Model):
 @app.route('/enviar_notificacao', methods=['POST'])
 def enviar_notificacao():
 
-    # somente admin pode enviar
-    if session.get('perfil') != 'admin':
+    # somente admin e operador pode enviar
+    if session.get('perfil') not in ['admin','operador']:
         return redirect('/menu')
 
 
@@ -160,7 +160,6 @@ def notificacoes_count():
 
 # ==========================
 # LISTAR NOTIFICACOES
-# ==========================
 @app.route('/notificacoes')
 def notificacoes():
 
@@ -178,9 +177,19 @@ def notificacoes():
     ).all()
 
 
+    usuarios = []
+
+    if session.get('perfil') in ['admin', 'operador']:
+        usuarios = Usuario.query.order_by(
+            Usuario.usuario.asc()
+        ).all()
+
+
     return render_template(
         'notificacoes.html',
-        notificacoes=lista
+        notificacoes=lista,
+        usuarios=usuarios,
+        pode_criar=session.get('perfil') in ['admin','operador']
     )
 
 
