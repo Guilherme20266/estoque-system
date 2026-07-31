@@ -621,7 +621,7 @@ def logout():
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
 
-    if not admin_ou_operador():
+    if not pode_separacao():
         return redirect('/menu')
 
     if request.method == 'POST':
