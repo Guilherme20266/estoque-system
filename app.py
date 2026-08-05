@@ -702,7 +702,7 @@ def cadastrar():
 @app.route('/inventario')
 def inventario():
 
-    if not admin():
+    if not admin_ou_operador():
         return redirect('/menu')
 
     produtos = Produto.query.all()
