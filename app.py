@@ -734,7 +734,7 @@ def inventario():
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
 
-    if not admin():
+    if not admin_ou_operador():
         return redirect('/menu')
 
     produto = Produto.query.get_or_404(id)
@@ -964,7 +964,7 @@ def transferencia():
 @app.route('/historico')
 def historico():
 
-    if not admin_ou_operador():
+    if not admin():
         return redirect('/menu')
 
     busca = request.args.get('busca', '')
