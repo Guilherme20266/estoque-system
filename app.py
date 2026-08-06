@@ -472,6 +472,7 @@ def pode_separacao():
 
 def pode_consultar():
     return session.get('perfil') in ['admin', 'operador', 'separacao', 'consulta']
+    
 def calcular_status(validade):
 
     try:
@@ -483,23 +484,33 @@ def calcular_status(validade):
             "%d/%m/%Y"
         )
 
-        meses = (
-            (data_validade.year - hoje.year) * 12
-            + data_validade.month
-            - hoje.month
-        )
 
-        if meses <= 4:
-            return "URGENTE", 1
+        dias = (data_validade - hoje).days
 
-        elif meses <= 7:
-            return "ATENCAO", 2
 
+        # ⚫ VENCIDO
+        if dias <= 0:
+            return "VENCIDO", 1
+
+
+        # 🔴 URGENTE - até 2 meses
+        elif dias <= 60:
+            return "URGENTE", 2
+
+
+        # 🟡 ATENÇÃO - entre 3 e 5 meses
+        elif dias <= 150:
+            return "ATENCAO", 3
+
+
+        # 🟢 NORMAL - mais de 5 meses
         else:
-            return "OK", 3
+            return "OK", 4
+
 
     except:
-        return "SEM_DATA", 4
+
+        return "SEM_DATA", 5
 
 
 @app.route('/buscar-produto/<codigo>')
