@@ -1582,7 +1582,10 @@ def solicitacoes():
         solicitacoes = (
             Solicitacao.query
             .filter_by(solicitante=usuario)
-            .order_by(Solicitacao.id.desc())
+            .order_by(
+                Solicitacao.observacao.asc(),
+                Solicitacao.id.asc()
+            )
             .all()
         )
 
@@ -1608,7 +1611,6 @@ def solicitacoes():
         perfil=perfil,
         usuario=usuario
     )
-
 
 # ==========================
 # API CONTADOR SOLICITAÇÕES
