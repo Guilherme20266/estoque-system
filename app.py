@@ -1596,6 +1596,7 @@ def solicitacoes():
                     (Solicitacao.operador == "", 1),
                     else_=2
                 ),
+                Solicitacao.observacao.asc(),
                 Solicitacao.id.asc()
             )
             .all()
