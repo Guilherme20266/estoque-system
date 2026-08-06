@@ -682,7 +682,7 @@ card-pendente
 card-andamento
 {% endif %}"
 data-status="{{ s.status }}"
-data-rua="{{ s.observacao|lower if s.observacao else '' }}"
+data-endereco="{{ s.observacao|lower if s.observacao else '' }}"
 data-solicitante="{{ s.solicitante|lower }}">
 
 
@@ -968,7 +968,7 @@ function aplicarFiltros(){
     document.querySelectorAll(".solicitacao-card").forEach(card=>{
 
         let status = card.dataset.status;
-        let ruaCard = card.dataset.rua;
+        let ruaCard = card.dataset.endereco;
         let solicitante = card.dataset.solicitante;
 
         let statusOk =
