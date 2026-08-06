@@ -14,6 +14,20 @@
     flex-wrap:wrap;
 }
 
+#filtroRua,
+#filtroUsuario{
+    width:100%;
+    height:45px;
+    border:none;
+    outline:none;
+    border-radius:12px;
+    padding:0 12px;
+    background:#111827;
+    color:white;
+    font-size:15px;
+    margin-bottom:10px;
+}
+
 .filtro-btn{
     flex:1;
     min-width:180px;
@@ -172,37 +186,6 @@ body{
     cursor:pointer;
     transition:.25s;
     box-sizing:border-box;
-}
-
-
-.pesquisa-box{
-    width:100%;
-    margin-top:0;
-    margin-bottom:10px;
-}
-
-
-#pesquisaSolicitacao{
-    width:100%;
-    height:45px;
-    border:none;
-    outline:none;
-    border-radius:12px;
-    padding:0 15px;
-    font-size:15px;
-    background:#111827;
-    color:#fff;
-    box-sizing:border-box;
-    border:2px solid transparent;
-    transition:.25s;
-}
-
-#pesquisaSolicitacao::placeholder{
-    color:#94a3b8;
-}
-
-#pesquisaSolicitacao:focus{
-    border-color:#3b82f6;
 }
 
 
@@ -692,22 +675,15 @@ button:hover{
 
 
 
-<div class="card solicitacao-card"
-
-data-status="{{ s.status }}"
-data-rua="{{ s.observacao.split('-')[0]|lower }}"
-data-solicitante="{{ s.solicitante|lower }}">
-
+<div class="card solicitacao-card
 {% if s.status == 'PENDENTE' %}
 card-pendente
 {% elif s.status == 'EM ANDAMENTO' %}
 card-andamento
 {% endif %}"
-
 data-status="{{ s.status }}"
-data-produto="{{ s.produto|lower }}"
-data-solicitante="{{ s.solicitante|lower }}"
-data-tipo="{{ s.tipo|lower }}">
+data-rua="{{ s.observacao|lower if s.observacao else '' }}"
+data-solicitante="{{ s.solicitante|lower }}">
 
 
 <div class="info">
@@ -968,9 +944,6 @@ Nenhuma solicitação encontrada 🎉
 
 <script>
 
-let estadoAtual = "";
-let filtroStatus = "TODOS";
-
 
 function filtrarSolicitacoes(status, botao){
 
@@ -986,40 +959,32 @@ function filtrarSolicitacoes(status, botao){
 }
 
 
-function pesquisarSolicitacoes(){
-    aplicarFiltros();
-}
-
 
 function aplicarFiltros(){
 
-    let texto = document
-        .getElementById("pesquisaSolicitacao")
-        .value
-        .toLowerCase();
-
+    let rua = document.getElementById("filtroRua").value.toLowerCase();
+    let usuario = document.getElementById("filtroUsuario").value.toLowerCase();
 
     document.querySelectorAll(".solicitacao-card").forEach(card=>{
 
-        let produto = card.dataset.produto || "";
-        let solicitante = card.dataset.solicitante || "";
-        let tipo = card.dataset.tipo || "";
         let status = card.dataset.status;
-
-
-        let pesquisaOk =
-            produto.includes(texto) ||
-            solicitante.includes(texto) ||
-            tipo.includes(texto);
-
+        let ruaCard = card.dataset.rua;
+        let solicitante = card.dataset.solicitante;
 
         let statusOk =
             filtroStatus === "TODOS" ||
             status === filtroStatus;
 
+        let ruaOk =
+            rua === "" ||
+            ruaCard.startsWith(rua);
+
+        let usuarioOk =
+            usuario === "" ||
+            solicitante === usuario;
 
         card.style.display =
-            (pesquisaOk && statusOk)
+            (statusOk && ruaOk && usuarioOk)
             ? ""
             : "none";
 
@@ -1027,33 +992,39 @@ function aplicarFiltros(){
 
 }
      
-window.onload = function(){
+let estadoAtual = null;
+let filtroStatus = localStorage.getItem("filtroStatus") || "TODOS";
 
-    let pesquisa = localStorage.getItem("pesquisaSolicitacao");
 
-    if(pesquisa){
-        document.getElementById("pesquisaSolicitacao").value = pesquisa;
-    };
-
-    let filtro = localStorage.getItem("filtroStatus") || "TODOS";
+window.onload = function () {
 
     let botao = [...document.querySelectorAll(".filtro-btn")]
         .find(btn => {
 
-            if(filtro === "TODOS") return btn.textContent.includes("Todas");
-            if(filtro === "PENDENTE") return btn.textContent.includes("Pendentes");
-            if(filtro === "EM ANDAMENTO") return btn.textContent.includes("Em andamento");
-            if(filtro === "CONCLUIDO") return btn.textContent.includes("Concluídas");
+            if (filtroStatus === "TODOS")
+                return btn.textContent.includes("Todas");
+
+            if (filtroStatus === "PENDENTE")
+                return btn.textContent.includes("Pendentes");
+
+            if (filtroStatus === "EM ANDAMENTO")
+                return btn.textContent.includes("Em andamento");
+
+            if (filtroStatus === "CONCLUIDO")
+                return btn.textContent.includes("Concluídas");
 
         });
 
-    if(botao){
-        filtrarSolicitacoes(filtro, botao);
-    }else{
+
+    if (botao) {
+        filtrarSolicitacoes(filtroStatus, botao);
+    } else {
         aplicarFiltros();
     }
 
-}
+};
+
+
 
 function atualizarContadores(data){
 
@@ -1063,49 +1034,86 @@ function atualizarContadores(data){
 
 }
 
+
+
+// primeira carga
 fetch("/api/solicitacoes/count")
 .then(r => r.json())
 .then(data => {
 
     estadoAtual = JSON.stringify(data);
+
     atualizarContadores(data);
 
 });
 
+
+
+// atualização automática
 setInterval(() => {
+
 
     fetch("/api/solicitacoes/count")
     .then(response => response.json())
     .then(data => {
 
+
         atualizarContadores(data);
+
 
         let novoEstado = JSON.stringify(data);
 
-        if(novoEstado !== estadoAtual){
+
+        if (estadoAtual && novoEstado !== estadoAtual){
+
 
             let som = document.getElementById("novoPedidoSom");
 
-            if(som){
+            if (som){
                 som.play().catch(() => {});
             }
 
-            localStorage.setItem("filtroStatus", filtroStatus);
+
+
+            // salva filtros antes de atualizar
             localStorage.setItem(
-                "pesquisaSolicitacao",
-                document.getElementById("pesquisaSolicitacao").value
+                "filtroStatus",
+                filtroStatus
             );
+
+
+            let rua = document.getElementById("filtroRua");
+            if(rua){
+                localStorage.setItem(
+                    "filtroRua",
+                    rua.value
+                );
+            }
+
+
+            let usuario = document.getElementById("filtroUsuario");
+            if(usuario){
+                localStorage.setItem(
+                    "filtroUsuario",
+                    usuario.value
+                );
+            }
+
+
 
             location.reload();
 
         }
 
+
         estadoAtual = novoEstado;
+
 
     });
 
-}, 10000);
 
+}, 10000);
+    
 </script>
 
 {% endblock %}
