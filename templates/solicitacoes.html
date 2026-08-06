@@ -607,12 +607,43 @@ button:hover{
 
 
 <div class="pesquisa-box">
-    <input
-        type="text"
-        id="pesquisaSolicitacao"
-        placeholder="🔎 Pesquisar por produto ou solicitante..."
-        onkeyup="pesquisarSolicitacoes()"
-    >
+
+    <select id="filtroRua" onchange="aplicarFiltros()">
+        <option value="">📍 Todas as Ruas</option>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+        <option>D</option>
+        <option>E</option>
+        <option>F</option>
+        <option>G</option>
+        <option>H</option>
+        <option>I</option>
+        <option>J</option>
+        <option>K</option>
+        <option>L</option>
+        <option>M</option>
+        <option>N</option>
+        <option>O</option>
+        <option>P</option>
+        <option>Q</option>
+        <option>Laje-1</option>
+        <option>Laje-2</option>
+        <option>Laje-3</option>
+        <option>Laje-4</option>
+    </select>
+
+    <select id="filtroUsuario" onchange="aplicarFiltros()">
+        <option value="">👤 Todos os usuários</option>
+
+        {% for nome in solicitacoes | map(attribute='solicitante') | unique | sort %}
+            <option value="{{ nome|lower }}">
+                {{ nome }}
+            </option>
+        {% endfor %}
+
+    </select>
+
 </div>
     
 
@@ -661,7 +692,11 @@ button:hover{
 
 
 
-<div class="card solicitacao-card
+<div class="card solicitacao-card"
+
+data-status="{{ s.status }}"
+data-rua="{{ s.observacao.split('-')[0]|lower }}"
+data-solicitante="{{ s.solicitante|lower }}">
 
 {% if s.status == 'PENDENTE' %}
 card-pendente
