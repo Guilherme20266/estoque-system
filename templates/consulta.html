@@ -194,6 +194,19 @@ data-busca="
 
 📍 Endereço: {{ item.produto.endereco }}
 
+<br><br>
+
+<button
+type="button"
+class="btn-solicitar"
+onclick="confirmarSolicitacao(
+    '{{ item.produto.nome|replace("'", "\\'") }}',
+    '{{ item.produto.endereco|replace("'", "\\'") }}'
+)"
+>
+📦 Solicitar
+</button>
+
 </div>
 
 {% endfor %}
