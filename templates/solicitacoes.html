@@ -683,26 +683,13 @@ body{
 
             <!-- PRODUTO -->
 
-            <select
+            <input
+                type="text"
                 id="filtroProduto"
                 class="filtro-input"
-                onchange="aplicarFiltros()"
-            >
-
-                <option value="">
-                    📦 Todos os produtos
-                </option>
-
-
-                {% for nome in solicitacoes | map(attribute='produto') | unique | sort %}
-
-                    <option value="{{ nome|lower }}">
-                        {{ nome }}
-                    </option>
-
-                {% endfor %}
-
-            </select>
+                placeholder="📦 Pesquisar produto..."
+                oninput="aplicarFiltros()"
+             >
 
 
             <!-- DATA -->
@@ -1209,7 +1196,7 @@ function aplicarFiltros(){
 
             let produtoOk =
                 produto === "" ||
-                produtoCard === produto;
+                produtoCard.includes(produto);
 
 
             /* ==========================
