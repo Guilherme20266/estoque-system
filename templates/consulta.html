@@ -583,19 +583,3 @@ campoBusca.addEventListener(
 </script>
 
 {% endblock %}
-```
-
-### O que foi corrigido
-
-* ✅ Removido o **botão Solicitar duplicado**.
-* ✅ Corrigido o `{% if perfil ... %}`.
-* ✅ `admin`, `separacao` e `consulta` conseguem ver o botão.
-* ❌ `operador` não vê o botão.
-* ✅ Mantido o SweetAlert2.
-* ✅ Mantida a confirmação antes de solicitar.
-* ✅ Mantida a mensagem de sucesso.
-* ✅ Mantido o bloqueio de solicitação duplicada pelo endereço.
-* ✅ Mantida a pesquisa em tempo real por **nome, código ou endereço**.
-* ✅ Mantido o leitor de QR Code.
-
-**Importante:** isso corrige a parte visual do `consulta.html`. No `app.py`, o `/nova-solicitacao` também precisa estar com a permissão JSON permitindo `admin`, `separacao` e `consulta`, e bloqueando `operador`, como ajustamos anteriormente.
