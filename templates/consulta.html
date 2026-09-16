@@ -1,3 +1,4 @@
+```html
 {% extends "base.html" %}
 
 {% block title %}Consulta{% endblock %}
@@ -86,9 +87,17 @@ margin-bottom:12px;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.urgente{ border-left:8px solid red; }
-.atencao{ border-left:8px solid orange; }
-.ok{ border-left:8px solid green; }
+.urgente{
+border-left:8px solid red;
+}
+
+.atencao{
+border-left:8px solid orange;
+}
+
+.ok{
+border-left:8px solid green;
+}
 
 .piscando{
 color:red;
@@ -143,8 +152,11 @@ cursor:not-allowed;
 <h2>🔎 Consulta</h2>
 
 <a href="/menu">
-<button class="menu">🏠 Voltar ao Menu</button>
+<button class="menu">
+🏠 Voltar ao Menu
+</button>
 </a>
+
 
 <form method="GET" id="formBusca">
 
@@ -171,15 +183,21 @@ onclick="abrirCamera()"
 
 </form>
 
+
 <div id="reader"></div>
 
+
 <a href="/exportar-consulta?busca={{ busca }}">
-<button class="export">📊 Exportar Consulta (Excel)</button>
+<button class="export">
+📊 Exportar Consulta (Excel)
+</button>
 </a>
+
 
 {% for item in lista %}
 
-<div class="card produto-card
+<div
+class="card produto-card
 {% if item.status == 'URGENTE' %}
 urgente
 {% elif item.status == 'ATENCAO' %}
@@ -187,16 +205,21 @@ atencao
 {% else %}
 ok
 {% endif %}"
-
 data-busca="
 {{ item.produto.nome|lower }}
 {{ item.produto.codigo|lower }}
 {{ item.produto.endereco|lower }}
 ">
 
+
 {% if item.status == 'URGENTE' %}
-<div class="piscando">🚨 URGENTE</div>
+
+<div class="piscando">
+🚨 URGENTE
+</div>
+
 {% endif %}
+
 
 <b>{{ item.produto.nome }}</b>
 
@@ -218,18 +241,6 @@ data-busca="
 
 <br><br>
 
-{% if perfil in ["admin", "separacao", "consulta"] %}
-
-<button
-type="button"
-class="btn-solicitar"
-onclick="confirmarSolicitacao(
-    '{{ item.produto.nome|replace("'", "\\'") }}',
-    '{{ item.produto.endereco|replace("'", "\\'") }}'
-)"
->
-📦 Solicitar
-</button>
 
 {% if perfil in ["admin", "separacao", "consulta"] %}
 
@@ -243,6 +254,9 @@ onclick="confirmarSolicitacao(
 >
 📦 Solicitar
 </button>
+
+{% endif %}
+
 
 </div>
 
@@ -252,16 +266,25 @@ onclick="confirmarSolicitacao(
 
 {% endblock %}
 
+
 {% block script %}
 
 <script>
 
+
+/* ==========================
+   CONFIRMAR SOLICITAÇÃO
+========================== */
+
 function confirmarSolicitacao(produto, endereco){
 
     Swal.fire({
+
         title: 'Confirmar solicitação?',
+
         html: `
             <div style="text-align:left; margin-top:15px;">
+
                 <p style="margin-bottom:8px;">
                     📦 <b>Produto:</b><br>
                     ${produto}
@@ -271,19 +294,33 @@ function confirmarSolicitacao(produto, endereco){
                     📍 <b>Endereço:</b><br>
                     ${endereco}
                 </p>
+
             </div>
         `,
+
         icon: 'question',
+
         showCancelButton: true,
+
         confirmButtonText: 'Sim, solicitar',
+
         cancelButtonText: 'Cancelar',
+
         reverseButtons: true,
+
         confirmButtonColor: '#007bff',
+
         cancelButtonColor: '#6c757d'
+
     }).then((result) => {
 
         if(result.isConfirmed){
-            enviarSolicitacao(produto, endereco);
+
+            enviarSolicitacao(
+                produto,
+                endereco
+            );
+
         }
 
     });
@@ -291,16 +328,28 @@ function confirmarSolicitacao(produto, endereco){
 }
 
 
+/* ==========================
+   ENVIAR SOLICITAÇÃO
+========================== */
+
 function enviarSolicitacao(produto, endereco){
 
     Swal.fire({
+
         title: 'Enviando solicitação...',
+
         text: 'Aguarde um momento.',
+
         allowOutsideClick: false,
+
         allowEscapeKey: false,
+
         didOpen: () => {
+
             Swal.showLoading();
+
         }
+
     });
 
 
@@ -313,8 +362,11 @@ function enviarSolicitacao(produto, endereco){
         },
 
         body: JSON.stringify({
+
             produto: produto,
+
             endereco: endereco
+
         })
 
     })
@@ -323,111 +375,227 @@ function enviarSolicitacao(produto, endereco){
 
     .then(data => {
 
+
+        /* ==========================
+           SUCESSO
+        ========================== */
+
         if(data.sucesso){
 
             Swal.fire({
+
                 title: 'Solicitação realizada!',
+
                 text: 'A solicitação foi enviada com sucesso.',
+
                 icon: 'success',
+
                 confirmButtonText: 'OK',
+
                 confirmButtonColor: '#007bff'
+
             });
 
             return;
+
         }
 
+
+        /* ==========================
+           DUPLICADA
+        ========================== */
 
         if(data.duplicada){
 
             Swal.fire({
+
                 title: 'Solicitação já existente',
+
                 text: 'Já existe uma solicitação em andamento para este endereço.',
+
                 icon: 'warning',
+
                 confirmButtonText: 'Entendi',
+
                 confirmButtonColor: '#007bff'
+
             });
 
             return;
+
         }
 
 
+        /* ==========================
+           ERRO
+        ========================== */
+
         Swal.fire({
+
             title: 'Não foi possível solicitar',
-            text: data.mensagem || 'Ocorreu um erro ao realizar a solicitação.',
+
+            text:
+                data.mensagem ||
+                'Ocorreu um erro ao realizar a solicitação.',
+
             icon: 'error',
+
             confirmButtonText: 'OK',
+
             confirmButtonColor: '#007bff'
+
         });
 
     })
+
 
     .catch(error => {
 
         console.error(error);
 
         Swal.fire({
+
             title: 'Erro',
+
             text: 'Não foi possível enviar a solicitação. Tente novamente.',
+
             icon: 'error',
+
             confirmButtonText: 'OK',
+
             confirmButtonColor: '#007bff'
+
         });
 
     });
 
 }
 
+
+/* ==========================
+   LEITOR DE CÓDIGO
+========================== */
+
 let scanner;
+
 
 function abrirCamera(){
 
-document.getElementById("reader").style.display = "block";
+    document.getElementById(
+        "reader"
+    ).style.display = "block";
 
-scanner = new Html5Qrcode("reader");
 
-scanner.start(
-{ facingMode: "environment" },
-{
-fps: 10,
-qrbox: {
-width: 300,
-height: 120
-}
-},
-(codigo)=>{
+    scanner = new Html5Qrcode(
+        "reader"
+    );
 
-document.getElementById("busca").value = codigo;
 
-scanner.stop().then(() => {
-document.getElementById("reader").style.display = "none";
-document.getElementById("formBusca").submit();
-});
+    scanner.start(
 
-}
-);
+        {
+            facingMode: "environment"
+        },
 
-}
+        {
+            fps: 10,
 
-const campoBusca = document.getElementById("busca");
+            qrbox: {
+                width: 300,
+                height: 120
+            }
+        },
 
-campoBusca.addEventListener("input", function(){
+        (codigo) => {
 
-    let texto = this.value.toLowerCase();
+            document.getElementById(
+                "busca"
+            ).value = codigo;
 
-    document.querySelectorAll(".produto-card").forEach(card=>{
 
-        let dados = card.dataset.busca;
+            scanner.stop().then(() => {
 
-        if(dados.includes(texto)){
-            card.style.display = "";
-        }else{
-            card.style.display = "none";
+                document.getElementById(
+                    "reader"
+                ).style.display = "none";
+
+
+                document
+                    .getElementById(
+                        "formBusca"
+                    )
+                    .submit();
+
+            });
+
         }
 
-    });
+    );
 
-});
+}
+
+
+/* ==========================
+   BUSCA EM TEMPO REAL
+========================== */
+
+const campoBusca =
+    document.getElementById(
+        "busca"
+    );
+
+
+campoBusca.addEventListener(
+    "input",
+    function(){
+
+        let texto =
+            this.value.toLowerCase();
+
+
+        document
+            .querySelectorAll(
+                ".produto-card"
+            )
+            .forEach(card => {
+
+                let dados =
+                    card.dataset.busca;
+
+
+                if(
+                    dados.includes(texto)
+                ){
+
+                    card.style.display = "";
+
+                }else{
+
+                    card.style.display = "none";
+
+                }
+
+            });
+
+    }
+);
 
 </script>
 
 {% endblock %}
+```
+
+### O que foi corrigido
+
+* ✅ Removido o **botão Solicitar duplicado**.
+* ✅ Corrigido o `{% if perfil ... %}`.
+* ✅ `admin`, `separacao` e `consulta` conseguem ver o botão.
+* ❌ `operador` não vê o botão.
+* ✅ Mantido o SweetAlert2.
+* ✅ Mantida a confirmação antes de solicitar.
+* ✅ Mantida a mensagem de sucesso.
+* ✅ Mantido o bloqueio de solicitação duplicada pelo endereço.
+* ✅ Mantida a pesquisa em tempo real por **nome, código ou endereço**.
+* ✅ Mantido o leitor de QR Code.
+
+**Importante:** isso corrige a parte visual do `consulta.html`. No `app.py`, o `/nova-solicitacao` também precisa estar com a permissão JSON permitindo `admin`, `separacao` e `consulta`, e bloqueando `operador`, como ajustamos anteriormente.
