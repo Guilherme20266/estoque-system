@@ -2,46 +2,70 @@
 
 {% block title %}Solicitações{% endblock %}
 
-
 {% block style %}
 
+/* ==========================
+   BASE
+========================== */
 
-.filtros-status{
-    display:flex;
-    gap:12px;
-    width:100%;
-    margin-bottom:10px;
-    flex-wrap:wrap;
+body{
+    font-family:Arial,sans-serif;
+    margin:0;
+    min-height:100vh;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
 }
 
-#filtroRua,
-#filtroUsuario{
+.container{
+    width:92%;
+    max-width:1050px;
+    margin:30px auto;
+}
+
+
+/* ==========================
+   CABEÇALHO
+========================== */
+
+.header{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.header h2{
+    margin:0 0 20px 0;
+    font-size:28px;
+    text-align:center;
+}
+
+
+/* ==========================
+   FILTROS DE STATUS
+========================== */
+
+.filtros-status{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
     width:100%;
-    height:45px;
-    border:none;
-    outline:none;
-    border-radius:12px;
-    padding:0 12px;
-    background:#111827;
-    color:white;
-    font-size:15px;
-    margin-bottom:10px;
+    margin-bottom:12px;
 }
 
 .filtro-btn{
-    flex:1;
-    min-width:180px;
-    height:55px;
-    border-radius:14px;
-    font-size:16px;
+    height:46px;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
     font-weight:bold;
     color:white;
     cursor:pointer;
-    transition:.3s;
+    transition:.2s;
 }
 
 .filtro-btn:hover{
-    transform:translateY(-3px);
+    transform:translateY(-2px);
 }
 
 .filtro-todos{
@@ -61,496 +85,461 @@
 }
 
 .filtro-ativo{
-    box-shadow:0 0 0 3px white;
+    box-shadow:0 0 0 3px rgba(255,255,255,.9);
 }
 
 
-.card-pendente{
-    animation:pulseYellow 1.8s infinite;
-    border:1px solid rgba(250,204,21,.45);
+/* ==========================
+   ÁREA DE FILTROS
+========================== */
+
+.filtros-box{
+    width:100%;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    padding:14px;
+    box-sizing:border-box;
+    margin-bottom:15px;
 }
 
-.card-andamento{
-    animation:pulseBlue 1.8s infinite;
-    border:1px solid rgba(37,99,235,.45);
-}
-
-
-.badge-status{
-
-    display:inline-flex;
-    align-items:center;
-    padding:8px 15px;
-    border-radius:20px;
+.filtros-titulo{
+    font-size:14px;
     font-weight:bold;
-    margin-top:15px;
-
+    color:#cbd5e1;
+    margin-bottom:10px;
 }
 
-
-.badge-meu{
-
-    background:#facc15;
-    color:#111827;
-
+.filtros-campos{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
 }
 
-
-.badge-outro{
-
-    background:#dc2626;
+.filtro-input{
+    width:100%;
+    height:43px;
+    border:none;
+    outline:none;
+    border-radius:9px;
+    padding:0 11px;
+    background:#111827;
     color:white;
-
+    font-size:14px;
+    box-sizing:border-box;
 }
 
-
-.badge-livre{
-
-    background:#16a34a;
-    color:white;
-
+.filtro-input::placeholder{
+    color:#94a3b8;
 }
 
-body{
-    font-family:Arial,sans-serif;
-    margin:0;
-    min-height:100vh;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
+.filtro-input option{
+    background:#111827;
     color:white;
 }
 
+.btn-limpar{
+    width:100%;
+    height:43px;
+    border:none;
+    border-radius:9px;
+    background:#334155;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+}
 
-.container{
-    width:90%;
-    max-width:1100px;
-    margin:40px auto;
+.btn-limpar:hover{
+    background:#475569;
 }
 
 
-.header{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.header h1{
-    font-size:32px;
-    text-align:center;
-    margin:0;
-}
-
+/* ==========================
+   BOTÕES DO TOPO
+========================== */
 
 .top-buttons{
     width:100%;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-bottom:20px;
 }
 
 .top-buttons a,
 .top-buttons form{
     width:100%;
+    margin:0;
 }
 
 .top-buttons .btn{
     width:100%;
-    height:55px;
+    height:48px;
     display:flex;
     justify-content:center;
     align-items:center;
     border:none;
-    border-radius:12px;
-    font-size:18px;
-    font-weight:700;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:bold;
     text-decoration:none;
     box-sizing:border-box;
+    cursor:pointer;
 }
-
-
 
 .btn{
     display:flex;
     justify-content:center;
     align-items:center;
     width:100%;
-    height:52px;
-    padding:0 20px;
+    height:48px;
+    padding:0 15px;
     border:none;
-    border-radius:12px;
+    border-radius:10px;
     color:#fff;
-    font-size:18px;
-    font-weight:700;
+    font-size:15px;
+    font-weight:bold;
     text-decoration:none;
     cursor:pointer;
-    transition:.25s;
+    transition:.2s;
     box-sizing:border-box;
 }
 
-
-.status-info{
-    width:100%;
-    padding:14px;
-    border-radius:12px;
-    text-align:center;
-    font-weight:bold;
-    font-size:16px;
-}
-
-.status-info.andamento{
-    background:#2563eb;
-    color:#fff;
-}
-
-
 .btn:hover{
-
     transform:translateY(-2px);
-
 }
-
-
 
 .btn-voltar{
-
     background:#334155;
-
 }
-
-
 
 .btn-voltar:hover{
-
     background:#475569;
-
 }
-
-
 
 .btn-criar{
-
     background:#2563eb;
-
 }
-
-
 
 .btn-criar:hover{
-
     background:#1d4ed8;
-
 }
 
-
-
-
-.card{
-
-    background:rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(12px);
-
-    border-radius:20px;
-
-    padding:25px;
-
-    margin-bottom:20px;
-
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
-
-    border:1px solid rgba(255,255,255,.1);
-
-}
-
-
-
-.alert{
-    padding:15px;
-    margin-bottom:20px;
-    border-radius:12px;
-    font-weight:bold;
-    animation:fade .3s ease;
-}
-
-.alert.success{
-    background:#22c55e;
-    color:#fff;
-    border-left:5px solid #15803d;
-}
-
-.alert.error{
-    background:#ef4444;
-    color:#fff;
-    border-left:5px solid #b91c1c;
-}
-
-@keyframes fade{
-    from{
-        opacity:0;
-        transform:translateY(-10px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-
-.top-buttons form{
-    width:100%;
-    margin:0;
-}
 .btn-delete{
     background:#7f1d1d;
     color:white;
 }
 
 
-.info{
+/* ==========================
+   CARDS
+========================== */
 
-    display:grid;
+.card{
+    background:rgba(255,255,255,.07);
+    backdrop-filter:blur(10px);
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:12px;
+    box-shadow:0 6px 20px rgba(0,0,0,.22);
+    border:1px solid rgba(255,255,255,.08);
+}
 
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+.card-pendente{
+    border-left:5px solid #facc15;
+}
 
-    gap:15px;
-
+.card-andamento{
+    border-left:5px solid #2563eb;
 }
 
 
+/* ==========================
+   CABEÇALHO DO CARD
+========================== */
 
-.item{
-
-    background:#111827;
-
-    padding:15px;
-
-    border-radius:12px;
-
+.card-topo{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
 }
 
+.produto{
+    font-size:18px;
+    font-weight:bold;
+    color:white;
+}
 
-
-.item span{
-
+.quantidade{
     color:#94a3b8;
-
     font-size:13px;
-
+    margin-top:3px;
 }
 
 
-
-.item strong{
-
-    display:block;
-
-    margin-top:5px;
-
-    font-size:17px;
-
-}
-
-
+/* ==========================
+   STATUS
+========================== */
 
 .status{
-
-    display:inline-block;
-
-    padding:8px 15px;
-
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px 10px;
     border-radius:20px;
-
+    font-size:12px;
     font-weight:bold;
-
+    white-space:nowrap;
 }
-
-
 
 .pendente{
     background:#facc15;
     color:#111;
-    animation:blinkYellow 1.5s infinite;
 }
 
 .andamento{
-    background:linear-gradient(90deg,#2563eb,#1d4ed8);
-    color:#fff;
-    animation:blinkBlue 1.5s infinite;
-}
-
-@keyframes blinkYellow{
-    0%,100%{opacity:1;}
-    50%{opacity:.55;}
-}
-
-@keyframes blinkBlue{
-    0%,100%{opacity:1;}
-    50%{opacity:.55;}
+    background:#2563eb;
+    color:white;
 }
 
 .concluido{
     background:#22c55e;
-    color:#fff;
+    color:white;
 }
 
 .erro{
     background:#ef4444;
-    color:#fff;
+    color:white;
 }
 
-.obs{
 
-    margin-top:20px;
+/* ==========================
+   INFORMAÇÕES DO CARD
+========================== */
 
-    padding:15px;
-
-    background:#020617;
-
-    border-radius:12px;
-
+.detalhes{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 15px;
     color:#cbd5e1;
+    font-size:13px;
+    margin-bottom:10px;
+}
 
+.detalhes span{
+    white-space:nowrap;
 }
 
 
+/* ==========================
+   ENDEREÇO
+========================== */
+
+.endereco{
+    background:#020617;
+    border-radius:9px;
+    padding:10px 12px;
+    color:#e2e8f0;
+    font-size:14px;
+    margin-top:8px;
+}
+
+.endereco b{
+    color:white;
+}
+
+
+/* ==========================
+   AÇÕES
+========================== */
 
 .acoes{
-
     display:flex;
-
-    gap:10px;
-
+    gap:8px;
     flex-wrap:wrap;
-
-    margin-top:20px;
-
+    margin-top:12px;
 }
 
+.acoes form{
+    margin:0;
+}
 
-
-button{
-
+.acoes button{
     border:none;
-
-    padding:12px 20px;
-
-    border-radius:10px;
-
+    padding:10px 14px;
+    border-radius:8px;
     cursor:pointer;
-
     font-weight:bold;
-
-    transition:.3s;
-
+    font-size:13px;
+    transition:.2s;
 }
 
-
-
-button:hover{
-
+.acoes button:hover{
     transform:translateY(-2px);
-
 }
-
-
 
 .btn-ok{
-
     background:#22c55e;
-
     color:white;
-
 }
-
-
 
 .btn-nao{
-
     background:#ef4444;
-
     color:white;
-
 }
-
-
-
-.btn-delete{
-
-    background:#7f1d1d;
-
-    color:white;
-
-}
-
-
 
 .btn-andamento{
     background:#2563eb;
     color:white;
 }
 
-.btn-andamento:hover{
+.status-info{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    text-align:center;
+    font-weight:bold;
+    font-size:13px;
+    box-sizing:border-box;
+}
+
+.status-info.andamento{
     background:#1d4ed8;
+    color:white;
+}
+
+.acoes .btn-delete{
+    background:#7f1d1d;
+    color:white;
 }
 
 
+/* ==========================
+   ALERTAS
+========================== */
+
+.alert{
+    padding:12px 15px;
+    margin-bottom:15px;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.alert.success{
+    background:#22c55e;
+    color:white;
+}
+
+.alert.error{
+    background:#ef4444;
+    color:white;
+}
+
+
+/* ==========================
+   VAZIO
+========================== */
 
 .vazio{
-
     text-align:center;
-
-    padding:50px;
-
-    font-size:20px;
-
+    padding:45px 20px;
+    font-size:17px;
     opacity:.7;
-
 }
 
 
+/* ==========================
+   MOBILE
+========================== */
+
+@media(max-width:800px){
+
+    .filtros-status{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .filtros-campos{
+        grid-template-columns:1fr 1fr;
+    }
+
+}
 
 @media(max-width:600px){
 
     .container{
-
-        width:95%;
-
+        width:94%;
         margin:20px auto;
-
     }
 
-
-    .header h1{
-
-        font-size:25px;
-
+    .header h2{
+        font-size:24px;
     }
 
+    .filtros-status{
+        grid-template-columns:1fr 1fr;
+        gap:6px;
+    }
 
-    button,
-    .btn{
+    .filtro-btn{
+        height:43px;
+        font-size:12px;
+    }
 
+    .filtros-campos{
+        grid-template-columns:1fr;
+    }
+
+    .top-buttons{
+        grid-template-columns:1fr;
+    }
+
+    .card{
+        padding:14px;
+    }
+
+    .card-topo{
+        align-items:flex-start;
+    }
+
+    .produto{
+        font-size:16px;
+    }
+
+    .detalhes{
+        flex-direction:column;
+        gap:5px;
+    }
+
+    .acoes{
+        flex-direction:column;
+    }
+
+    .acoes form,
+    .acoes button{
         width:100%;
-
-        text-align:center;
-
     }
 
 }
 
-
 {% endblock %}
-
 
 
 {% block content %}
 
-
 <div class="container">
 
+
+<!-- ==========================
+     ALERTAS
+========================== -->
+
 {% with messages = get_flashed_messages(with_categories=true) %}
+
     {% if messages %}
+
         {% for category, message in messages %}
 
             <div class="alert {{ category }}">
@@ -558,376 +547,483 @@ button:hover{
             </div>
 
         {% endfor %}
+
     {% endif %}
+
 {% endwith %}
 
 
+<!-- ==========================
+     CABEÇALHO
+========================== -->
+
 <div class="header">
 
-
-<h2> 📦 Solicitações </h2>
-
-
-<div class="filtros-status">
-
-<button class="filtro-btn filtro-todos filtro-ativo" onclick="filtrarSolicitacoes('TODOS', this)">
-📦 Todas
-</button>
-
-<button class="filtro-btn filtro-pendente" onclick="filtrarSolicitacoes('PENDENTE', this)">
-🟡 Pendentes (<span id="count-pendente">0</span>)
-</button>
-
-<button class="filtro-btn filtro-andamento" onclick="filtrarSolicitacoes('EM ANDAMENTO', this)">
-🔵 Em andamento (<span id="count-andamento">0</span>)
-</button>
-
-<button class="filtro-btn filtro-concluido" onclick="filtrarSolicitacoes('CONCLUIDO', this)">
-🟢 Concluídas (<span id="count-concluido">0</span>)
-</button>
-
-</div>
+    <h2>📦 Solicitações</h2>
 
 
-<div class="pesquisa-box">
+    <!-- ==========================
+         FILTROS DE STATUS
+    ========================== -->
 
-    <select id="filtroRua" onchange="aplicarFiltros()">
-        <option value="">📍 Todas as Ruas</option>
-        <option>A</option>
-        <option>B</option>
-        <option>C</option>
-        <option>D</option>
-        <option>E</option>
-        <option>F</option>
-        <option>G</option>
-        <option>H</option>
-        <option>I</option>
-        <option>J</option>
-        <option>K</option>
-        <option>L</option>
-        <option>M</option>
-        <option>N</option>
-        <option>O</option>
-        <option>P</option>
-        <option>Q</option>
-        <option>Laje-1</option>
-        <option>Laje-2</option>
-        <option>Laje-3</option>
-        <option>Laje-4</option>
-    </select>
+    <div class="filtros-status">
 
-    <select id="filtroUsuario" onchange="aplicarFiltros()">
-        <option value="">👤 Todos os usuários</option>
-
-        {% for nome in solicitacoes | map(attribute='solicitante') | unique | sort %}
-            <option value="{{ nome|lower }}">
-                {{ nome }}
-            </option>
-        {% endfor %}
-
-    </select>
-
-</div>
-    
-
-<div class="top-buttons">
-
-    {% if perfil in ["admin", "separacao"] %}
-    <a href="/nova-solicitacao" class="btn btn-criar">
-        ➕ Nova Solicitação
-    </a>
-    {% endif %}
-
-    {% if perfil == "admin" %}
-    <form method="POST"
-          action="/excluir-todas-solicitacoes"
-          onsubmit="return confirm('Tem certeza que deseja excluir TODAS as solicitações? Esta ação não poderá ser desfeita.');">
-
-        <button type="submit" class="btn btn-delete">
-            🗑 Excluir Todas
+        <button
+            class="filtro-btn filtro-todos filtro-ativo"
+            onclick="filtrarSolicitacoes('TODOS', this)"
+        >
+            📦 Todas
         </button>
 
-    </form>
-    {% endif %}
 
-    <a href="/menu" class="btn btn-voltar">
-        ⬅ Voltar
-    </a>
+        <button
+            class="filtro-btn filtro-pendente"
+            onclick="filtrarSolicitacoes('PENDENTE', this)"
+        >
+            🟡 Pendentes
+            (<span id="count-pendente">0</span>)
+        </button>
 
-</div>
 
+        <button
+            class="filtro-btn filtro-andamento"
+            onclick="filtrarSolicitacoes('EM ANDAMENTO', this)"
+        >
+            🔵 Em andamento
+            (<span id="count-andamento">0</span>)
+        </button>
 
 
-</div>
+        <button
+            class="filtro-btn filtro-concluido"
+            onclick="filtrarSolicitacoes('CONCLUIDO', this)"
+        >
+            🟢 Concluídas
+            (<span id="count-concluido">0</span>)
+        </button>
 
+    </div>
 
 
+    <!-- ==========================
+         FILTROS
+    ========================== -->
 
+    <div class="filtros-box">
 
-{% if solicitacoes %}
+        <div class="filtros-titulo">
+            🔎 Filtros
+        </div>
 
 
-<input type="hidden" id="totalSolicitacoes" value="{{ solicitacoes|length }}">
+        <div class="filtros-campos">
 
 
-{% for s in solicitacoes %}
+            <!-- RUA -->
 
+            <select
+                id="filtroRua"
+                class="filtro-input"
+                onchange="aplicarFiltros()"
+            >
 
+                <option value="">
+                    📍 Todas as Ruas
+                </option>
 
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+                <option>D</option>
+                <option>E</option>
+                <option>F</option>
+                <option>G</option>
+                <option>H</option>
+                <option>I</option>
+                <option>J</option>
+                <option>K</option>
+                <option>L</option>
+                <option>M</option>
+                <option>N</option>
+                <option>O</option>
+                <option>P</option>
+                <option>Q</option>
 
-<div class="card solicitacao-card
-{% if s.status == 'PENDENTE' %}
-card-pendente
-{% elif s.status == 'EM ANDAMENTO' %}
-card-andamento
-{% endif %}"
-data-status="{{ s.status }}"
-data-endereco="{{ s.observacao|lower if s.observacao else '' }}"
-data-solicitante="{{ s.solicitante|lower }}">
+                <option>Laje-1</option>
+                <option>Laje-2</option>
+                <option>Laje-3</option>
+                <option>Laje-4</option>
 
+            </select>
 
-<div class="info">
 
+            <!-- USUÁRIO -->
 
+            <select
+                id="filtroUsuario"
+                class="filtro-input"
+                onchange="aplicarFiltros()"
+            >
 
-<div class="item">
+                <option value="">
+                    👤 Todos os usuários
+                </option>
 
-<span>Produto</span>
 
-<strong>
-{{s.produto}}
-</strong>
+                {% for nome in solicitacoes | map(attribute='solicitante') | unique | sort %}
 
-</div>
+                    <option value="{{ nome|lower }}">
+                        {{ nome }}
+                    </option>
 
+                {% endfor %}
 
+            </select>
 
-<div class="item">
 
-<span>Quantidade</span>
+            <!-- PRODUTO -->
 
-<strong>
-{{s.quantidade}}
-</strong>
+            <select
+                id="filtroProduto"
+                class="filtro-input"
+                onchange="aplicarFiltros()"
+            >
 
-</div>
+                <option value="">
+                    📦 Todos os produtos
+                </option>
 
 
+                {% for nome in solicitacoes | map(attribute='produto') | unique | sort %}
 
-<div class="item">
+                    <option value="{{ nome|lower }}">
+                        {{ nome }}
+                    </option>
 
-<span>Tipo</span>
+                {% endfor %}
 
-<strong>
-{{s.tipo}}
-</strong>
+            </select>
 
-</div>
 
+            <!-- DATA -->
 
+            <input
+                type="date"
+                id="filtroData"
+                class="filtro-input"
+                onchange="aplicarFiltros()"
+            >
 
-<div class="item">
 
-<span>Solicitante</span>
+        </div>
 
-<strong>
-{{s.solicitante}}
-</strong>
 
-</div>
+        <br>
 
 
+        <button
+            type="button"
+            class="btn-limpar"
+            onclick="limparFiltros()"
+        >
+            🔄 Limpar filtros
+        </button>
 
-<div class="item">
+    </div>
 
-<span>Data</span>
 
-<strong>
-{{s.data}}
-</strong>
+    <!-- ==========================
+         BOTÕES
+    ========================== -->
 
-</div>
+    <div class="top-buttons">
 
 
+        {% if perfil in ["admin", "separacao"] %}
 
-{% if s.operador %}
+        <a
+            href="/nova-solicitacao"
+            class="btn btn-criar"
+        >
+            ➕ Nova Solicitação
+        </a>
 
-<div class="item">
+        {% endif %}
 
-    <span>Operador</span>
 
-    <strong>{{ s.operador }}</strong>
+        {% if perfil == "admin" %}
 
-</div>
+        <form
+            method="POST"
+            action="/excluir-todas-solicitacoes"
+            onsubmit="return confirm('Tem certeza que deseja excluir TODAS as solicitações? Esta ação não poderá ser desfeita.');"
+        >
 
-{% endif %}
-
-
-
-<div class="item">
-
-<span>Status</span>
-
-<strong>
-
-
-{% if s.status == "PENDENTE" %}
-
-<span class="status pendente">
-    {{ s.status }}
-</span>
-
-{% elif s.status == "EM ANDAMENTO" %}
-
-<span class="status andamento">
-    {{ s.status }}
-</span>
-
-{% elif s.status == "CONCLUIDO" %}
-
-<span class="status concluido">
-    {{ s.status }}
-</span>
-
-{% elif s.status == "NAO ENCONTRADO" %}
-
-<span class="status erro">
-    {{ s.status }}
-</span>
-
-{% endif %}
-
-</strong>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-{% if s.observacao %}
-
-
-<div class="obs">
-
-📍 <b>Endereço: </b>
-
-{{s.observacao}}
-
-
-</div>
-
-
-{% endif %}
-
-
-
-
-
-
-<div class="acoes">
-
-
-
-
-
-{% if perfil in ['admin','operador'] %}
-
-    {% if s.status == "PENDENTE" %}
-
-        <form method="POST" action="/solicitacao/{{ s.id }}/em-andamento">
-
-            <button class="btn-andamento">
-                ▶ Aceitar Solicitação
+            <button
+                type="submit"
+                class="btn btn-delete"
+            >
+                🗑 Excluir Todas
             </button>
 
         </form>
 
-    {% elif s.status == "EM ANDAMENTO" %}
+        {% endif %}
 
-        {% if s.operador == usuario %}
 
-            <div class="status-info andamento">
-                👷 Em andamento por você
+        <a
+            href="/menu"
+            class="btn btn-voltar"
+        >
+            ⬅ Voltar
+        </a>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================
+     SOLICITAÇÕES
+========================== -->
+
+{% if solicitacoes %}
+
+<input
+    type="hidden"
+    id="totalSolicitacoes"
+    value="{{ solicitacoes|length }}"
+>
+
+
+{% for s in solicitacoes %}
+
+<div
+    class="card solicitacao-card
+
+    {% if s.status == 'PENDENTE' %}
+        card-pendente
+    {% elif s.status == 'EM ANDAMENTO' %}
+        card-andamento
+    {% endif %}"
+
+    data-status="{{ s.status }}"
+
+    data-endereco="{{ s.observacao|lower if s.observacao else '' }}"
+
+    data-solicitante="{{ s.solicitante|lower }}"
+
+    data-produto="{{ s.produto|lower }}"
+
+    data-data="{{ s.data }}"
+>
+
+
+    <!-- ==========================
+         PRODUTO + STATUS
+    ========================== -->
+
+    <div class="card-topo">
+
+        <div>
+
+            <div class="produto">
+                📦 {{ s.produto }}
             </div>
 
-            <form method="POST" action="/solicitacao/{{ s.id }}/concluir">
-
-                <button class="btn-ok">
-                    ✅ Produto Encontrado
-                </button>
-
-            </form>
-
-            <form method="POST" action="/solicitacao/{{ s.id }}/nao-encontrado">
-
-                <button class="btn-nao">
-                    ❌ Não Encontrado
-                </button>
-
-            </form>
-
-        {% else %}
-
-            <div class="status-info andamento">
-                🔒 Em andamento por {{ s.operador }}
+            <div class="quantidade">
+                Quantidade: {{ s.quantidade }}
             </div>
+
+        </div>
+
+
+        {% if s.status == "PENDENTE" %}
+
+            <span class="status pendente">
+                🟡 PENDENTE
+            </span>
+
+        {% elif s.status == "EM ANDAMENTO" %}
+
+            <span class="status andamento">
+                🔵 EM ANDAMENTO
+            </span>
+
+        {% elif s.status == "CONCLUIDO" %}
+
+            <span class="status concluido">
+                🟢 CONCLUÍDO
+            </span>
+
+        {% elif s.status == "NAO ENCONTRADO" %}
+
+            <span class="status erro">
+                🔴 NÃO ENCONTRADO
+            </span>
 
         {% endif %}
 
+    </div>
+
+
+    <!-- ==========================
+         INFORMAÇÕES
+    ========================== -->
+
+    <div class="detalhes">
+
+        <span>
+            👤 {{ s.solicitante }}
+        </span>
+
+
+        <span>
+            📅 {{ s.data }}
+        </span>
+
+
+        {% if s.operador %}
+
+        <span>
+            👷 {{ s.operador }}
+        </span>
+
+        {% endif %}
+
+
+        {% if s.tipo %}
+
+        <span>
+            🔄 {{ s.tipo }}
+        </span>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ==========================
+         ENDEREÇO
+    ========================== -->
+
+    {% if s.observacao %}
+
+    <div class="endereco">
+
+        📍 <b>Endereço:</b>
+        {{ s.observacao }}
+
+    </div>
+
     {% endif %}
 
-{% endif %}
+
+    <!-- ==========================
+         AÇÕES
+    ========================== -->
+
+    <div class="acoes">
 
 
+        {% if perfil in ['admin','operador'] %}
 
 
+            {% if s.status == "PENDENTE" %}
+
+                <form
+                    method="POST"
+                    action="/solicitacao/{{ s.id }}/em-andamento"
+                >
+
+                    <button class="btn-andamento">
+                        ▶ Aceitar Solicitação
+                    </button>
+
+                </form>
 
 
-{% if perfil == "admin" %}
+            {% elif s.status == "EM ANDAMENTO" %}
 
 
+                {% if s.operador == usuario %}
 
-<form method="POST" 
-action="/excluir-solicitacao/{{s.id}}"
-onsubmit="return confirm('Deseja realmente excluir esta solicitação?');">
-
-
-<button class="btn-delete">
-
-🗑 Excluir
-
-</button>
+                    <div class="status-info andamento">
+                        👷 Em andamento por você
+                    </div>
 
 
-</form>
+                    <form
+                        method="POST"
+                        action="/solicitacao/{{ s.id }}/concluir"
+                    >
+
+                        <button class="btn-ok">
+                            ✅ Produto Encontrado
+                        </button>
+
+                    </form>
 
 
+                    <form
+                        method="POST"
+                        action="/solicitacao/{{ s.id }}/nao-encontrado"
+                    >
 
-{% endif %}
+                        <button class="btn-nao">
+                            ❌ Não Encontrado
+                        </button>
 
+                    </form>
+
+
+                {% else %}
+
+                    <div class="status-info andamento">
+                        🔒 Em andamento por {{ s.operador }}
+                    </div>
+
+                {% endif %}
+
+
+            {% endif %}
+
+
+        {% endif %}
+
+
+        {% if perfil == "admin" %}
+
+        <form
+            method="POST"
+            action="/excluir-solicitacao/{{ s.id }}"
+            onsubmit="return confirm('Deseja realmente excluir esta solicitação?');"
+        >
+
+            <button class="btn-delete">
+                🗑 Excluir
+            </button>
+
+        </form>
+
+        {% endif %}
+
+
+    </div>
 
 
 </div>
-
-
-</div>
-
 
 {% endfor %}
 
-    
+
 {% else %}
 
 
 <div class="card vazio">
 
-Nenhuma solicitação encontrada 🎉
+    Nenhuma solicitação encontrada 🎉
 
 </div>
 
@@ -936,184 +1032,686 @@ Nenhuma solicitação encontrada 🎉
 
 </div>
 
-<audio id="novoPedidoSom">
-    <source src="/static/sounds/alerta.mp3" type="audio/mpeg">
-</audio>
 
+<!-- ==========================
+     SOM
+========================== -->
+
+<audio id="novoPedidoSom">
+
+    <source
+        src="/static/sounds/alerta.mp3"
+        type="audio/mpeg"
+    >
+
+</audio>
 
 
 <script>
 
+/* ==========================
+   VARIÁVEIS
+========================== */
+
+let estadoAtual = null;
+
+let filtroStatus =
+    localStorage.getItem("filtroStatus") || "TODOS";
+
+
+/* ==========================
+   FILTRO DE STATUS
+========================== */
 
 function filtrarSolicitacoes(status, botao){
 
     filtroStatus = status;
 
-    document.querySelectorAll(".filtro-btn").forEach(btn=>{
-        btn.classList.remove("filtro-ativo");
-    });
-
-    botao.classList.add("filtro-ativo");
-
-    aplicarFiltros();
-}
+    localStorage.setItem(
+        "filtroStatus",
+        filtroStatus
+    );
 
 
+    document
+        .querySelectorAll(".filtro-btn")
+        .forEach(btn => {
 
-function aplicarFiltros(){
-
-    let rua = document.getElementById("filtroRua").value.toLowerCase();
-    let usuario = document.getElementById("filtroUsuario").value.toLowerCase();
-
-    document.querySelectorAll(".solicitacao-card").forEach(card=>{
-
-        let status = card.dataset.status;
-        let ruaCard = card.dataset.endereco;
-        let solicitante = card.dataset.solicitante;
-
-        let statusOk =
-            filtroStatus === "TODOS" ||
-            status === filtroStatus;
-
-        let ruaOk =
-            rua === "" ||
-            ruaCard.startsWith(rua);
-
-        let usuarioOk =
-            usuario === "" ||
-            solicitante === usuario;
-
-        card.style.display =
-            (statusOk && ruaOk && usuarioOk)
-            ? ""
-            : "none";
-
-    });
-
-}
-     
-let estadoAtual = null;
-let filtroStatus = localStorage.getItem("filtroStatus") || "TODOS";
-
-
-window.onload = function () {
-
-    let botao = [...document.querySelectorAll(".filtro-btn")]
-        .find(btn => {
-
-            if (filtroStatus === "TODOS")
-                return btn.textContent.includes("Todas");
-
-            if (filtroStatus === "PENDENTE")
-                return btn.textContent.includes("Pendentes");
-
-            if (filtroStatus === "EM ANDAMENTO")
-                return btn.textContent.includes("Em andamento");
-
-            if (filtroStatus === "CONCLUIDO")
-                return btn.textContent.includes("Concluídas");
+            btn.classList.remove(
+                "filtro-ativo"
+            );
 
         });
 
 
-    if (botao) {
-        filtrarSolicitacoes(filtroStatus, botao);
-    } else {
-        aplicarFiltros();
+    if(botao){
+
+        botao.classList.add(
+            "filtro-ativo"
+        );
+
     }
 
-};
 
-
-
-function atualizarContadores(data){
-
-    document.getElementById("count-pendente").innerText = data.pendentes;
-    document.getElementById("count-andamento").innerText = data.andamento;
-    document.getElementById("count-concluido").innerText = data.concluidas;
+    aplicarFiltros();
 
 }
 
 
+/* ==========================
+   APLICAR TODOS OS FILTROS
+========================== */
 
-// primeira carga
-fetch("/api/solicitacoes/count")
-.then(r => r.json())
-.then(data => {
+function aplicarFiltros(){
 
-    estadoAtual = JSON.stringify(data);
-
-    atualizarContadores(data);
-
-});
-
+    let rua =
+        document.getElementById(
+            "filtroRua"
+        ).value.toLowerCase();
 
 
-// atualização automática
+    let usuario =
+        document.getElementById(
+            "filtroUsuario"
+        ).value.toLowerCase();
+
+
+    let produto =
+        document.getElementById(
+            "filtroProduto"
+        ).value.toLowerCase();
+
+
+    let data =
+        document.getElementById(
+            "filtroData"
+        ).value;
+
+
+    /* SALVAR FILTROS */
+
+    localStorage.setItem(
+        "filtroRua",
+        rua
+    );
+
+    localStorage.setItem(
+        "filtroUsuario",
+        usuario
+    );
+
+    localStorage.setItem(
+        "filtroProduto",
+        produto
+    );
+
+    localStorage.setItem(
+        "filtroData",
+        data
+    );
+
+
+    document
+        .querySelectorAll(".solicitacao-card")
+        .forEach(card => {
+
+
+            let status =
+                card.dataset.status;
+
+
+            let ruaCard =
+                card.dataset.endereco;
+
+
+            let solicitante =
+                card.dataset.solicitante;
+
+
+            let produtoCard =
+                card.dataset.produto;
+
+
+            let dataCard =
+                card.dataset.data;
+
+
+            /* ==========================
+               STATUS
+            ========================== */
+
+            let statusOk =
+                filtroStatus === "TODOS" ||
+                status === filtroStatus;
+
+
+            /* ==========================
+               RUA
+            ========================== */
+
+            let ruaOk =
+                rua === "" ||
+                ruaCard.startsWith(rua);
+
+
+            /* ==========================
+               USUÁRIO
+            ========================== */
+
+            let usuarioOk =
+                usuario === "" ||
+                solicitante === usuario;
+
+
+            /* ==========================
+               PRODUTO
+            ========================== */
+
+            let produtoOk =
+                produto === "" ||
+                produtoCard === produto;
+
+
+            /* ==========================
+               DATA
+            ========================== */
+
+            let dataOk = true;
+
+
+            if(data !== ""){
+
+                /*
+                 * O banco guarda:
+                 *
+                 * DD/MM/YYYY HH:MM
+                 *
+                 * O input date fornece:
+                 *
+                 * YYYY-MM-DD
+                 */
+
+                let partes =
+                    dataCard.split(" ")[0].split("/");
+
+
+                if(partes.length === 3){
+
+                    let dataFormatada =
+                        partes[2] +
+                        "-" +
+                        partes[1].padStart(2,"0") +
+                        "-" +
+                        partes[0].padStart(2,"0");
+
+
+                    dataOk =
+                        dataFormatada === data;
+
+                }else{
+
+                    dataOk = false;
+
+                }
+
+            }
+
+
+            /* ==========================
+               MOSTRAR / ESCONDER
+            ========================== */
+
+            if(
+                statusOk &&
+                ruaOk &&
+                usuarioOk &&
+                produtoOk &&
+                dataOk
+            ){
+
+                card.style.display = "";
+
+            }else{
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+}
+
+
+/* ==========================
+   LIMPAR FILTROS
+========================== */
+
+function limparFiltros(){
+
+    document.getElementById(
+        "filtroRua"
+    ).value = "";
+
+
+    document.getElementById(
+        "filtroUsuario"
+    ).value = "";
+
+
+    document.getElementById(
+        "filtroProduto"
+    ).value = "";
+
+
+    document.getElementById(
+        "filtroData"
+    ).value = "";
+
+
+    filtroStatus = "TODOS";
+
+
+    localStorage.removeItem(
+        "filtroRua"
+    );
+
+    localStorage.removeItem(
+        "filtroUsuario"
+    );
+
+    localStorage.removeItem(
+        "filtroProduto"
+    );
+
+    localStorage.removeItem(
+        "filtroData"
+    );
+
+    localStorage.setItem(
+        "filtroStatus",
+        "TODOS"
+    );
+
+
+    document
+        .querySelectorAll(".filtro-btn")
+        .forEach(btn => {
+
+            btn.classList.remove(
+                "filtro-ativo"
+            );
+
+        });
+
+
+    let botaoTodos =
+        document.querySelector(
+            ".filtro-todos"
+        );
+
+
+    if(botaoTodos){
+
+        botaoTodos.classList.add(
+            "filtro-ativo"
+        );
+
+    }
+
+
+    aplicarFiltros();
+
+}
+
+
+/* ==========================
+   RESTAURAR FILTROS
+========================== */
+
+function restaurarFiltros(){
+
+    let ruaSalva =
+        localStorage.getItem(
+            "filtroRua"
+        );
+
+
+    let usuarioSalvo =
+        localStorage.getItem(
+            "filtroUsuario"
+        );
+
+
+    let produtoSalvo =
+        localStorage.getItem(
+            "filtroProduto"
+        );
+
+
+    let dataSalva =
+        localStorage.getItem(
+            "filtroData"
+        );
+
+
+    if(ruaSalva !== null){
+
+        document.getElementById(
+            "filtroRua"
+        ).value = ruaSalva;
+
+    }
+
+
+    if(usuarioSalvo !== null){
+
+        document.getElementById(
+            "filtroUsuario"
+        ).value = usuarioSalvo;
+
+    }
+
+
+    if(produtoSalvo !== null){
+
+        document.getElementById(
+            "filtroProduto"
+        ).value = produtoSalvo;
+
+    }
+
+
+    if(dataSalva !== null){
+
+        document.getElementById(
+            "filtroData"
+        ).value = dataSalva;
+
+    }
+
+
+    /* ==========================
+       BOTÃO DE STATUS
+    ========================== */
+
+    let botoes =
+        document.querySelectorAll(
+            ".filtro-btn"
+        );
+
+
+    let botaoEncontrado = null;
+
+
+    botoes.forEach(btn => {
+
+        if(
+            filtroStatus === "TODOS" &&
+            btn.classList.contains(
+                "filtro-todos"
+            )
+        ){
+
+            botaoEncontrado = btn;
+
+        }
+
+
+        if(
+            filtroStatus === "PENDENTE" &&
+            btn.classList.contains(
+                "filtro-pendente"
+            )
+        ){
+
+            botaoEncontrado = btn;
+
+        }
+
+
+        if(
+            filtroStatus === "EM ANDAMENTO" &&
+            btn.classList.contains(
+                "filtro-andamento"
+            )
+        ){
+
+            botaoEncontrado = btn;
+
+        }
+
+
+        if(
+            filtroStatus === "CONCLUIDO" &&
+            btn.classList.contains(
+                "filtro-concluido"
+            )
+        ){
+
+            botaoEncontrado = btn;
+
+        }
+
+    });
+
+
+    if(botaoEncontrado){
+
+        botoes.forEach(btn => {
+
+            btn.classList.remove(
+                "filtro-ativo"
+            );
+
+        });
+
+
+        botaoEncontrado.classList.add(
+            "filtro-ativo"
+        );
+
+    }
+
+
+    aplicarFiltros();
+
+}
+
+
+/* ==========================
+   CONTADORES
+========================== */
+
+function atualizarContadores(data){
+
+    document.getElementById(
+        "count-pendente"
+    ).innerText = data.pendentes;
+
+
+    document.getElementById(
+        "count-andamento"
+    ).innerText = data.andamento;
+
+
+    document.getElementById(
+        "count-concluido"
+    ).innerText = data.concluidas;
+
+}
+
+
+/* ==========================
+   PRIMEIRA CARGA
+========================== */
+
+window.addEventListener(
+    "load",
+    function(){
+
+        restaurarFiltros();
+
+
+        fetch(
+            "/api/solicitacoes/count"
+        )
+
+        .then(r => r.json())
+
+        .then(data => {
+
+            estadoAtual =
+                JSON.stringify(data);
+
+            atualizarContadores(data);
+
+        });
+
+    }
+);
+
+
+/* ==========================
+   ATUALIZAÇÃO AUTOMÁTICA
+========================== */
+
 setInterval(() => {
 
 
-    fetch("/api/solicitacoes/count")
+    fetch(
+        "/api/solicitacoes/count"
+    )
+
     .then(response => response.json())
+
     .then(data => {
 
 
         atualizarContadores(data);
 
 
-        let novoEstado = JSON.stringify(data);
+        let novoEstado =
+            JSON.stringify(data);
 
 
-        if (estadoAtual && novoEstado !== estadoAtual){
+        if(
+            estadoAtual &&
+            novoEstado !== estadoAtual
+        ){
 
 
-            let som = document.getElementById("novoPedidoSom");
+            /* ==========================
+               SOM
+            ========================== */
 
-            if (som){
-                som.play().catch(() => {});
+            let som =
+                document.getElementById(
+                    "novoPedidoSom"
+                );
+
+
+            if(som){
+
+                som.play().catch(
+                    () => {}
+                );
+
             }
 
 
+            /* ==========================
+               SALVAR FILTROS
+            ========================== */
 
-            // salva filtros antes de atualizar
             localStorage.setItem(
                 "filtroStatus",
                 filtroStatus
             );
 
 
-            let rua = document.getElementById("filtroRua");
+            let rua =
+                document.getElementById(
+                    "filtroRua"
+                );
+
+
             if(rua){
+
                 localStorage.setItem(
                     "filtroRua",
                     rua.value
                 );
+
             }
 
 
-            let usuario = document.getElementById("filtroUsuario");
+            let usuario =
+                document.getElementById(
+                    "filtroUsuario"
+                );
+
+
             if(usuario){
+
                 localStorage.setItem(
                     "filtroUsuario",
                     usuario.value
                 );
+
             }
 
 
+            let produto =
+                document.getElementById(
+                    "filtroProduto"
+                );
+
+
+            if(produto){
+
+                localStorage.setItem(
+                    "filtroProduto",
+                    produto.value
+                );
+
+            }
+
+
+            let data =
+                document.getElementById(
+                    "filtroData"
+                );
+
+
+            if(data){
+
+                localStorage.setItem(
+                    "filtroData",
+                    data.value
+                );
+
+            }
+
+
+            /*
+             * Recarrega para trazer
+             * as novas solicitações.
+             */
 
             location.reload();
 
         }
 
 
-        estadoAtual = novoEstado;
+        estadoAtual =
+            novoEstado;
 
 
     });
 
 
 }, 10000);
-    
+
 </script>
 
 {% endblock %}
