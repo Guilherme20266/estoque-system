@@ -1729,41 +1729,158 @@ def api_solicitacoes():
 def nova_solicitacao():
 
     if not logado():
+        if request.is_json:
+            return jsonify({
+                "sucesso": False,
+                "mensagem": "Sessão expirada."
+            }), 401
+
         return redirect("/")
 
     if session.get("perfil") not in ["admin", "separacao"]:
+        if request.is_json:
+            return jsonify({
+                "sucesso": False,
+                "mensagem": "Você não tem permissão para solicitar."
+            }), 403
+
         return redirect("/menu")
 
+    # ==========================
+    # ENVIO PELO BOTÃO DA CONSULTA
+    # ==========================
     if request.method == "POST":
 
-        rua = request.form["rua"]
+        # Aceita JSON enviado pelo botão da Consulta
+        if request.is_json:
 
-        # Se for uma laje, usa somente o nome
-        if rua.startswith("Laje"):
-            endereco = rua.strip().replace(" ", "-")
+            dados = request.get_json()
+
+            produto_nome = str(
+                dados.get("produto", "")
+            ).strip()
+
+            endereco = str(
+                dados.get("endereco", "")
+            ).strip()
+
+            if not produto_nome or not endereco:
+                return jsonify({
+                    "sucesso": False,
+                    "mensagem": "Produto ou endereço não informado."
+                }), 400
+
+        # ==========================
+        # ENVIO PELO FORMULÁRIO ANTIGO
+        # ==========================
         else:
-            endereco = (
-                f"{rua}-"
-                f"{request.form['coluna']}-"
-                f"{request.form['nivel']}"
+
+            produto_nome = request.form.get(
+                "produto",
+                ""
+            ).strip()
+
+            rua = request.form.get(
+                "rua",
+                ""
+            ).strip()
+
+            if not rua:
+                return jsonify({
+                    "sucesso": False,
+                    "mensagem": "Endereço não informado."
+                }), 400
+
+            # Se for uma laje, usa somente o nome
+            if rua.startswith("Laje"):
+
+                endereco = rua.replace(
+                    " ",
+                    "-"
+                )
+
+            else:
+
+                endereco = (
+                    f"{rua}-"
+                    f"{request.form.get('coluna', '').strip()}-"
+                    f"{request.form.get('nivel', '').strip()}"
+                )
+
+        # ==========================
+        # 🔒 IMPEDIR DUPLICAÇÃO
+        # ==========================
+        solicitacao_existente = Solicitacao.query.filter(
+            Solicitacao.observacao == endereco,
+            Solicitacao.status.in_([
+                "PENDENTE",
+                "EM ANDAMENTO"
+            ])
+        ).first()
+
+        if solicitacao_existente:
+
+            if request.is_json:
+
+                return jsonify({
+                    "sucesso": False,
+                    "duplicada": True,
+                    "mensagem": (
+                        "Já existe uma solicitação "
+                        "para este endereço."
+                    )
+                }), 409
+
+            flash(
+                "Já existe uma solicitação para este endereço!",
+                "error"
             )
 
+            return redirect("/solicitacoes")
+
+        # ==========================
+        # CRIAR SOLICITAÇÃO
+        # ==========================
         nova = Solicitacao(
-            produto=request.form["produto"],
+
+            produto=produto_nome,
+
             quantidade=1,
-            tipo=request.form["tipo"],
+
+            tipo="Separar",
+
             observacao=endereco,
-            solicitante=session.get("usuario"),
+
+            solicitante=session.get(
+                "usuario"
+            ),
+
             operador="",
+
             status="PENDENTE",
+
             data=datetime.now(
                 ZoneInfo("America/Sao_Paulo")
-            ).strftime("%d/%m/%Y %H:%M"),
+            ).strftime(
+                "%d/%m/%Y %H:%M"
+            ),
+
             finalizado_em=""
         )
 
         db.session.add(nova)
         db.session.commit()
+
+        # ==========================
+        # RESPOSTA PARA A CONSULTA
+        # ==========================
+        if request.is_json:
+
+            return jsonify({
+                "sucesso": True,
+                "mensagem": "Solicitação feita com sucesso!",
+                "endereco": endereco
+            })
 
         flash(
             "Solicitação enviada com sucesso!",
@@ -1772,7 +1889,9 @@ def nova_solicitacao():
 
         return redirect("/solicitacoes")
 
-    return render_template("nova_solicitacao.html")
+    return render_template(
+        "nova_solicitacao.html"
+    )
 
 # ==========================
 # EM ANDAMENTO
