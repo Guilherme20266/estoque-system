@@ -243,21 +243,51 @@ onclick="confirmarSolicitacao(
 
 function confirmarSolicitacao(produto, endereco){
 
-    const confirmar = confirm(
-        "Tem certeza que deseja solicitar?\n\n" +
-        "Produto: " + produto + "\n" +
-        "Endereço: " + endereco
-    );
+    Swal.fire({
+        title: 'Confirmar solicitação?',
+        html: `
+            <div style="text-align:left; margin-top:15px;">
+                <p style="margin-bottom:8px;">
+                    📦 <b>Produto:</b><br>
+                    ${produto}
+                </p>
 
-    if(!confirmar){
-        return;
-    }
+                <p>
+                    📍 <b>Endereço:</b><br>
+                    ${endereco}
+                </p>
+            </div>
+        `,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, solicitar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true,
+        confirmButtonColor: '#007bff',
+        cancelButtonColor: '#6c757d'
+    }).then((result) => {
 
-    enviarSolicitacao(produto, endereco);
+        if(result.isConfirmed){
+            enviarSolicitacao(produto, endereco);
+        }
+
+    });
+
 }
 
 
 function enviarSolicitacao(produto, endereco){
+
+    Swal.fire({
+        title: 'Enviando solicitação...',
+        text: 'Aguarde um momento.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
 
     fetch("/nova-solicitacao", {
 
@@ -280,9 +310,13 @@ function enviarSolicitacao(produto, endereco){
 
         if(data.sucesso){
 
-            alert(
-                "✅ Solicitação feita com sucesso!"
-            );
+            Swal.fire({
+                title: 'Solicitação realizada!',
+                text: 'A solicitação foi enviada com sucesso.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#007bff'
+            });
 
             return;
         }
@@ -290,18 +324,25 @@ function enviarSolicitacao(produto, endereco){
 
         if(data.duplicada){
 
-            alert(
-                "⚠️ Já existe uma solicitação para este endereço."
-            );
+            Swal.fire({
+                title: 'Solicitação já existente',
+                text: 'Já existe uma solicitação em andamento para este endereço.',
+                icon: 'warning',
+                confirmButtonText: 'Entendi',
+                confirmButtonColor: '#007bff'
+            });
 
             return;
         }
 
 
-        alert(
-            "❌ " +
-            (data.mensagem || "Não foi possível fazer a solicitação.")
-        );
+        Swal.fire({
+            title: 'Não foi possível solicitar',
+            text: data.mensagem || 'Ocorreu um erro ao realizar a solicitação.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#007bff'
+        });
 
     })
 
@@ -309,15 +350,17 @@ function enviarSolicitacao(produto, endereco){
 
         console.error(error);
 
-        alert(
-            "❌ Erro ao enviar a solicitação."
-        );
+        Swal.fire({
+            title: 'Erro',
+            text: 'Não foi possível enviar a solicitação. Tente novamente.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#007bff'
+        });
 
     });
 
 }
-
-
 let scanner;
 function abrirCamera(){
 
