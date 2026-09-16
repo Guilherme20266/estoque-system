@@ -231,7 +231,7 @@ onclick="confirmarSolicitacao(
 📦 Solicitar
 </button>
 
-{% endif %}
+{% if perfil in ["admin", "separacao", "consulta"] %}
 
 <button
 type="button"
