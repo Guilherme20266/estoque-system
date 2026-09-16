@@ -5,7 +5,6 @@
 {% block head %}
 
 <script src="https://unpkg.com/html5-qrcode"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 {% endblock %}
 
@@ -86,17 +85,9 @@ margin-bottom:12px;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.urgente{
-border-left:8px solid red;
-}
-
-.atencao{
-border-left:8px solid orange;
-}
-
-.ok{
-border-left:8px solid green;
-}
+.urgente{ border-left:8px solid red; }
+.atencao{ border-left:8px solid orange; }
+.ok{ border-left:8px solid green; }
 
 .piscando{
 color:red;
@@ -151,11 +142,8 @@ cursor:not-allowed;
 <h2>🔎 Consulta</h2>
 
 <a href="/menu">
-<button class="menu">
-🏠 Voltar ao Menu
-</button>
+<button class="menu">🏠 Voltar ao Menu</button>
 </a>
-
 
 <form method="GET" id="formBusca">
 
@@ -182,21 +170,15 @@ onclick="abrirCamera()"
 
 </form>
 
-
 <div id="reader"></div>
 
-
 <a href="/exportar-consulta?busca={{ busca }}">
-<button class="export">
-📊 Exportar Consulta (Excel)
-</button>
+<button class="export">📊 Exportar Consulta (Excel)</button>
 </a>
-
 
 {% for item in lista %}
 
-<div
-class="card produto-card
+<div class="card produto-card
 {% if item.status == 'URGENTE' %}
 urgente
 {% elif item.status == 'ATENCAO' %}
@@ -204,21 +186,16 @@ atencao
 {% else %}
 ok
 {% endif %}"
+
 data-busca="
 {{ item.produto.nome|lower }}
 {{ item.produto.codigo|lower }}
 {{ item.produto.endereco|lower }}
 ">
 
-
 {% if item.status == 'URGENTE' %}
-
-<div class="piscando">
-🚨 URGENTE
-</div>
-
+<div class="piscando">🚨 URGENTE</div>
 {% endif %}
-
 
 <b>{{ item.produto.nome }}</b>
 
@@ -240,9 +217,6 @@ data-busca="
 
 <br><br>
 
-
-{% if perfil in ["admin", "separacao", "consulta"] %}
-
 <button
 type="button"
 class="btn-solicitar"
@@ -254,9 +228,6 @@ onclick="confirmarSolicitacao(
 📦 Solicitar
 </button>
 
-{% endif %}
-
-
 </div>
 
 {% endfor %}
@@ -265,92 +236,27 @@ onclick="confirmarSolicitacao(
 
 {% endblock %}
 
-
 {% block script %}
 
 <script>
 
-
-/* ==========================
-   CONFIRMAR SOLICITAÇÃO
-========================== */
-
 function confirmarSolicitacao(produto, endereco){
 
-    Swal.fire({
+    const confirmar = confirm(
+        "Tem certeza que deseja solicitar?\n\n" +
+        "Produto: " + produto + "\n" +
+        "Endereço: " + endereco
+    );
 
-        title: 'Confirmar solicitação?',
+    if(!confirmar){
+        return;
+    }
 
-        html: `
-            <div style="text-align:left; margin-top:15px;">
-
-                <p style="margin-bottom:8px;">
-                    📦 <b>Produto:</b><br>
-                    ${produto}
-                </p>
-
-                <p>
-                    📍 <b>Endereço:</b><br>
-                    ${endereco}
-                </p>
-
-            </div>
-        `,
-
-        icon: 'question',
-
-        showCancelButton: true,
-
-        confirmButtonText: 'Sim, solicitar',
-
-        cancelButtonText: 'Cancelar',
-
-        reverseButtons: true,
-
-        confirmButtonColor: '#007bff',
-
-        cancelButtonColor: '#6c757d'
-
-    }).then((result) => {
-
-        if(result.isConfirmed){
-
-            enviarSolicitacao(
-                produto,
-                endereco
-            );
-
-        }
-
-    });
-
+    enviarSolicitacao(produto, endereco);
 }
 
 
-/* ==========================
-   ENVIAR SOLICITAÇÃO
-========================== */
-
 function enviarSolicitacao(produto, endereco){
-
-    Swal.fire({
-
-        title: 'Enviando solicitação...',
-
-        text: 'Aguarde um momento.',
-
-        allowOutsideClick: false,
-
-        allowEscapeKey: false,
-
-        didOpen: () => {
-
-            Swal.showLoading();
-
-        }
-
-    });
-
 
     fetch("/nova-solicitacao", {
 
@@ -361,11 +267,8 @@ function enviarSolicitacao(produto, endereco){
         },
 
         body: JSON.stringify({
-
             produto: produto,
-
             endereco: endereco
-
         })
 
     })
@@ -374,210 +277,95 @@ function enviarSolicitacao(produto, endereco){
 
     .then(data => {
 
-
-        /* ==========================
-           SUCESSO
-        ========================== */
-
         if(data.sucesso){
 
-            Swal.fire({
-
-                title: 'Solicitação realizada!',
-
-                text: 'A solicitação foi enviada com sucesso.',
-
-                icon: 'success',
-
-                confirmButtonText: 'OK',
-
-                confirmButtonColor: '#007bff'
-
-            });
+            alert(
+                "✅ Solicitação feita com sucesso!"
+            );
 
             return;
-
         }
 
-
-        /* ==========================
-           DUPLICADA
-        ========================== */
 
         if(data.duplicada){
 
-            Swal.fire({
-
-                title: 'Solicitação já existente',
-
-                text: 'Já existe uma solicitação em andamento para este endereço.',
-
-                icon: 'warning',
-
-                confirmButtonText: 'Entendi',
-
-                confirmButtonColor: '#007bff'
-
-            });
+            alert(
+                "⚠️ Já existe uma solicitação para este endereço."
+            );
 
             return;
-
         }
 
 
-        /* ==========================
-           ERRO
-        ========================== */
-
-        Swal.fire({
-
-            title: 'Não foi possível solicitar',
-
-            text:
-                data.mensagem ||
-                'Ocorreu um erro ao realizar a solicitação.',
-
-            icon: 'error',
-
-            confirmButtonText: 'OK',
-
-            confirmButtonColor: '#007bff'
-
-        });
+        alert(
+            "❌ " +
+            (data.mensagem || "Não foi possível fazer a solicitação.")
+        );
 
     })
-
 
     .catch(error => {
 
         console.error(error);
 
-        Swal.fire({
-
-            title: 'Erro',
-
-            text: 'Não foi possível enviar a solicitação. Tente novamente.',
-
-            icon: 'error',
-
-            confirmButtonText: 'OK',
-
-            confirmButtonColor: '#007bff'
-
-        });
+        alert(
+            "❌ Erro ao enviar a solicitação."
+        );
 
     });
 
 }
 
 
-/* ==========================
-   LEITOR DE CÓDIGO
-========================== */
-
 let scanner;
-
-
 function abrirCamera(){
 
-    document.getElementById(
-        "reader"
-    ).style.display = "block";
+document.getElementById("reader").style.display = "block";
 
+scanner = new Html5Qrcode("reader");
 
-    scanner = new Html5Qrcode(
-        "reader"
-    );
+scanner.start(
+{ facingMode: "environment" },
+{
+fps: 10,
+qrbox: {
+width: 300,
+height: 120
+}
+},
+(codigo)=>{
 
+document.getElementById("busca").value = codigo;
 
-    scanner.start(
+scanner.stop().then(() => {
+document.getElementById("reader").style.display = "none";
+document.getElementById("formBusca").submit();
+});
 
-        {
-            facingMode: "environment"
-        },
-
-        {
-            fps: 10,
-
-            qrbox: {
-                width: 300,
-                height: 120
-            }
-        },
-
-        (codigo) => {
-
-            document.getElementById(
-                "busca"
-            ).value = codigo;
-
-
-            scanner.stop().then(() => {
-
-                document.getElementById(
-                    "reader"
-                ).style.display = "none";
-
-
-                document
-                    .getElementById(
-                        "formBusca"
-                    )
-                    .submit();
-
-            });
-
-        }
-
-    );
+}
+);
 
 }
 
+const campoBusca = document.getElementById("busca");
 
-/* ==========================
-   BUSCA EM TEMPO REAL
-========================== */
+campoBusca.addEventListener("input", function(){
 
-const campoBusca =
-    document.getElementById(
-        "busca"
-    );
+    let texto = this.value.toLowerCase();
 
+    document.querySelectorAll(".produto-card").forEach(card=>{
 
-campoBusca.addEventListener(
-    "input",
-    function(){
+        let dados = card.dataset.busca;
 
-        let texto =
-            this.value.toLowerCase();
+        if(dados.includes(texto)){
+            card.style.display = "";
+        }else{
+            card.style.display = "none";
+        }
 
+    });
 
-        document
-            .querySelectorAll(
-                ".produto-card"
-            )
-            .forEach(card => {
-
-                let dados =
-                    card.dataset.busca;
-
-
-                if(
-                    dados.includes(texto)
-                ){
-
-                    card.style.display = "";
-
-                }else{
-
-                    card.style.display = "none";
-
-                }
-
-            });
-
-    }
-);
+});
 
 </script>
 
