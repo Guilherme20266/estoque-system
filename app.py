@@ -1729,6 +1729,7 @@ def api_solicitacoes():
 def nova_solicitacao():
 
     if not logado():
+
         if request.is_json:
             return jsonify({
                 "sucesso": False,
@@ -1737,7 +1738,17 @@ def nova_solicitacao():
 
         return redirect("/")
 
-    if session.get("perfil") not in ["admin", "separacao"]:
+
+    # ==========================
+    # PERMISSÃO
+    # ==========================
+
+    if session.get("perfil") not in [
+        "admin",
+        "separacao",
+        "consulta"
+    ]:
+
         if request.is_json:
             return jsonify({
                 "sucesso": False,
@@ -1746,15 +1757,20 @@ def nova_solicitacao():
 
         return redirect("/menu")
 
+
     # ==========================
-    # ENVIO PELO BOTÃO DA CONSULTA
+    # POST
     # ==========================
+
     if request.method == "POST":
 
-        # Aceita JSON enviado pelo botão da Consulta
+        # =====================================================
+        # ENVIO PELO BOTÃO DA CONSULTA - JSON
+        # =====================================================
+
         if request.is_json:
 
-            dados = request.get_json()
+            dados = request.get_json() or {}
 
             produto_nome = str(
                 dados.get("produto", "")
@@ -1764,15 +1780,46 @@ def nova_solicitacao():
                 dados.get("endereco", "")
             ).strip()
 
-            if not produto_nome or not endereco:
+            tipo = str(
+                dados.get("tipo", "")
+            ).strip()
+
+
+            # ==========================
+            # VALIDAÇÕES
+            # ==========================
+
+            if not produto_nome:
+
                 return jsonify({
                     "sucesso": False,
-                    "mensagem": "Produto ou endereço não informado."
+                    "mensagem": "Produto não informado."
                 }), 400
 
-        # ==========================
+
+            if not endereco:
+
+                return jsonify({
+                    "sucesso": False,
+                    "mensagem": "Endereço não informado."
+                }), 400
+
+
+            if tipo not in [
+                "Pedido",
+                "Abastecer"
+            ]:
+
+                return jsonify({
+                    "sucesso": False,
+                    "mensagem": "Tipo de solicitação inválido."
+                }), 400
+
+
+        # =====================================================
         # ENVIO PELO FORMULÁRIO ANTIGO
-        # ==========================
+        # =====================================================
+
         else:
 
             produto_nome = request.form.get(
@@ -1780,18 +1827,49 @@ def nova_solicitacao():
                 ""
             ).strip()
 
+            tipo = request.form.get(
+                "tipo",
+                "Pedido"
+            ).strip()
+
             rua = request.form.get(
                 "rua",
                 ""
             ).strip()
 
-            if not rua:
-                return jsonify({
-                    "sucesso": False,
-                    "mensagem": "Endereço não informado."
-                }), 400
 
-            # Se for uma laje, usa somente o nome
+            if not produto_nome:
+
+                flash(
+                    "Produto não informado!",
+                    "error"
+                )
+
+                return redirect("/solicitacoes")
+
+
+            if not rua:
+
+                flash(
+                    "Endereço não informado!",
+                    "error"
+                )
+
+                return redirect("/solicitacoes")
+
+
+            if tipo not in [
+                "Pedido",
+                "Abastecer"
+            ]:
+
+                tipo = "Pedido"
+
+
+            # ==========================
+            # MONTA ENDEREÇO
+            # ==========================
+
             if rua.startswith("Laje"):
 
                 endereco = rua.replace(
@@ -1807,9 +1885,11 @@ def nova_solicitacao():
                     f"{request.form.get('nivel', '').strip()}"
                 )
 
-        # ==========================
-        # 🔒 IMPEDIR DUPLICAÇÃO
-        # ==========================
+
+        # =====================================================
+        # IMPEDIR DUPLICAÇÃO PELO ENDEREÇO
+        # =====================================================
+
         solicitacao_existente = Solicitacao.query.filter(
             Solicitacao.observacao == endereco,
             Solicitacao.status.in_([
@@ -1817,6 +1897,7 @@ def nova_solicitacao():
                 "EM ANDAMENTO"
             ])
         ).first()
+
 
         if solicitacao_existente:
 
@@ -1831,6 +1912,7 @@ def nova_solicitacao():
                     )
                 }), 409
 
+
             flash(
                 "Já existe uma solicitação para este endereço!",
                 "error"
@@ -1838,17 +1920,21 @@ def nova_solicitacao():
 
             return redirect("/solicitacoes")
 
-        # ==========================
+
+        # =====================================================
         # CRIAR SOLICITAÇÃO
-        # ==========================
+        # =====================================================
+
         nova = Solicitacao(
 
             produto=produto_nome,
 
             quantidade=1,
 
-            tipo="Separar",
+            # AGORA SALVA O TIPO ESCOLHIDO
+            tipo=tipo,
 
+            # O ENDEREÇO CONTINUA SENDO SALVO AQUI
             observacao=endereco,
 
             solicitante=session.get(
@@ -1868,19 +1954,37 @@ def nova_solicitacao():
             finalizado_em=""
         )
 
+
         db.session.add(nova)
+
         db.session.commit()
 
-        # ==========================
-        # RESPOSTA PARA A CONSULTA
-        # ==========================
+
+        # =====================================================
+        # RESPOSTA PARA O JAVASCRIPT
+        # =====================================================
+
         if request.is_json:
 
             return jsonify({
+
                 "sucesso": True,
-                "mensagem": "Solicitação feita com sucesso!",
-                "endereco": endereco
+
+                "mensagem": (
+                    f"Solicitação de {tipo.lower()} "
+                    f"feita com sucesso!"
+                ),
+
+                "endereco": endereco,
+
+                "tipo": tipo
+
             })
+
+
+        # =====================================================
+        # FORMULÁRIO NORMAL
+        # =====================================================
 
         flash(
             "Solicitação enviada com sucesso!",
@@ -1888,6 +1992,11 @@ def nova_solicitacao():
         )
 
         return redirect("/solicitacoes")
+
+
+    # =====================================================
+    # GET
+    # =====================================================
 
     return render_template(
         "nova_solicitacao.html"
