@@ -556,18 +556,9 @@ def menu():
     # ==========================
     # CONTADOR SOLICITAÇÕES
     # ==========================
-    if perfil == "separacao":
-
-        total_solicitacoes = Solicitacao.query.filter_by(
-            solicitante=session.get("usuario"),
-            status="PENDENTE"
-        ).count()
-
-    else:
-
-        total_solicitacoes = Solicitacao.query.filter_by(
-            status="PENDENTE"
-        ).count()
+   total_solicitacoes = Solicitacao.query.filter_by(
+        status="PENDENTE"
+   ).count()
 
 
 
@@ -1588,33 +1579,20 @@ def solicitacoes():
     perfil = session.get("perfil")
     usuario = session.get("usuario")
 
-    if perfil == "separacao":
-
-        solicitacoes = (
-            Solicitacao.query
-            .filter_by(solicitante=usuario)
-            .order_by(
-                Solicitacao.observacao.asc(),
-                Solicitacao.id.asc()
-            )
-            .all()
+    # TODOS os usuários visualizam TODAS as solicitações
+    solicitacoes = (
+        Solicitacao.query
+        .order_by(
+            db.case(
+                (Solicitacao.operador == usuario, 0),
+                (Solicitacao.operador == "", 1),
+                else_=2
+            ),
+            Solicitacao.observacao.asc(),
+            Solicitacao.id.asc()
         )
-
-    else:
-
-        solicitacoes = (
-            Solicitacao.query
-            .order_by(
-                db.case(
-                    (Solicitacao.operador == usuario, 0),
-                    (Solicitacao.operador == "", 1),
-                    else_=2
-                ),
-                Solicitacao.observacao.asc(),
-                Solicitacao.id.asc()
-            )
-            .all()
-        )
+        .all()
+    )
 
     return render_template(
         "solicitacoes.html",
@@ -1631,33 +1609,18 @@ def contar_solicitacoes():
 
     if not logado():
         return jsonify({
-            "pendentes":0,
-            "andamento":0,
-            "concluidas":0,
-            "total":0
+            "pendentes": 0,
+            "andamento": 0,
+            "concluidas": 0,
+            "total": 0
         })
 
-
-    perfil = session.get("perfil")
-    usuario = session.get("usuario")
-
-
-    if perfil == "separacao":
-
-        lista = Solicitacao.query.filter_by(
-            solicitante=usuario
-        ).all()
-
-    else:
-
-        lista = Solicitacao.query.all()
-
-
+    # TODOS recebem os contadores gerais
+    lista = Solicitacao.query.all()
 
     pendentes = 0
     andamento = 0
     concluidas = 0
-
 
     for s in lista:
 
@@ -1667,21 +1630,14 @@ def contar_solicitacoes():
         elif s.status == "EM ANDAMENTO":
             andamento += 1
 
-        elif s.status in ["CONCLUIDO","NAO ENCONTRADO"]:
+        elif s.status in ["CONCLUIDO", "NAO ENCONTRADO"]:
             concluidas += 1
 
-
-
     return jsonify({
-
         "pendentes": pendentes,
-
         "andamento": andamento,
-
         "concluidas": concluidas,
-
         "total": len(lista)
-
     })
 
 @app.route("/api/solicitacoes")
@@ -1690,22 +1646,12 @@ def api_solicitacoes():
     if not logado():
         return jsonify([])
 
-    perfil = session.get("perfil")
-    usuario = session.get("usuario")
-
-    if perfil == "separacao":
-        lista = (
-            Solicitacao.query
-            .filter_by(solicitante=usuario)
-            .order_by(Solicitacao.id.desc())
-            .all()
-        )
-    else:
-        lista = (
-            Solicitacao.query
-            .order_by(Solicitacao.id.desc())
-            .all()
-        )
+    # TODOS recebem todas as solicitações
+    lista = (
+        Solicitacao.query
+        .order_by(Solicitacao.id.desc())
+        .all()
+    )
 
     return jsonify([
         {
