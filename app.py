@@ -556,9 +556,9 @@ def menu():
     # ==========================
     # CONTADOR SOLICITAÇÕES
     # ==========================
-   total_solicitacoes = Solicitacao.query.filter_by(
+    total_solicitacoes = Solicitacao.query.filter_by(
         status="PENDENTE"
-   ).count()
+    ).count()
 
 
 
