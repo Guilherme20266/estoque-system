@@ -1,4 +1,4 @@
-total_solicitfrom flask import (
+flask import (
     Flask,
     jsonify,
     render_template,
