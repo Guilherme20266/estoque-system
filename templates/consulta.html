@@ -86,9 +86,17 @@ margin-bottom:12px;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.urgente{ border-left:8px solid red; }
-.atencao{ border-left:8px solid orange; }
-.ok{ border-left:8px solid green; }
+.urgente{
+border-left:8px solid red;
+}
+
+.atencao{
+border-left:8px solid orange;
+}
+
+.ok{
+border-left:8px solid green;
+}
 
 .piscando{
 color:red;
@@ -179,7 +187,8 @@ onclick="abrirCamera()"
 
 {% for item in lista %}
 
-<div class="card produto-card
+<div
+class="card produto-card
 {% if item.status == 'URGENTE' %}
 urgente
 {% elif item.status == 'ATENCAO' %}
@@ -187,7 +196,6 @@ atencao
 {% else %}
 ok
 {% endif %}"
-
 data-busca="
 {{ item.produto.nome|lower }}
 {{ item.produto.codigo|lower }}
@@ -241,16 +249,26 @@ onclick="confirmarSolicitacao(
 
 <script>
 
+/* =========================================================
+   ESCOLHER O TIPO DA SOLICITAÇÃO
+========================================================= */
+
 function confirmarSolicitacao(produto, endereco){
 
     Swal.fire({
+
         title: 'O que deseja solicitar?',
+
         html: `
             <div style="margin-top:15px;">
 
                 <button
                     type="button"
-                    onclick="escolherTipoSolicitacao('${produto.replace(/'/g, "\\'")}', '${endereco.replace(/'/g, "\\'")}', 'Pedido')"
+                    onclick="escolherTipoSolicitacao(
+                        ${JSON.stringify(produto)},
+                        ${JSON.stringify(endereco)},
+                        'Pedido'
+                    )"
                     style="
                         width:100%;
                         padding:14px;
@@ -269,7 +287,11 @@ function confirmarSolicitacao(produto, endereco){
 
                 <button
                     type="button"
-                    onclick="escolherTipoSolicitacao('${produto.replace(/'/g, "\\'")}', '${endereco.replace(/'/g, "\\'")}', 'Abastecer')"
+                    onclick="escolherTipoSolicitacao(
+                        ${JSON.stringify(produto)},
+                        ${JSON.stringify(endereco)},
+                        'Abastecer'
+                    )"
                     style="
                         width:100%;
                         padding:14px;
@@ -287,21 +309,32 @@ function confirmarSolicitacao(produto, endereco){
 
             </div>
         `,
+
         showConfirmButton: false,
+
         showCancelButton: true,
+
         cancelButtonText: 'Cancelar',
+
         cancelButtonColor: '#6c757d'
+
     });
 
 }
 
+
+/* =========================================================
+   CONFIRMAR SOLICITAÇÃO
+========================================================= */
 
 function escolherTipoSolicitacao(produto, endereco, tipo){
 
     Swal.close();
 
     Swal.fire({
+
         title: 'Confirmar solicitação?',
+
         html: `
             <div style="text-align:left; margin-top:15px;">
 
@@ -322,13 +355,21 @@ function escolherTipoSolicitacao(produto, endereco, tipo){
 
             </div>
         `,
+
         icon: 'question',
+
         showCancelButton: true,
+
         confirmButtonText: 'Sim, solicitar',
+
         cancelButtonText: 'Cancelar',
+
         reverseButtons: true,
+
         confirmButtonColor: '#007bff',
+
         cancelButtonColor: '#6c757d'
+
     }).then((result) => {
 
         if(result.isConfirmed){
@@ -344,53 +385,258 @@ function escolherTipoSolicitacao(produto, endereco, tipo){
     });
 
 }
-let scanner;
-function abrirCamera(){
 
-document.getElementById("reader").style.display = "block";
 
-scanner = new Html5Qrcode("reader");
+/* =========================================================
+   ENVIAR SOLICITAÇÃO PARA O FLASK
+========================================================= */
 
-scanner.start(
-{ facingMode: "environment" },
-{
-fps: 10,
-qrbox: {
-width: 300,
-height: 120
-}
-},
-(codigo)=>{
+function enviarSolicitacao(produto, endereco, tipo){
 
-document.getElementById("busca").value = codigo;
+    Swal.fire({
 
-scanner.stop().then(() => {
-document.getElementById("reader").style.display = "none";
-document.getElementById("formBusca").submit();
-});
+        title: 'Enviando...',
 
-}
-);
+        text: 'Aguarde um momento.',
 
-}
+        allowOutsideClick: false,
 
-const campoBusca = document.getElementById("busca");
+        allowEscapeKey: false,
 
-campoBusca.addEventListener("input", function(){
+        showConfirmButton: false,
 
-    let texto = this.value.toLowerCase();
+        didOpen: () => {
 
-    document.querySelectorAll(".produto-card").forEach(card=>{
+            Swal.showLoading();
 
-        let dados = card.dataset.busca;
-
-        if(dados.includes(texto)){
-            card.style.display = "";
-        }else{
-            card.style.display = "none";
         }
 
     });
+
+
+    fetch("/nova-solicitacao", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            produto: produto,
+
+            endereco: endereco,
+
+            tipo: tipo
+
+        })
+
+    })
+
+    .then(async response => {
+
+        let data;
+
+        try {
+
+            data = await response.json();
+
+        } catch(error) {
+
+            throw new Error("Resposta inválida do servidor.");
+
+        }
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.mensagem ||
+                "Não foi possível enviar a solicitação."
+            );
+
+        }
+
+
+        return data;
+
+    })
+
+    .then(data => {
+
+        if(data.sucesso){
+
+            Swal.fire({
+
+                icon: "success",
+
+                title: "Solicitação enviada!",
+
+                text:
+                    data.mensagem ||
+                    "Sua solicitação foi enviada com sucesso.",
+
+                confirmButtonText: "OK",
+
+                confirmButtonColor: "#28a745"
+
+            });
+
+        }else{
+
+            Swal.fire({
+
+                icon: "warning",
+
+                title: "Atenção",
+
+                text:
+                    data.mensagem ||
+                    "Não foi possível enviar a solicitação.",
+
+                confirmButtonText: "OK",
+
+                confirmButtonColor: "#6c757d"
+
+            });
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error("Erro ao enviar solicitação:", error);
+
+        Swal.fire({
+
+            icon: "error",
+
+            title: "Erro",
+
+            text:
+                error.message ||
+                "Não foi possível enviar a solicitação.",
+
+            confirmButtonText: "OK",
+
+            confirmButtonColor: "#dc3545"
+
+        });
+
+    });
+
+}
+
+
+/* =========================================================
+   LEITOR DE QR CODE
+========================================================= */
+
+let scanner = null;
+
+function abrirCamera(){
+
+    const reader = document.getElementById("reader");
+
+    reader.style.display = "block";
+
+
+    scanner = new Html5Qrcode("reader");
+
+
+    scanner.start(
+
+        {
+            facingMode: "environment"
+        },
+
+        {
+            fps: 10,
+
+            qrbox: {
+                width: 300,
+                height: 120
+            }
+        },
+
+        (codigo) => {
+
+            document.getElementById("busca").value = codigo;
+
+
+            scanner.stop().then(() => {
+
+                reader.style.display = "none";
+
+                document
+                    .getElementById("formBusca")
+                    .submit();
+
+            });
+
+        }
+
+    ).catch(error => {
+
+        console.error("Erro ao abrir câmera:", error);
+
+        reader.style.display = "none";
+
+        Swal.fire({
+
+            icon: "error",
+
+            title: "Erro ao abrir câmera",
+
+            text:
+                "Não foi possível acessar a câmera. Verifique a permissão do navegador.",
+
+            confirmButtonText: "OK",
+
+            confirmButtonColor: "#dc3545"
+
+        });
+
+    });
+
+}
+
+
+/* =========================================================
+   FILTRO INSTANTÂNEO DA CONSULTA
+========================================================= */
+
+const campoBusca = document.getElementById("busca");
+
+
+campoBusca.addEventListener("input", function(){
+
+    let texto = this.value
+        .toLowerCase()
+        .trim();
+
+
+    document
+        .querySelectorAll(".produto-card")
+        .forEach(card => {
+
+            let dados = card.dataset.busca
+                .toLowerCase();
+
+
+            if(dados.includes(texto)){
+
+                card.style.display = "";
+
+            }else{
+
+                card.style.display = "none";
+
+            }
+
+        });
 
 });
 
