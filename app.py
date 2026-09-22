@@ -1,4 +1,4 @@
-from flask import (
+total_solicitfrom flask import (
     Flask,
     jsonify,
     render_template,
@@ -1579,18 +1579,11 @@ def solicitacoes():
     perfil = session.get("perfil")
     usuario = session.get("usuario")
 
-    # TODOS os usuários visualizam TODAS as solicitações
+    # Todas as solicitações em ordem de criação
+    # A mais antiga sempre aparece primeiro
     solicitacoes = (
         Solicitacao.query
-        .order_by(
-            db.case(
-                (Solicitacao.operador == usuario, 0),
-                (Solicitacao.operador == "", 1),
-                else_=2
-            ),
-            Solicitacao.observacao.asc(),
-            Solicitacao.id.asc()
-        )
+        .order_by(Solicitacao.id.asc())
         .all()
     )
 
@@ -1646,10 +1639,10 @@ def api_solicitacoes():
     if not logado():
         return jsonify([])
 
-    # TODOS recebem todas as solicitações
+    # Ordem original dos pedidos
     lista = (
         Solicitacao.query
-        .order_by(Solicitacao.id.desc())
+        .order_by(Solicitacao.id.asc())
         .all()
     )
 
