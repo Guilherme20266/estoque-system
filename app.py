@@ -628,19 +628,58 @@ def cadastrar():
 
     if request.method == 'POST':
 
-        rua = request.form["rua"]
+        # ==========================
+        # PEGAR E LIMPAR OS CAMPOS
+        # ==========================
+
+        rua = request.form.get("rua", "").strip()
+        coluna = request.form.get("coluna", "").strip()
+        nivel = request.form.get("nivel", "").strip()
+        validade = request.form.get("validade", "").strip()
+        nome = request.form.get("nome", "").strip()
+        codigo = request.form.get("codigo", "").strip()
+
+        # ==========================
+        # VALIDAÇÃO DA DATA
+        # ==========================
+
+        if not validade:
+            return redirect('/cadastrar?erro=validade')
+
+        try:
+            datetime.strptime(validade, "%d/%m/%Y")
+        except ValueError:
+            return redirect('/cadastrar?erro=validade')
+
+        # ==========================
+        # VALIDAÇÃO DA RUA
+        # ==========================
+
+        if not rua:
+            return redirect('/cadastrar?erro=endereco')
+
+        # ==========================
+        # ENDEREÇO
+        # ==========================
 
         # Se for Laje, usa apenas o nome da laje
         if rua.startswith("Laje"):
-            endereco = rua.strip().replace(" ", "-")
-        else:
-            endereco = (
-                f"{rua}-"
-                f"{request.form['coluna']}-"
-                f"{request.form['nivel']}"
-            )
 
-            # Só verifica endereço duplicado para os racks
+            endereco = rua.replace(" ", "-")
+
+        else:
+
+            # Rua normal precisa obrigatoriamente
+            # de coluna e nível
+            if not coluna or not nivel:
+                return redirect('/cadastrar?erro=endereco')
+
+            endereco = f"{rua}-{coluna}-{nivel}"
+
+            # ==========================
+            # VERIFICAR ENDEREÇO DUPLICADO
+            # ==========================
+
             existe = Produto.query.filter_by(
                 endereco=endereco
             ).first()
@@ -648,36 +687,52 @@ def cadastrar():
             if existe:
                 return redirect('/cadastrar?erro=endereco')
 
-        # SALVA NO CATÁLOGO
-        catalogo = CatalogoProduto.query.filter_by(
-            codigo=request.form['codigo']
-        ).first()
-
-        if not catalogo:
-            catalogo = CatalogoProduto(
-                codigo=request.form['codigo'],
-                nome=request.form['nome']
-            )
-            db.session.add(catalogo)
-
+        # ==========================
         # VALIDAÇÃO DE QUANTIDADE
+        # ==========================
+
         try:
-            quantidade = int(request.form['quantidade'])
-        except:
+            quantidade = int(request.form.get("quantidade", ""))
+        except (ValueError, TypeError):
             return redirect('/cadastrar?erro=quantidade')
 
         if quantidade < 1 or quantidade > 1000:
             return redirect('/cadastrar?erro=quantidade')
 
+        # ==========================
+        # SALVAR NO CATÁLOGO
+        # ==========================
+
+        catalogo = CatalogoProduto.query.filter_by(
+            codigo=codigo
+        ).first()
+
+        if not catalogo:
+
+            catalogo = CatalogoProduto(
+                codigo=codigo,
+                nome=nome
+            )
+
+            db.session.add(catalogo)
+
+        # ==========================
+        # CRIAR PRODUTO
+        # ==========================
+
         produto = Produto(
-            codigo=request.form['codigo'],
-            nome=request.form['nome'],
+            codigo=codigo,
+            nome=nome,
             quantidade=quantidade,
-            validade=request.form['validade'],
+            validade=validade,
             endereco=endereco
         )
 
         db.session.add(produto)
+
+        # ==========================
+        # HISTÓRICO
+        # ==========================
 
         historico = Historico(
             data=datetime.now(
@@ -692,6 +747,11 @@ def cadastrar():
         )
 
         db.session.add(historico)
+
+        # ==========================
+        # SALVAR
+        # ==========================
+
         db.session.commit()
 
         return redirect('/cadastrar?sucesso=1')
