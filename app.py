@@ -1456,11 +1456,11 @@ def exportar_consulta():
     ws.title = "Consulta"
 
     ws.append([
-        "Nome",
-        "Código",
-        "Quantidade",
-        "Validade",
-        "Endereço"
+        "PRODUTO",
+        "CÓDIGO",
+        "QUANTIDADE",
+        "VALIDADE",
+        "ENDEREÇO"
     ])
 
     # ==========================================
