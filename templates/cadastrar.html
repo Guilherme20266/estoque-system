@@ -371,10 +371,6 @@ function dataValida(data){
         return false;
     }
 
-    if(ano < 2000){
-    return false;
-    }
-
     if(
         partes[0].length !== 2 ||
         partes[1].length !== 2 ||
@@ -397,14 +393,28 @@ function dataValida(data){
         dia
     );
 
-    return (
-        dataTeste.getFullYear() === ano &&
-        dataTeste.getMonth() === mes - 1 &&
-        dataTeste.getDate() === dia
-    );
+    // Verifica se a data realmente existe
+    if(
+        dataTeste.getFullYear() !== ano ||
+        dataTeste.getMonth() !== mes - 1 ||
+        dataTeste.getDate() !== dia
+    ){
+        return false;
+    }
 
+    // Pega a data de hoje
+    let hoje = new Date();
+
+    hoje.setHours(0, 0, 0, 0);
+    dataTeste.setHours(0, 0, 0, 0);
+
+    // Não permite data vencida
+    if(dataTeste < hoje){
+        return false;
+    }
+
+    return true;
 }
-
 
 // ==========================
 // ESCONDER COLUNA E NÍVEL
