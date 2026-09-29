@@ -646,11 +646,17 @@ def cadastrar():
         if not validade:
             return redirect('/cadastrar?erro=validade')
 
-        try:
-            datetime.strptime(validade, "%d/%m/%Y")
+         try:
+            data_validade = datetime.strptime(
+                validade,
+                "%d/%m/%Y"
+            )
+        if data_validade.year < 2000:
+           return redirect('/cadastrar?erro=validade')
+
         except ValueError:
             return redirect('/cadastrar?erro=validade')
-
+        
         # ==========================
         # VALIDAÇÃO DA RUA
         # ==========================
