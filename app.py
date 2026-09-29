@@ -128,9 +128,6 @@ class Notificacao(db.Model):
 # ==========================
 # ENVIAR NOTIFICACAO
 # ==========================
-# ==========================
-# ENVIAR NOTIFICACAO
-# ==========================
 @app.route('/enviar_notificacao', methods=['POST'])
 def enviar_notificacao():
 
@@ -167,7 +164,6 @@ def enviar_notificacao():
 
         return redirect('/notificacoes')
 
-
     # ==========================
     # ATUALIZAÇÃO DO SISTEMA
     # ENVIA PARA TODOS
@@ -199,6 +195,148 @@ def enviar_notificacao():
         )
 
         return redirect('/notificacoes')
+
+    # ==========================
+    # NOTIFICAÇÃO DIRETA
+    # ==========================
+
+    usuario_id = request.form.get('usuario_id')
+
+    if not usuario_id:
+
+        flash(
+            "Selecione um usuário!",
+            "error"
+        )
+
+        return redirect('/notificacoes')
+
+    try:
+
+        usuario_id = int(usuario_id)
+
+    except (ValueError, TypeError):
+
+        flash(
+            "Usuário inválido!",
+            "error"
+        )
+
+        return redirect('/notificacoes')
+
+    usuario_destino = Usuario.query.get(usuario_id)
+
+    if not usuario_destino:
+
+        flash(
+            "Usuário não encontrado!",
+            "error"
+        )
+
+        return redirect('/notificacoes')
+
+    notificacao = Notificacao(
+        titulo=titulo,
+        mensagem=mensagem,
+        usuario_id=usuario_destino.id,
+        enviado_por=enviado_por,
+        lida=False
+    )
+
+    db.session.add(notificacao)
+
+    db.session.commit()
+
+    flash(
+        "🔔 Notificação enviada com sucesso!",
+        "success"
+    )
+
+    return redirect('/notificacoes')
+
+
+    # ==========================
+# CENTRAL DE NOTIFICAÇÕES
+# ==========================
+@app.route('/notificacoes')
+def notificacoes():
+
+    if 'usuario_id' not in session:
+        return redirect('/')
+
+    usuario_id = session.get('usuario_id')
+    usuario = session.get('usuario')
+    perfil = session.get('perfil')
+
+    # ==========================
+    # NOTIFICAÇÕES
+    # ==========================
+
+    if perfil in ['admin', 'operador']:
+
+        lista = Notificacao.query.filter(
+            db.or_(
+                Notificacao.usuario_id == usuario_id,
+                Notificacao.enviado_por == usuario
+            )
+        ).order_by(
+            Notificacao.id.desc()
+        ).all()
+
+    else:
+
+        lista = Notificacao.query.filter_by(
+            usuario_id=usuario_id
+        ).order_by(
+            Notificacao.id.desc()
+        ).all()
+
+    # ==========================
+    # MARCAR COMO LIDA
+    # ==========================
+
+    agora = datetime.now(
+        ZoneInfo("America/Sao_Paulo")
+    )
+
+    alterou = False
+
+    for n in lista:
+
+        if n.usuario_id == usuario_id and not n.lida:
+
+            n.lida = True
+            n.lida_por = usuario
+            n.lida_em = agora
+
+            alterou = True
+
+    if alterou:
+        db.session.commit()
+
+    # ==========================
+    # USUÁRIOS PARA ENVIO
+    # ==========================
+
+    pode_criar = perfil in ['admin', 'operador']
+
+    usuarios = []
+
+    if pode_criar:
+
+        usuarios = Usuario.query.filter(
+            Usuario.usuario != usuario
+        ).order_by(
+            Usuario.usuario.asc()
+        ).all()
+
+    return render_template(
+        'notificacoes.html',
+        notificacoes=lista,
+        pode_criar=pode_criar,
+        usuarios=usuarios,
+        perfil=perfil
+    )
 
 
     # ==========================
