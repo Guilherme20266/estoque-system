@@ -131,87 +131,177 @@ class Notificacao(db.Model):
 @app.route('/enviar_notificacao', methods=['POST'])
 def enviar_notificacao():
 
-    if session.get('perfil') not in ['admin', 'operador']:
+    if session.get('perfil') not in ['admin','operador']:
         return redirect('/menu')
 
 
     usuario_id = request.form.get('usuario_id')
 
-    titulo = request.form.get('titulo')
-    mensagem = request.form.get('mensagem')
-    urgencia = request.form.get('urgencia', 'media')
-    tipo_notificacao = request.form.get('tipo_notificacao', 'direta')
-
-    enviado_por = session.get('usuario')
-
-
-    # ==========================================
-    # ATUALIZAÇÃO DO SISTEMA
-    # ENVIA PARA TODOS OS USUÁRIOS
-    # ==========================================
-
-    if tipo_notificacao == 'sistema' or usuario_id == 'todos':
-
-        usuarios_destino = Usuario.query.filter(
-            Usuario.usuario != enviado_por
-        ).all()
-
-
-        for usuario in usuarios_destino:
-
-            notificacao = Notificacao(
-                titulo=titulo,
-                mensagem=mensagem,
-                urgencia=urgencia,
-                usuario_id=usuario.id,
-                enviado_por=enviado_por
-            )
-
-            db.session.add(notificacao)
-
-
-        db.session.commit()
-
-
-        flash(
-            "Atualização do sistema enviada para todos os usuários!",
-            "success"
-        )
-
-
-        return redirect('/notificacoes')
-
-
-    # ==========================================
-    # NOTIFICAÇÃO DIRETA
-    # ==========================================
-
-    if not usuario_id:
-
-        flash(
-            "Selecione um usuário!",
-            "error"
-        )
-
-        return redirect('/notificacoes')
-
 
     notificacao = Notificacao(
-        titulo=titulo,
-        mensagem=mensagem,
-        urgencia=urgencia,
-        usuario_id=int(usuario_id),
-        enviado_por=enviado_por
+        titulo=request.form.get('titulo'),
+        mensagem=request.form.get('mensagem'),
+        urgencia=request.form.get('urgencia','media'),
+        usuario_id=usuario_id,
+        enviado_por=session.get('usuario')
     )
 
 
     db.session.add(notificacao)
-
     db.session.commit()
 
 
     flash(
         "Notificação enviada com sucesso!",
+        "success"
+    )
+
+
+    return redirect('/notificacoes')
+
+
+
+# ==========================
+# CONTADOR DE NOTIFICACOES
+# ==========================
+@app.route('/api/notificacoes/count')
+def notificacoes_count():
+
+    if 'usuario_id' not in session:
+        return jsonify({
+            "total": 0
+        })
+
+
+    usuario_id = session['usuario_id']
+
+
+    total = Notificacao.query.filter_by(
+        usuario_id=usuario_id,
+        lida=False
+    ).count()
+
+
+    return jsonify({
+        "total": total
+    })
+
+
+
+# ==========================
+# LISTAR NOTIFICACOES
+@app.route('/notificacoes')
+def notificacoes():
+
+    if 'usuario_id' not in session:
+        return redirect('/')
+
+
+    usuario_id = session['usuario_id']
+    usuario = session.get('usuario')
+    perfil = session.get('perfil')
+
+
+    # ==========================
+    # BUSCA NOTIFICAÇÕES
+    # ==========================
+
+    if perfil in ['admin', 'operador']:
+
+        # Mostra recebidas + enviadas
+        lista = Notificacao.query.filter(
+            db.or_(
+                Notificacao.usuario_id == usuario_id,
+                Notificacao.enviado_por == usuario
+            )
+        ).order_by(
+            Notificacao.criada_em.desc()
+        ).all()
+
+
+    else:
+
+        # Separação vê somente o que recebeu
+        lista = Notificacao.query.filter_by(
+            usuario_id=usuario_id
+        ).order_by(
+            Notificacao.criada_em.desc()
+        ).all()
+
+
+
+    # ==========================
+    # MARCAR COMO LIDA
+    # SOMENTE QUEM RECEBEU
+    # ==========================
+
+    agora = datetime.now(
+        ZoneInfo("America/Sao_Paulo")
+    )
+
+    alterou = False
+
+
+    for n in lista:
+
+        # usuário que recebeu abriu a notificação
+        if n.usuario_id == usuario_id and not n.lida:
+
+            n.lida = True
+            n.lida_em = agora
+
+            alterou = True
+
+
+
+    if alterou:
+        db.session.commit()
+
+
+
+    # ==========================
+    # PERMISSÃO DE CRIAR
+    # ==========================
+
+    pode_criar = perfil in [
+        "admin",
+        "operador"
+    ]
+
+
+    usuarios = []
+
+
+    if pode_criar:
+
+        usuarios = Usuario.query.filter(
+            Usuario.usuario != usuario
+        ).all()
+
+
+
+    return render_template(
+        'notificacoes.html',
+        notificacoes=lista,
+        pode_criar=pode_criar,
+        usuarios=usuarios,
+        perfil=perfil
+    )
+
+@app.route('/limpar-notificacoes', methods=['POST'])
+def limpar_notificacoes():
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+
+    Notificacao.query.delete()
+
+    db.session.commit()
+
+
+    flash(
+        "Todas as notificações foram apagadas!",
         "success"
     )
 
