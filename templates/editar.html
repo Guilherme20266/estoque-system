@@ -46,7 +46,9 @@ button{
     margin-top:10px;
 }
 
-a{ text-decoration:none; }
+a{
+    text-decoration:none;
+}
 
 {% endblock %}
 
@@ -58,11 +60,40 @@ a{ text-decoration:none; }
 
 <form method="POST">
 
-<input type="text" name="nome" value="{{ produto.nome }}" required>
+<input
+    type="text"
+    name="nome"
+    value="{{ produto.nome }}"
+    placeholder="Nome"
+    required
+>
 
-<input type="text" name="codigo" value="{{ produto.codigo }}" required>
+<input
+    type="text"
+    name="codigo"
+    value="{{ produto.codigo }}"
+    placeholder="Código"
+    required
+>
 
-<input type="text" name="validade" value="{{ produto.validade }}" placeholder="dd/mm/aaaa">
+<input
+    type="number"
+    name="quantidade"
+    value="{{ produto.quantidade }}"
+    placeholder="Quantidade"
+    min="1"
+    max="1000"
+    required
+>
+
+<input
+    type="text"
+    name="validade"
+    value="{{ produto.validade }}"
+    placeholder="dd/mm/aaaa"
+    maxlength="10"
+    required
+>
 
 <button class="salvar" type="submit">
 💾 Salvar Alterações
