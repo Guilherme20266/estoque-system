@@ -61,20 +61,19 @@ body{
 }
 
 
-.baixa{
-    border-left:6px solid #22c55e;
+.lida{
+    margin-top:10px;
+    font-size:13px;
+    color:#16a34a;
+    font-weight:bold;
 }
 
-.media{
-    border-left:6px solid #eab308;
-}
 
-.alta{
-    border-left:6px solid #f97316;
-}
-
-.critica{
-    border-left:6px solid #dc2626;
+.nao-lida{
+    margin-top:10px;
+    font-size:13px;
+    color:#dc2626;
+    font-weight:bold;
 }
 
 
@@ -297,35 +296,6 @@ a{
 
 
             <!-- ==========================================
-                 URGÊNCIA
-                 ========================================== -->
-
-            <label class="label">
-                Urgência
-            </label>
-
-            <select name="urgencia">
-
-                <option value="baixa">
-                    🟢 Baixa
-                </option>
-
-                <option value="media" selected>
-                    🟡 Média
-                </option>
-
-                <option value="alta">
-                    🟠 Alta
-                </option>
-
-                <option value="critica">
-                    🔴 Crítica
-                </option>
-
-            </select>
-
-
-            <!-- ==========================================
                  ENVIAR
                  ========================================== -->
 
@@ -351,7 +321,7 @@ a{
 
     {% for n in notificacoes %}
 
-    <div class="card {{ n.urgencia }}">
+    <div class="card">
 
         <div class="titulo">
             {{ n.titulo }}
@@ -364,7 +334,7 @@ a{
 
 
         <div class="enviado">
-            📨 Enviado por: {{ n.enviado_por }}
+            📨 Enviado por: {{ n.enviado_por or 'Sistema' }}
         </div>
 
 
@@ -376,29 +346,37 @@ a{
 
             {% if perfil != 'separacao' %}
 
-            <br><br>
+                {% if n.lida %}
+
+                    <div class="lida">
+                        ✅ Lida
+                    </div>
+
+                    {% if n.lida_por %}
+
+                        <div class="lida">
+                            👤 Lida por: {{ n.lida_por }}
+                        </div>
+
+                    {% endif %}
 
 
-            {% if n.lida %}
+                    {% if n.lida_em %}
 
-                ✅ Lida
+                        <div class="data">
+                            📅 Lida em:
+                            {{ n.lida_em.strftime('%d/%m/%Y %H:%M') }}
+                        </div>
 
-            {% else %}
+                    {% endif %}
 
-                ⏳ Não lida
+                {% else %}
 
-            {% endif %}
+                    <div class="nao-lida">
+                        ⏳ Não lida
+                    </div>
 
-
-            {% if n.lida_em %}
-
-                <br>
-
-                📅 Lida em:
-                {{ n.lida_em.strftime('%d/%m/%Y %H:%M') }}
-
-            {% endif %}
-
+                {% endif %}
 
             {% endif %}
 
@@ -482,7 +460,7 @@ function alterarTipoNotificacao(){
 
         /*
          * Atualização do sistema:
-         * seleciona automaticamente TODOS
+         * enviada para todos os usuários.
          */
 
         usuarioSelect.innerHTML = `
@@ -495,9 +473,10 @@ function alterarTipoNotificacao(){
 
         usuarioSelect.disabled = true;
 
+
         /*
-         * disabled não envia o campo no POST.
-         * Por isso criamos um campo hidden.
+         * Campo hidden para enviar
+         * tipo_notificacao corretamente.
          */
 
         let hidden = document.getElementById(
@@ -515,6 +494,7 @@ function alterarTipoNotificacao(){
             document.querySelector("form").appendChild(
                 hidden
             );
+
         }
 
         hidden.value = "todos";
@@ -522,14 +502,16 @@ function alterarTipoNotificacao(){
 
         infoSistema.style.display = "block";
 
+
     }else{
 
         /*
          * Notificação direta:
-         * volta a mostrar os usuários
+         * volta a mostrar os usuários.
          */
 
         usuarioSelect.disabled = false;
+
 
         usuarioSelect.innerHTML = `
             <option value="">
@@ -550,7 +532,7 @@ function alterarTipoNotificacao(){
 
 
         /*
-         * Remove campo hidden
+         * Remove campo hidden.
          */
 
         const hidden = document.getElementById(
