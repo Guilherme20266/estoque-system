@@ -1184,7 +1184,7 @@ def exportar_consulta():
         ]
 
     # ==========================================
-    # CRIA TODOS OS ENDEREÇOS POSSÍVEIS
+    # ESTRUTURA DOS ENDEREÇOS
     # ==========================================
 
     estrutura = {
@@ -1203,20 +1203,43 @@ def exportar_consulta():
 
         for coluna in range(1, total_colunas + 1):
 
-            for nivel in range(1, total_niveis + 1):
+            # COMEÇA NO NÍVEL 2
+            for nivel in range(2, total_niveis + 1):
 
-                endereco = f"{rua}-{coluna}-{nivel}"
+                endereco = f"{rua}-{coluna:02d}-{nivel:02d}"
 
                 todos_enderecos.append(endereco)
 
     # ==========================================
-    # TRANSFORMA OS PRODUTOS EM DICIONÁRIO
+    # PRODUTOS POR ENDEREÇO
     # ==========================================
 
     produtos_por_endereco = {}
 
     for p in produtos:
-        produtos_por_endereco[p.endereco] = p
+
+        # Normaliza o endereço para comparação
+        partes = p.endereco.split("-")
+
+        if len(partes) == 3:
+
+            rua = partes[0]
+
+            try:
+                coluna = int(partes[1])
+                nivel = int(partes[2])
+
+                endereco_formatado = (
+                    f"{rua}-{coluna:02d}-{nivel:02d}"
+                )
+
+                produtos_por_endereco[endereco_formatado] = p
+
+            except ValueError:
+                pass
+
+        else:
+            produtos_por_endereco[p.endereco] = p
 
     # ==========================================
     # CRIA EXCEL
@@ -1235,7 +1258,7 @@ def exportar_consulta():
     ])
 
     # ==========================================
-    # ADICIONA TODOS OS ENDEREÇOS
+    # EXPORTA ENDEREÇOS
     # ==========================================
 
     for endereco in todos_enderecos:
@@ -1249,7 +1272,7 @@ def exportar_consulta():
                 produto.codigo,
                 produto.quantidade,
                 produto.validade,
-                produto.endereco
+                endereco
             ])
 
         else:
@@ -1263,7 +1286,7 @@ def exportar_consulta():
             ])
 
     # ==========================================
-    # ADICIONA LAJES QUE EXISTIREM NO BANCO
+    # ADICIONA LAJES
     # ==========================================
 
     lajes = [
