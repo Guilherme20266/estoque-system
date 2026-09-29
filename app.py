@@ -646,13 +646,18 @@ def cadastrar():
         if not validade:
             return redirect('/cadastrar?erro=validade')
 
-         try:
+        try:
             data_validade = datetime.strptime(
                 validade,
                 "%d/%m/%Y"
-            )
-        if data_validade.year < 2000:
-           return redirect('/cadastrar?erro=validade')
+            ).date()
+
+            hoje = datetime.now(
+                ZoneInfo("America/Sao_Paulo")
+            ).date()
+
+            if data_validade < hoje:
+                return redirect('/cadastrar?erro=validade')
 
         except ValueError:
             return redirect('/cadastrar?erro=validade')
