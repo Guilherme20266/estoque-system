@@ -1474,7 +1474,7 @@ def exportar_consulta():
         if produto:
 
             ws.append([
-                produto.nome,
+                produto.produto,
                 produto.codigo,
                 produto.quantidade,
                 produto.validade,
