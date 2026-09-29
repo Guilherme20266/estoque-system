@@ -176,7 +176,6 @@ cursor:pointer;
     method="POST"
     id="formCadastro"
     onsubmit="return validarFormulario()"
-    novalidate
 >
 
 <input
@@ -348,237 +347,74 @@ function mascaraData(input){
 }
 
 
-
 // ==========================
-// VALIDAR FORMULÁRIO
+// VALIDAR DATA REAL
 // ==========================
 
-function validarFormulario(){
+function dataValida(data){
 
-    let validade = document.getElementById(
-        "validade"
-    ).value.trim();
+    let partes = data.split("/");
 
-    let ruaValor = rua.value;
-
-    let quantidade = document.querySelector(
-        'input[name="quantidade"]'
-    ).value.trim();
-
-
-    // ==========================
-    // QUANTIDADE
-    // ==========================
-
-    if(!quantidade){
-
-        Swal.fire({
-            icon: "warning",
-            title: "Quantidade não informada",
-            text: "Informe a quantidade do produto.",
-            confirmButtonText: "OK",
-            confirmButtonColor: "#007bff"
-        });
-
-        document.querySelector(
-            'input[name="quantidade"]'
-        ).focus();
-
+    if(partes.length !== 3){
         return false;
     }
 
+    let dia = parseInt(partes[0], 10);
+    let mes = parseInt(partes[1], 10);
+    let ano = parseInt(partes[2], 10);
 
     if(
-        parseInt(quantidade) < 1 ||
-        parseInt(quantidade) > 1000
+        isNaN(dia) ||
+        isNaN(mes) ||
+        isNaN(ano)
     ){
-
-        Swal.fire({
-            icon: "error",
-            title: "Quantidade inválida",
-            text: "A quantidade deve estar entre 1 e 1000.",
-            confirmButtonText: "OK",
-            confirmButtonColor: "#dc3545"
-        });
-
-        document.querySelector(
-            'input[name="quantidade"]'
-        ).focus();
-
         return false;
     }
 
-
-    // ==========================
-    // DATA
-    // ==========================
-
-    if(!validade){
-
-        Swal.fire({
-            icon: "warning",
-            title: "Data não informada",
-            text: "Informe a data de validade do produto.",
-            confirmButtonText: "OK",
-            confirmButtonColor: "#007bff"
-        });
-
-        document.getElementById(
-            "validade"
-        ).focus();
-
+    if(
+        partes[0].length !== 2 ||
+        partes[1].length !== 2 ||
+        partes[2].length !== 4
+    ){
         return false;
     }
 
-
-    if(validade.length !== 10){
-
-        Swal.fire({
-            icon: "error",
-            title: "Data inválida",
-            text: "Digite a data no formato DD/MM/AAAA.",
-            confirmButtonText: "OK",
-            confirmButtonColor: "#dc3545"
-        });
-
-        document.getElementById(
-            "validade"
-        ).focus();
-
+    if(mes < 1 || mes > 12){
         return false;
     }
 
-
-    // Data existe e não está vencida
-    if(!dataValida(validade)){
-
-        let partes = validade.split("/");
-
-        let dia = parseInt(partes[0], 10);
-        let mes = parseInt(partes[1], 10);
-        let ano = parseInt(partes[2], 10);
-
-        let dataDigitada = new Date(
-            ano,
-            mes - 1,
-            dia
-        );
-
-        let hoje = new Date();
-
-        hoje.setHours(0, 0, 0, 0);
-        dataDigitada.setHours(0, 0, 0, 0);
-
-
-        // ==========================
-        // DATA VENCIDA
-        // ==========================
-
-        if(
-            !isNaN(dataDigitada.getTime()) &&
-            dataDigitada < hoje
-        ){
-
-            Swal.fire({
-                icon: "error",
-                title: "Data vencida",
-                text: "A data de validade não pode ser anterior à data atual.",
-                confirmButtonText: "OK",
-                confirmButtonColor: "#dc3545"
-            });
-
-        }else{
-
-            Swal.fire({
-                icon: "error",
-                title: "Data inválida",
-                text: "Coloque uma data válida.",
-                confirmButtonText: "OK",
-                confirmButtonColor: "#dc3545"
-            });
-
-        }
-
-        document.getElementById(
-            "validade"
-        ).focus();
-
+    if(dia < 1 || dia > 31){
         return false;
     }
 
+    let dataTeste = new Date(
+        ano,
+        mes - 1,
+        dia
+    );
 
-    // ==========================
-    // RUA
-    // ==========================
-
-    if(!ruaValor){
-
-        Swal.fire({
-            icon: "warning",
-            title: "Rua não selecionada",
-            text: "Selecione a rua onde o produto será armazenado.",
-            confirmButtonText: "OK",
-            confirmButtonColor: "#007bff"
-        });
-
-        rua.focus();
-
+    // Verifica se a data realmente existe
+    if(
+        dataTeste.getFullYear() !== ano ||
+        dataTeste.getMonth() !== mes - 1 ||
+        dataTeste.getDate() !== dia
+    ){
         return false;
     }
 
+    // Pega a data de hoje
+    let hoje = new Date();
 
-    // ==========================
-    // COLUNA
-    // ==========================
+    hoje.setHours(0, 0, 0, 0);
+    dataTeste.setHours(0, 0, 0, 0);
 
-    if(!ruaValor.startsWith("Laje")){
-
-        if(!coluna.value){
-
-            Swal.fire({
-                icon: "warning",
-                title: "Coluna não selecionada",
-                text: "Selecione a coluna do endereço.",
-                confirmButtonText: "OK",
-                confirmButtonColor: "#007bff"
-            });
-
-            coluna.focus();
-
-            return false;
-        }
-
-
-        // ==========================
-        // NÍVEL
-        // ==========================
-
-        if(!nivel.value){
-
-            Swal.fire({
-                icon: "warning",
-                title: "Nível não selecionado",
-                text: "Selecione o nível do endereço.",
-                confirmButtonText: "OK",
-                confirmButtonColor: "#007bff"
-            });
-
-            nivel.focus();
-
-            return false;
-        }
-
+    // Não permite data vencida
+    if(dataTeste < hoje){
+        return false;
     }
-
-
-    // ==========================
-    // TUDO CERTO
-    // ==========================
 
     return true;
-
 }
-
 
 // ==========================
 // ESCONDER COLUNA E NÍVEL
