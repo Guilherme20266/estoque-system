@@ -805,7 +805,7 @@ def inventario():
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
 
-    if not admin_ou_operador():
+    if session.get('perfil') not in ['admin', 'operador', 'separacao']:
         return redirect('/menu')
 
     produto = Produto.query.get_or_404(id)
@@ -1017,7 +1017,7 @@ def separacao():
 @app.route('/transferencia', methods=['GET', 'POST'])
 def transferencia():
 
-    if not admin_ou_operador():
+    if session.get('perfil') not in ['admin', 'operador', 'separacao']:
         return redirect('/menu')
 
     busca = request.args.get("busca", "")
