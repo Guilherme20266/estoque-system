@@ -167,7 +167,7 @@ a{
     </button>
 </a>
 
- {% if perfil == "admin" %}
+ {% if perfil in ["admin", "operador", "separacao"] %}
 <a href="/inventario">
     <button class="btn padrao">
         🗃️ Inventário
