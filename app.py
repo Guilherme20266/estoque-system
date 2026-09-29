@@ -773,7 +773,7 @@ def cadastrar():
 @app.route('/inventario')
 def inventario():
 
-    if not admin_ou_operador():
+    if session.get('perfil') not in ['admin', 'operador', 'separacao']:
         return redirect('/menu')
 
     produtos = Produto.query.all()
