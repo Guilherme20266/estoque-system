@@ -118,6 +118,14 @@ textarea{
     background:#16a34a;
 }
 
+.btn-limpar{
+    background:#dc2626;
+}
+
+.btn-voltar{
+    background:#6b7280;
+}
+
 .btn:hover{
     opacity:.92;
 }
@@ -138,6 +146,10 @@ a{
 
 .destinatario-box{
     margin-top:5px;
+}
+
+.acoes{
+    margin-bottom:18px;
 }
 
 {% endblock %}
@@ -308,6 +320,47 @@ a{
 
 
     <!-- ==========================================
+         AÇÕES
+         ========================================== -->
+
+    <div class="acoes">
+
+        {% if perfil == 'admin' %}
+
+        <form
+            action="/limpar-notificacoes"
+            method="POST"
+            onsubmit="return confirmarLimpeza()"
+        >
+
+            <button
+                type="submit"
+                class="btn btn-limpar"
+            >
+                🗑 Limpar todas notificações
+            </button>
+
+        </form>
+
+        {% endif %}
+
+
+        <a href="/menu">
+
+            <button
+                type="button"
+                class="btn btn-voltar"
+            >
+                ⬅ Voltar
+            </button>
+
+        </a>
+
+    </div>
+
+
+
+    <!-- ==========================================
          LISTA DE NOTIFICAÇÕES
          ========================================== -->
 
@@ -334,10 +387,15 @@ a{
         <div class="data">
 
             📅 Enviada em:
+
             {% if n.criada_em %}
+
                 {{ n.criada_em.strftime('%d/%m/%Y %H:%M') }}
+
             {% else %}
+
                 —
+
             {% endif %}
 
 
@@ -396,46 +454,6 @@ a{
     {% endfor %}
 
 
-
-    <!-- ==========================================
-         LIMPAR NOTIFICAÇÕES
-         ========================================== -->
-
-    {% if perfil == 'admin' %}
-
-    <form
-        action="/limpar-notificacoes"
-        method="POST"
-        onsubmit="return confirmarLimpeza()"
-    >
-
-        <button
-            type="submit"
-            class="btn"
-            style="background:#dc2626"
-        >
-            🗑 Limpar todas notificações
-        </button>
-
-    </form>
-
-    {% endif %}
-
-
-
-    <!-- ==========================================
-         VOLTAR
-         ========================================== -->
-
-    <a href="/menu">
-
-        <button class="btn">
-            ⬅ Voltar
-        </button>
-
-    </a>
-
-
 </div>
 
 
@@ -455,6 +473,7 @@ function alterarTipoNotificacao(){
     const infoSistema = document.getElementById(
         "info-sistema"
     );
+
 
     if(tipo === "sistema"){
 
@@ -488,6 +507,7 @@ function alterarTipoNotificacao(){
     }
 
 }
+
 
 
 function confirmarLimpeza(){
