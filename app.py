@@ -1183,22 +1183,110 @@ def exportar_consulta():
             or busca.lower() in p.endereco.lower()
         ]
 
+    # ==========================================
+    # CRIA TODOS OS ENDEREÇOS POSSÍVEIS
+    # ==========================================
+
+    estrutura = {
+        "A": (60, 5),
+        "B": (70, 5),
+        "C": (80, 5),
+        "D": (80, 5),
+        "E": (44, 5),
+        "F": (44, 5),
+        "G": (46, 6)
+    }
+
+    todos_enderecos = []
+
+    for rua, (total_colunas, total_niveis) in estrutura.items():
+
+        for coluna in range(1, total_colunas + 1):
+
+            for nivel in range(1, total_niveis + 1):
+
+                endereco = f"{rua}-{coluna}-{nivel}"
+
+                todos_enderecos.append(endereco)
+
+    # ==========================================
+    # TRANSFORMA OS PRODUTOS EM DICIONÁRIO
+    # ==========================================
+
+    produtos_por_endereco = {}
+
+    for p in produtos:
+        produtos_por_endereco[p.endereco] = p
+
+    # ==========================================
+    # CRIA EXCEL
+    # ==========================================
+
     wb = Workbook()
     ws = wb.active
     ws.title = "Consulta"
 
-    ws.append(["Nome", "Código", "Quantidade", "Validade", "Endereço"])
+    ws.append([
+        "Nome",
+        "Código",
+        "Quantidade",
+        "Validade",
+        "Endereço"
+    ])
 
-    for p in produtos:
+    # ==========================================
+    # ADICIONA TODOS OS ENDEREÇOS
+    # ==========================================
+
+    for endereco in todos_enderecos:
+
+        produto = produtos_por_endereco.get(endereco)
+
+        if produto:
+
+            ws.append([
+                produto.nome,
+                produto.codigo,
+                produto.quantidade,
+                produto.validade,
+                produto.endereco
+            ])
+
+        else:
+
+            ws.append([
+                "VAZIO",
+                "-",
+                "-",
+                "-",
+                endereco
+            ])
+
+    # ==========================================
+    # ADICIONA LAJES QUE EXISTIREM NO BANCO
+    # ==========================================
+
+    lajes = [
+        p for p in produtos
+        if p.endereco.startswith("Laje-")
+    ]
+
+    for produto in lajes:
+
         ws.append([
-            p.nome,
-            p.codigo,
-            p.quantidade,
-            p.validade,
-            p.endereco
+            produto.nome,
+            produto.codigo,
+            produto.quantidade,
+            produto.validade,
+            produto.endereco
         ])
 
+    # ==========================================
+    # GERA ARQUIVO
+    # ==========================================
+
     output = BytesIO()
+
     wb.save(output)
     output.seek(0)
 
