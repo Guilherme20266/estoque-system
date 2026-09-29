@@ -309,6 +309,40 @@ def notificacoes():
             Notificacao.id.desc()
         ).all()
 
+# ==========================
+# LIMPAR TODAS AS NOTIFICAÇÕES
+# ==========================
+@app.route('/limpar-notificacoes', methods=['POST'])
+def limpar_notificacoes():
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    try:
+
+        Notificacao.query.delete(
+            synchronize_session=False
+        )
+
+        db.session.commit()
+
+        flash(
+            "🗑 Todas as notificações foram apagadas!",
+            "success"
+        )
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        flash(
+            f"Erro ao apagar notificações: {str(e)}",
+            "error"
+        )
+
+    return redirect('/notificacoes')
+
+    
     # ==========================
     # MARCAR COMO LIDA
     # ==========================
