@@ -161,10 +161,13 @@ cursor:pointer;
     placeholder="DD/MM/AAAA"
     inputmode="numeric"
     maxlength="10"
+    required
     oninput="mascaraData(this)"
 >
 
-<select name="rua">
+<select name="rua" required>
+<select name="coluna" required>
+<select name="nivel" required>
 
     <option value="">Selecione a Rua</option>
     
