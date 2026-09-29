@@ -348,73 +348,96 @@ function mascaraData(input){
 
 
 // ==========================
-// VALIDAR DATA REAL
+// VALIDAR FORMULÁRIO
 // ==========================
 
-function dataValida(data){
+function validarFormulario(){
 
-    let partes = data.split("/");
+    let validade = document.getElementById(
+        "validade"
+    ).value.trim();
 
-    if(partes.length !== 3){
+    let ruaValor = rua.value;
+
+    // DATA
+    if(!dataValida(validade)){
+
+        Swal.fire({
+            icon: "error",
+            title: "Data inválida",
+            text: "Coloque uma data válida.",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#dc3545"
+        });
+
+        document.getElementById(
+            "validade"
+        ).focus();
+
         return false;
+
     }
 
-    let dia = parseInt(partes[0], 10);
-    let mes = parseInt(partes[1], 10);
-    let ano = parseInt(partes[2], 10);
+    // RUA
+    if(!ruaValor){
 
-    if(
-        isNaN(dia) ||
-        isNaN(mes) ||
-        isNaN(ano)
-    ){
+        Swal.fire({
+            icon: "warning",
+            title: "Rua não selecionada",
+            text: "Selecione uma rua.",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#007bff"
+        });
+
+        rua.focus();
+
         return false;
+
     }
 
-    if(
-        partes[0].length !== 2 ||
-        partes[1].length !== 2 ||
-        partes[2].length !== 4
-    ){
-        return false;
-    }
+    // COLUNA E NÍVEL
+    // Não são necessários para Laje
 
-    if(mes < 1 || mes > 12){
-        return false;
-    }
+    if(!ruaValor.startsWith("Laje")){
 
-    if(dia < 1 || dia > 31){
-        return false;
-    }
+        if(!coluna.value){
 
-    let dataTeste = new Date(
-        ano,
-        mes - 1,
-        dia
-    );
+            Swal.fire({
+                icon: "warning",
+                title: "Coluna não selecionada",
+                text: "Selecione uma coluna.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#007bff"
+            });
 
-    // Verifica se a data realmente existe
-    if(
-        dataTeste.getFullYear() !== ano ||
-        dataTeste.getMonth() !== mes - 1 ||
-        dataTeste.getDate() !== dia
-    ){
-        return false;
-    }
+            coluna.focus();
 
-    // Pega a data de hoje
-    let hoje = new Date();
+            return false;
 
-    hoje.setHours(0, 0, 0, 0);
-    dataTeste.setHours(0, 0, 0, 0);
+        }
 
-    // Não permite data vencida
-    if(dataTeste < hoje){
-        return false;
+        if(!nivel.value){
+
+            Swal.fire({
+                icon: "warning",
+                title: "Nível não selecionado",
+                text: "Selecione um nível.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#007bff"
+            });
+
+            nivel.focus();
+
+            return false;
+
+        }
+
     }
 
     return true;
+
 }
+
 
 // ==========================
 // ESCONDER COLUNA E NÍVEL
