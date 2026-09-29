@@ -22,7 +22,6 @@ body{
     max-width:520px;
 }
 
-
 .topo{
     background:white;
     border-radius:16px;
@@ -30,7 +29,6 @@ body{
     text-align:center;
     margin-bottom:18px;
 }
-
 
 .card,
 .form-card{
@@ -40,12 +38,11 @@ body{
     margin-bottom:12px;
 }
 
-
 .mensagem{
     margin-top:10px;
     line-height:1.5;
+    white-space:pre-wrap;
 }
-
 
 .data{
     margin-top:10px;
@@ -53,13 +50,11 @@ body{
     color:#6b7280;
 }
 
-
 .enviado{
     margin-top:10px;
     font-size:13px;
     color:#2563eb;
 }
-
 
 .lida{
     margin-top:10px;
@@ -68,14 +63,12 @@ body{
     font-weight:bold;
 }
 
-
 .nao-lida{
     margin-top:10px;
     font-size:13px;
     color:#dc2626;
     font-weight:bold;
 }
-
 
 input,
 textarea,
@@ -90,18 +83,15 @@ select{
     background:white;
 }
 
-
 textarea{
     height:90px;
     resize:vertical;
 }
 
-
 .titulo{
     font-weight:bold;
     font-size:18px;
 }
-
 
 .label{
     display:block;
@@ -110,7 +100,6 @@ textarea{
     font-weight:bold;
     color:#374151;
 }
-
 
 .btn{
     width:100%;
@@ -125,21 +114,17 @@ textarea{
     font-size:15px;
 }
 
-
 .btn-criar{
     background:#16a34a;
 }
-
 
 .btn:hover{
     opacity:.92;
 }
 
-
 a{
     text-decoration:none;
 }
-
 
 .info-tipo{
     margin-top:10px;
@@ -150,7 +135,6 @@ a{
     font-size:12px;
     line-height:1.4;
 }
-
 
 .destinatario-box{
     margin-top:5px;
@@ -192,7 +176,10 @@ a{
         </h3>
 
 
-        <form action="/enviar_notificacao" method="POST">
+        <form
+            action="/enviar_notificacao"
+            method="POST"
+        >
 
 
             <!-- ==========================================
@@ -221,16 +208,19 @@ a{
             </select>
 
 
+
             <!-- ==========================================
                  DESTINATÁRIO
                  ========================================== -->
 
-            <div class="destinatario-box">
+            <div
+                class="destinatario-box"
+                id="destinatario-container"
+            >
 
                 <label class="label">
                     Destinatário
                 </label>
-
 
                 <select
                     name="usuario_id"
@@ -241,7 +231,6 @@ a{
                     <option value="">
                         Selecionar usuário
                     </option>
-
 
                     {% for u in usuarios %}
 
@@ -265,6 +254,7 @@ a{
             </div>
 
 
+
             <!-- ==========================================
                  TÍTULO
                  ========================================== -->
@@ -274,10 +264,12 @@ a{
             </label>
 
             <input
+                type="text"
                 name="titulo"
                 placeholder="Título da notificação"
                 required
             >
+
 
 
             <!-- ==========================================
@@ -295,6 +287,7 @@ a{
             ></textarea>
 
 
+
             <!-- ==========================================
                  ENVIAR
                  ========================================== -->
@@ -305,7 +298,6 @@ a{
             >
                 🔔 Enviar
             </button>
-
 
         </form>
 
@@ -334,14 +326,20 @@ a{
 
 
         <div class="enviado">
-            📨 Enviado por: {{ n.enviado_por or 'Sistema' }}
+            📨 Enviado por:
+            {{ n.enviado_por or 'Sistema' }}
         </div>
 
 
         <div class="data">
 
             📅 Enviada em:
-            {{ n.criada_em.strftime('%d/%m/%Y %H:%M') }}
+            {% if n.criada_em %}
+                {{ n.criada_em.strftime('%d/%m/%Y %H:%M') }}
+            {% else %}
+                —
+            {% endif %}
+
 
 
             {% if perfil != 'separacao' %}
@@ -352,10 +350,12 @@ a{
                         ✅ Lida
                     </div>
 
+
                     {% if n.lida_por %}
 
                         <div class="lida">
-                            👤 Lida por: {{ n.lida_por }}
+                            👤 Lida por:
+                            {{ n.lida_por }}
                         </div>
 
                     {% endif %}
@@ -364,7 +364,7 @@ a{
                     {% if n.lida_em %}
 
                         <div class="data">
-                            📅 Lida em:
+                            🕐 Lida em:
                             {{ n.lida_em.strftime('%d/%m/%Y %H:%M') }}
                         </div>
 
@@ -398,7 +398,7 @@ a{
 
 
     <!-- ==========================================
-         BOTÕES
+         LIMPAR NOTIFICAÇÕES
          ========================================== -->
 
     {% if perfil == 'admin' %}
@@ -406,6 +406,7 @@ a{
     <form
         action="/limpar-notificacoes"
         method="POST"
+        onsubmit="return confirmarLimpeza()"
     >
 
         <button
@@ -421,6 +422,11 @@ a{
     {% endif %}
 
 
+
+    <!-- ==========================================
+         VOLTAR
+         ========================================== -->
+
     <a href="/menu">
 
         <button class="btn">
@@ -433,11 +439,6 @@ a{
 </div>
 
 
-
-<!-- ==========================================
-     JAVASCRIPT
-     CONTROLA O TIPO DE NOTIFICAÇÃO
-     ========================================== -->
 
 <script>
 
@@ -455,50 +456,19 @@ function alterarTipoNotificacao(){
         "info-sistema"
     );
 
-
     if(tipo === "sistema"){
 
         /*
-         * Atualização do sistema:
-         * enviada para todos os usuários.
+         * Atualização do sistema
+         *
+         * Não precisa selecionar usuário.
          */
-
-        usuarioSelect.innerHTML = `
-            <option value="todos">
-                👥 Todos os usuários
-            </option>
-        `;
-
-        usuarioSelect.value = "todos";
 
         usuarioSelect.disabled = true;
 
+        usuarioSelect.required = false;
 
-        /*
-         * Campo hidden para enviar
-         * tipo_notificacao corretamente.
-         */
-
-        let hidden = document.getElementById(
-            "usuario_id_hidden"
-        );
-
-        if(!hidden){
-
-            hidden = document.createElement("input");
-
-            hidden.type = "hidden";
-            hidden.name = "usuario_id";
-            hidden.id = "usuario_id_hidden";
-
-            document.querySelector("form").appendChild(
-                hidden
-            );
-
-        }
-
-        hidden.value = "todos";
-
+        usuarioSelect.value = "";
 
         infoSistema.style.display = "block";
 
@@ -506,47 +476,25 @@ function alterarTipoNotificacao(){
     }else{
 
         /*
-         * Notificação direta:
-         * volta a mostrar os usuários.
+         * Notificação direta
          */
 
         usuarioSelect.disabled = false;
 
-
-        usuarioSelect.innerHTML = `
-            <option value="">
-                Selecionar usuário
-            </option>
-
-            {% for u in usuarios %}
-
-            <option value="{{ u.id }}">
-                {{ u.usuario }}
-            </option>
-
-            {% endfor %}
-        `;
-
-
-        usuarioSelect.value = "";
-
-
-        /*
-         * Remove campo hidden.
-         */
-
-        const hidden = document.getElementById(
-            "usuario_id_hidden"
-        );
-
-        if(hidden){
-            hidden.remove();
-        }
-
+        usuarioSelect.required = true;
 
         infoSistema.style.display = "none";
 
     }
+
+}
+
+
+function confirmarLimpeza(){
+
+    return confirm(
+        "Tem certeza que deseja apagar TODAS as notificações?"
+    );
 
 }
 
