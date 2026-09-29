@@ -196,66 +196,9 @@ def enviar_notificacao():
 
         return redirect('/notificacoes')
 
-    # ==========================
-    # NOTIFICAÇÃO DIRETA
-    # ==========================
-
-    usuario_id = request.form.get('usuario_id')
-
-    if not usuario_id:
-
-        flash(
-            "Selecione um usuário!",
-            "error"
-        )
-
-        return redirect('/notificacoes')
-
-    try:
-
-        usuario_id = int(usuario_id)
-
-    except (ValueError, TypeError):
-
-        flash(
-            "Usuário inválido!",
-            "error"
-        )
-
-        return redirect('/notificacoes')
-
-    usuario_destino = Usuario.query.get(usuario_id)
-
-    if not usuario_destino:
-
-        flash(
-            "Usuário não encontrado!",
-            "error"
-        )
-
-        return redirect('/notificacoes')
-
-    notificacao = Notificacao(
-        titulo=titulo,
-        mensagem=mensagem,
-        usuario_id=usuario_destino.id,
-        enviado_por=enviado_por,
-        lida=False
-    )
-
-    db.session.add(notificacao)
-
-    db.session.commit()
-
-    flash(
-        "🔔 Notificação enviada com sucesso!",
-        "success"
-    )
-
-    return redirect('/notificacoes')
 
 
-    # ==========================
+# ==========================
 # CENTRAL DE NOTIFICAÇÕES
 # ==========================
 @app.route('/notificacoes')
@@ -269,10 +212,14 @@ def notificacoes():
     perfil = session.get('perfil')
 
     # ==========================
-    # NOTIFICAÇÕES
+    # BUSCAR NOTIFICAÇÕES
     # ==========================
 
     if perfil in ['admin', 'operador']:
+
+        # Admin e operador veem:
+        # - notificações recebidas
+        # - notificações enviadas por eles
 
         lista = Notificacao.query.filter(
             db.or_(
@@ -284,6 +231,9 @@ def notificacoes():
         ).all()
 
     else:
+
+        # Separação e consulta veem
+        # somente as notificações recebidas
 
         lista = Notificacao.query.filter_by(
             usuario_id=usuario_id
@@ -303,6 +253,8 @@ def notificacoes():
 
     for n in lista:
 
+        # Só quem recebeu pode marcar como lida
+
         if n.usuario_id == usuario_id and not n.lida:
 
             n.lida = True
@@ -315,10 +267,17 @@ def notificacoes():
         db.session.commit()
 
     # ==========================
-    # USUÁRIOS PARA ENVIO
+    # PERMISSÃO PARA ENVIAR
     # ==========================
 
-    pode_criar = perfil in ['admin', 'operador']
+    pode_criar = perfil in [
+        'admin',
+        'operador'
+    ]
+
+    # ==========================
+    # USUÁRIOS PARA NOTIFICAÇÃO DIRETA
+    # ==========================
 
     usuarios = []
 
@@ -330,6 +289,10 @@ def notificacoes():
             Usuario.usuario.asc()
         ).all()
 
+    # ==========================
+    # TELA
+    # ==========================
+
     return render_template(
         'notificacoes.html',
         notificacoes=lista,
@@ -339,65 +302,6 @@ def notificacoes():
     )
 
 
-    # ==========================
-    # NOTIFICAÇÃO DIRETA
-    # ==========================
-
-    usuario_id = request.form.get('usuario_id')
-
-    if not usuario_id:
-
-        flash(
-            "Selecione um usuário!",
-            "error"
-        )
-
-        return redirect('/notificacoes')
-
-
-    try:
-        usuario_id = int(usuario_id)
-    except (ValueError, TypeError):
-
-        flash(
-            "Usuário inválido!",
-            "error"
-        )
-
-        return redirect('/notificacoes')
-
-
-    usuario_destino = Usuario.query.get(usuario_id)
-
-    if not usuario_destino:
-
-        flash(
-            "Usuário não encontrado!",
-            "error"
-        )
-
-        return redirect('/notificacoes')
-
-
-    notificacao = Notificacao(
-        titulo=titulo,
-        mensagem=mensagem,
-        usuario_id=usuario_destino.id,
-        enviado_por=enviado_por,
-        lida=False
-    )
-
-    db.session.add(notificacao)
-
-    db.session.commit()
-
-
-    flash(
-        "🔔 Notificação enviada com sucesso!",
-        "success"
-    )
-
-    return redirect('/notificacoes')
 # ==========================
 # PRODUTOS
 # ==========================
