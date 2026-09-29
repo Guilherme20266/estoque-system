@@ -371,6 +371,10 @@ function dataValida(data){
         return false;
     }
 
+    if(ano < 2000){
+    return false;
+    }
+
     if(
         partes[0].length !== 2 ||
         partes[1].length !== 2 ||
