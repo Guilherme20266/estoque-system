@@ -285,10 +285,6 @@ def notificacoes():
 
     if perfil in ['admin', 'operador']:
 
-        # Admin e operador veem:
-        # - notificações recebidas
-        # - notificações enviadas por eles
-
         lista = Notificacao.query.filter(
             db.or_(
                 Notificacao.usuario_id == usuario_id,
@@ -300,14 +296,71 @@ def notificacoes():
 
     else:
 
-        # Separação e consulta veem
-        # somente as notificações recebidas
-
         lista = Notificacao.query.filter_by(
             usuario_id=usuario_id
         ).order_by(
             Notificacao.id.desc()
         ).all()
+
+    # ==========================
+    # MARCAR COMO LIDA
+    # ==========================
+
+    agora = datetime.now(
+        ZoneInfo("America/Sao_Paulo")
+    )
+
+    alterou = False
+
+    for n in lista:
+
+        # Só quem recebeu pode marcar como lida
+        if n.usuario_id == usuario_id and not n.lida:
+
+            n.lida = True
+            n.lida_por = usuario
+            n.lida_em = agora
+
+            alterou = True
+
+    if alterou:
+        db.session.commit()
+
+    # ==========================
+    # PERMISSÃO PARA ENVIAR
+    # ==========================
+
+    pode_criar = perfil in [
+        'admin',
+        'operador'
+    ]
+
+    # ==========================
+    # USUÁRIOS PARA NOTIFICAÇÃO DIRETA
+    # ==========================
+
+    usuarios = []
+
+    if pode_criar:
+
+        usuarios = Usuario.query.filter(
+            Usuario.usuario != usuario
+        ).order_by(
+            Usuario.usuario.asc()
+        ).all()
+
+    # ==========================
+    # TELA
+    # ==========================
+
+    return render_template(
+        'notificacoes.html',
+        notificacoes=lista,
+        pode_criar=pode_criar,
+        usuarios=usuarios,
+        perfil=perfil
+    )
+
 
 # ==========================
 # LIMPAR TODAS AS NOTIFICAÇÕES
