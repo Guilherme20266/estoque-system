@@ -477,41 +477,39 @@ def calcular_status(validade):
 
     try:
 
-        hoje = datetime.today()
+        # Data de hoje no horário de São Paulo
+        hoje = datetime.now(
+            ZoneInfo("America/Sao_Paulo")
+        ).date()
 
+        # Converte a validade para data
         data_validade = datetime.strptime(
             validade,
             "%d/%m/%Y"
-        )
+        ).date()
 
-
+        # Calcula a diferença em dias
         dias = (data_validade - hoje).days
 
-
         # ⚫ VENCIDO
-        if dias <= 0:
+        if dias < 0:
             return "VENCIDO", 1
-
 
         # 🔴 URGENTE - até 2 meses
         elif dias <= 60:
             return "URGENTE", 2
 
-
-        # 🟡 ATENÇÃO - entre 3 e 5 meses
+        # 🟡 ATENÇÃO - de 3 até 5 meses
         elif dias <= 150:
             return "ATENCAO", 3
-
 
         # 🟢 NORMAL - mais de 5 meses
         else:
             return "OK", 4
 
-
     except:
 
         return "SEM_DATA", 5
-
 
 @app.route('/buscar-produto/<codigo>')
 def buscar_produto(codigo):
