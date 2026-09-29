@@ -814,16 +814,41 @@ def editar(id):
 
         nome_antigo = produto.nome
         codigo_antigo = produto.codigo
+        quantidade_antiga = produto.quantidade
         validade_antiga = produto.validade
 
         novo_nome = request.form['nome']
         novo_codigo = request.form['codigo']
+        nova_quantidade = request.form['quantidade']
         nova_validade = request.form['validade']
+
+        # ==========================
+        # VALIDAÇÃO DA QUANTIDADE
+        # ==========================
+
+        try:
+            nova_quantidade = int(nova_quantidade)
+        except (ValueError, TypeError):
+            flash("Quantidade inválida!", "error")
+            return redirect(f'/editar/{id}')
+
+        if nova_quantidade < 1 or nova_quantidade > 1000:
+            flash("A quantidade deve estar entre 1 e 1000!", "error")
+            return redirect(f'/editar/{id}')
+
+        # ==========================
+        # ATUALIZA PRODUTO
+        # ==========================
 
         produto.nome = novo_nome
         produto.codigo = novo_codigo
+        produto.quantidade = nova_quantidade
         produto.validade = nova_validade
-        
+
+        # ==========================
+        # ATUALIZA CATÁLOGO
+        # ==========================
+
         catalogo = CatalogoProduto.query.filter_by(
             codigo=novo_codigo
         ).first()
@@ -831,24 +856,55 @@ def editar(id):
         if catalogo:
             catalogo.nome = novo_nome
 
+        # ==========================
+        # HISTÓRICO
+        # ==========================
+
         historico = Historico(
-            data=datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
+            data=datetime.now(
+                ZoneInfo("America/Sao_Paulo")
+            ).strftime("%d/%m/%Y %H:%M"),
+
             usuario=session.get('usuario'),
+
             acao="EDITAR",
+
             produto=novo_nome,
-            quantidade=produto.quantidade,
-            origem=f"{nome_antigo} | {codigo_antigo} | {validade_antiga}",
-            destino=f"{novo_nome} | {novo_codigo} | {nova_validade}"
+
+            quantidade=nova_quantidade,
+
+            origem=(
+                f"{nome_antigo} | "
+                f"{codigo_antigo} | "
+                f"Quantidade: {quantidade_antiga} | "
+                f"{validade_antiga}"
+            ),
+
+            destino=(
+                f"{novo_nome} | "
+                f"{novo_codigo} | "
+                f"Quantidade: {nova_quantidade} | "
+                f"{nova_validade}"
+            )
         )
 
         db.session.add(historico)
+
         db.session.commit()
 
-        flash("Produto editado com sucesso!", "success")
+        flash(
+            "Produto editado com sucesso!",
+            "success"
+        )
 
         return redirect('/inventario')
 
-    return render_template('editar.html', produto=produto)
+    return render_template(
+        'editar.html',
+        produto=produto
+    )
+
+
 # ==========================
 # SEPARACAO
 # ==========================
