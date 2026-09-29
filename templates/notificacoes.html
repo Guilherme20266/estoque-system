@@ -43,6 +43,7 @@ body{
 
 .mensagem{
     margin-top:10px;
+    line-height:1.5;
 }
 
 
@@ -80,17 +81,20 @@ body{
 input,
 textarea,
 select{
-
     width:100%;
     padding:12px;
     margin-top:10px;
     box-sizing:border-box;
-
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    font-size:14px;
+    background:white;
 }
 
 
 textarea{
     height:90px;
+    resize:vertical;
 }
 
 
@@ -100,8 +104,16 @@ textarea{
 }
 
 
-.btn{
+.label{
+    display:block;
+    margin-top:10px;
+    font-size:13px;
+    font-weight:bold;
+    color:#374151;
+}
 
+
+.btn{
     width:100%;
     padding:15px;
     margin-top:15px;
@@ -110,7 +122,8 @@ textarea{
     background:#2563eb;
     color:white;
     font-weight:bold;
-
+    cursor:pointer;
+    font-size:15px;
 }
 
 
@@ -119,201 +132,443 @@ textarea{
 }
 
 
+.btn:hover{
+    opacity:.92;
+}
+
+
+a{
+    text-decoration:none;
+}
+
+
+.info-tipo{
+    margin-top:10px;
+    padding:10px;
+    border-radius:8px;
+    background:#eff6ff;
+    color:#1e40af;
+    font-size:12px;
+    line-height:1.4;
+}
+
+
+.destinatario-box{
+    margin-top:5px;
+}
+
 {% endblock %}
 
 
 
 {% block content %}
 
-
 <div class="box">
 
 
-<div class="topo">
+    <!-- ==========================================
+         TOPO
+         ========================================== -->
 
-<h1>
-🔔 Notificações
-</h1>
+    <div class="topo">
+
+        <h1>
+            🔔 Notificações
+        </h1>
+
+    </div>
+
+
+
+    {% if pode_criar %}
+
+    <!-- ==========================================
+         FORMULÁRIO DE ENVIO
+         ========================================== -->
+
+    <div class="form-card">
+
+        <h3>
+            Criar Notificação
+        </h3>
+
+
+        <form action="/enviar_notificacao" method="POST">
+
+
+            <!-- ==========================================
+                 TIPO DA NOTIFICAÇÃO
+                 ========================================== -->
+
+            <label class="label">
+                Tipo de notificação
+            </label>
+
+            <select
+                name="tipo_notificacao"
+                id="tipo_notificacao"
+                required
+                onchange="alterarTipoNotificacao()"
+            >
+
+                <option value="direta">
+                    🔔 Notificação direta
+                </option>
+
+                <option value="sistema">
+                    📢 Atualização do sistema
+                </option>
+
+            </select>
+
+
+            <!-- ==========================================
+                 DESTINATÁRIO
+                 ========================================== -->
+
+            <div class="destinatario-box">
+
+                <label class="label">
+                    Destinatário
+                </label>
+
+
+                <select
+                    name="usuario_id"
+                    id="usuario_id"
+                    required
+                >
+
+                    <option value="">
+                        Selecionar usuário
+                    </option>
+
+
+                    {% for u in usuarios %}
+
+                    <option value="{{ u.id }}">
+                        {{ u.usuario }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+                <div
+                    id="info-sistema"
+                    class="info-tipo"
+                    style="display:none;"
+                >
+                    📢 Esta mensagem será enviada para todos os usuários.
+                </div>
+
+            </div>
+
+
+            <!-- ==========================================
+                 TÍTULO
+                 ========================================== -->
+
+            <label class="label">
+                Título
+            </label>
+
+            <input
+                name="titulo"
+                placeholder="Título da notificação"
+                required
+            >
+
+
+            <!-- ==========================================
+                 MENSAGEM
+                 ========================================== -->
+
+            <label class="label">
+                Mensagem
+            </label>
+
+            <textarea
+                name="mensagem"
+                placeholder="Digite a mensagem da notificação..."
+                required
+            ></textarea>
+
+
+            <!-- ==========================================
+                 URGÊNCIA
+                 ========================================== -->
+
+            <label class="label">
+                Urgência
+            </label>
+
+            <select name="urgencia">
+
+                <option value="baixa">
+                    🟢 Baixa
+                </option>
+
+                <option value="media" selected>
+                    🟡 Média
+                </option>
+
+                <option value="alta">
+                    🟠 Alta
+                </option>
+
+                <option value="critica">
+                    🔴 Crítica
+                </option>
+
+            </select>
+
+
+            <!-- ==========================================
+                 ENVIAR
+                 ========================================== -->
+
+            <button
+                type="submit"
+                class="btn btn-criar"
+            >
+                🔔 Enviar
+            </button>
+
+
+        </form>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- ==========================================
+         LISTA DE NOTIFICAÇÕES
+         ========================================== -->
+
+    {% for n in notificacoes %}
+
+    <div class="card {{ n.urgencia }}">
+
+        <div class="titulo">
+            {{ n.titulo }}
+        </div>
+
+
+        <div class="mensagem">
+            {{ n.mensagem }}
+        </div>
+
+
+        <div class="enviado">
+            📨 Enviado por: {{ n.enviado_por }}
+        </div>
+
+
+        <div class="data">
+
+            📅 Enviada em:
+            {{ n.criada_em.strftime('%d/%m/%Y %H:%M') }}
+
+
+            {% if perfil != 'separacao' %}
+
+            <br><br>
+
+
+            {% if n.lida %}
+
+                ✅ Lida
+
+            {% else %}
+
+                ⏳ Não lida
+
+            {% endif %}
+
+
+            {% if n.lida_em %}
+
+                <br>
+
+                📅 Lida em:
+                {{ n.lida_em.strftime('%d/%m/%Y %H:%M') }}
+
+            {% endif %}
+
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    {% else %}
+
+    <div class="card">
+
+        Nenhuma notificação
+
+    </div>
+
+    {% endfor %}
+
+
+
+    <!-- ==========================================
+         BOTÕES
+         ========================================== -->
+
+    {% if perfil == 'admin' %}
+
+    <form
+        action="/limpar-notificacoes"
+        method="POST"
+    >
+
+        <button
+            type="submit"
+            class="btn"
+            style="background:#dc2626"
+        >
+            🗑 Limpar todas notificações
+        </button>
+
+    </form>
+
+    {% endif %}
+
+
+    <a href="/menu">
+
+        <button class="btn">
+            ⬅ Voltar
+        </button>
+
+    </a>
+
 
 </div>
 
 
 
-{% if pode_criar %}
+<!-- ==========================================
+     JAVASCRIPT
+     CONTROLA O TIPO DE NOTIFICAÇÃO
+     ========================================== -->
 
-<div class="form-card">
+<script>
 
+function alterarTipoNotificacao(){
 
-<h3>
-Criar Notificação
-</h3>
+    const tipo = document.getElementById(
+        "tipo_notificacao"
+    ).value;
 
+    const usuarioSelect = document.getElementById(
+        "usuario_id"
+    );
 
-<form action="/enviar_notificacao" method="POST">
+    const infoSistema = document.getElementById(
+        "info-sistema"
+    );
 
 
-<select name="usuario_id" required>
+    if(tipo === "sistema"){
 
-<option value="">
-Selecionar usuário
-</option>
+        /*
+         * Atualização do sistema:
+         * seleciona automaticamente TODOS
+         */
 
+        usuarioSelect.innerHTML = `
+            <option value="todos">
+                👥 Todos os usuários
+            </option>
+        `;
 
-{% for u in usuarios %}
+        usuarioSelect.value = "todos";
 
-<option value="{{u.id}}">
-{{u.usuario}}
-</option>
+        usuarioSelect.disabled = true;
 
-{% endfor %}
+        /*
+         * disabled não envia o campo no POST.
+         * Por isso criamos um campo hidden.
+         */
 
-</select>
+        let hidden = document.getElementById(
+            "usuario_id_hidden"
+        );
 
+        if(!hidden){
 
-<input
-name="titulo"
-placeholder="Título da notificação"
-required>
+            hidden = document.createElement("input");
 
+            hidden.type = "hidden";
+            hidden.name = "usuario_id";
+            hidden.id = "usuario_id_hidden";
 
-<textarea
-name="mensagem"
-placeholder="Mensagem"
-required></textarea>
+            document.querySelector("form").appendChild(
+                hidden
+            );
+        }
 
+        hidden.value = "todos";
 
-<select name="urgencia">
 
-<option value="baixa">
-🟢 Baixa
-</option>
+        infoSistema.style.display = "block";
 
-<option value="media">
-🟡 Média
-</option>
+    }else{
 
-<option value="alta">
-🟠 Alta
-</option>
+        /*
+         * Notificação direta:
+         * volta a mostrar os usuários
+         */
 
-<option value="critica">
-🔴 Crítica
-</option>
+        usuarioSelect.disabled = false;
 
-</select>
+        usuarioSelect.innerHTML = `
+            <option value="">
+                Selecionar usuário
+            </option>
 
+            {% for u in usuarios %}
 
-<button class="btn btn-criar">
-🔔 Enviar
-</button>
+            <option value="{{ u.id }}">
+                {{ u.usuario }}
+            </option>
 
+            {% endfor %}
+        `;
 
-</form>
 
+        usuarioSelect.value = "";
 
-</div>
 
-{% endif %}
+        /*
+         * Remove campo hidden
+         */
 
+        const hidden = document.getElementById(
+            "usuario_id_hidden"
+        );
 
+        if(hidden){
+            hidden.remove();
+        }
 
 
+        infoSistema.style.display = "none";
 
-{% for n in notificacoes %}
+    }
 
+}
 
-<div class="card {{n.urgencia}}">
-
-<div class="titulo">
-{{n.titulo}}
-</div>
-
-<div class="mensagem">
-{{n.mensagem}}
-</div>
-
-
-<div class="enviado">
-📨 Enviado por: {{n.enviado_por}}
-</div>
-
-
-<div class="data">
-
-📅 Enviada em:
-{{n.criada_em.strftime('%d/%m/%Y %H:%M')}}
-
-
-{% if perfil != 'separacao' %}
-
-<br><br>
-
-{% if n.lida %}
-
-✅ Lida
-
-{% else %}
-
-⏳ Não lida
-
-{% endif %}
-
-
-{% if n.lida_em %}
-
-<br>
-
-📅 Lida em:
-{{ n.lida_em.strftime('%d/%m/%Y %H:%M') }}
-
-{% endif %}
-
-
-{% endif %}
-
-</div>
-
-
-</div>
-
-
-{% else %}
-
-
-<div class="card">
-
-Nenhuma notificação
-
-</div>
-
-
-{% endfor %}
-
-
-<a href="/menu">
-
-{% if perfil == 'admin' %}
-
-<form action="/limpar-notificacoes" method="POST">
-
-<button class="btn" style="background:#dc2626">
-
-🗑 Limpar todas notificações
-
-</button>
-
-</form>
-
-{% endif %}
-
-<button class="btn">
-⬅ Voltar
-</button>
-
-</a>
-
-
-</div>
+</script>
 
 
 {% endblock %}
