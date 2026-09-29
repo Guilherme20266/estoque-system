@@ -176,6 +176,7 @@ cursor:pointer;
     method="POST"
     id="formCadastro"
     onsubmit="return validarFormulario()"
+    novalidate
 >
 
 <input
@@ -347,6 +348,7 @@ function mascaraData(input){
 }
 
 
+
 // ==========================
 // VALIDAR FORMULÁRIO
 // ==========================
@@ -359,13 +361,82 @@ function validarFormulario(){
 
     let ruaValor = rua.value;
 
+    let quantidade = document.querySelector(
+        'input[name="quantidade"]'
+    ).value.trim();
+
+
+    // ==========================
+    // QUANTIDADE
+    // ==========================
+
+    if(!quantidade){
+
+        Swal.fire({
+            icon: "warning",
+            title: "Quantidade não informada",
+            text: "Informe a quantidade do produto.",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#007bff"
+        });
+
+        document.querySelector(
+            'input[name="quantidade"]'
+        ).focus();
+
+        return false;
+    }
+
+
+    if(
+        parseInt(quantidade) < 1 ||
+        parseInt(quantidade) > 1000
+    ){
+
+        Swal.fire({
+            icon: "error",
+            title: "Quantidade inválida",
+            text: "A quantidade deve estar entre 1 e 1000.",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#dc3545"
+        });
+
+        document.querySelector(
+            'input[name="quantidade"]'
+        ).focus();
+
+        return false;
+    }
+
+
+    // ==========================
     // DATA
-    if(!dataValida(validade)){
+    // ==========================
+
+    if(!validade){
+
+        Swal.fire({
+            icon: "warning",
+            title: "Data não informada",
+            text: "Informe a data de validade do produto.",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#007bff"
+        });
+
+        document.getElementById(
+            "validade"
+        ).focus();
+
+        return false;
+    }
+
+
+    if(validade.length !== 10){
 
         Swal.fire({
             icon: "error",
             title: "Data inválida",
-            text: "Coloque uma data válida.",
+            text: "Digite a data no formato DD/MM/AAAA.",
             confirmButtonText: "OK",
             confirmButtonColor: "#dc3545"
         });
@@ -375,16 +446,77 @@ function validarFormulario(){
         ).focus();
 
         return false;
-
     }
 
+
+    // Data existe e não está vencida
+    if(!dataValida(validade)){
+
+        let partes = validade.split("/");
+
+        let dia = parseInt(partes[0], 10);
+        let mes = parseInt(partes[1], 10);
+        let ano = parseInt(partes[2], 10);
+
+        let dataDigitada = new Date(
+            ano,
+            mes - 1,
+            dia
+        );
+
+        let hoje = new Date();
+
+        hoje.setHours(0, 0, 0, 0);
+        dataDigitada.setHours(0, 0, 0, 0);
+
+
+        // ==========================
+        // DATA VENCIDA
+        // ==========================
+
+        if(
+            !isNaN(dataDigitada.getTime()) &&
+            dataDigitada < hoje
+        ){
+
+            Swal.fire({
+                icon: "error",
+                title: "Data vencida",
+                text: "A data de validade não pode ser anterior à data atual.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#dc3545"
+            });
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: "Data inválida",
+                text: "Coloque uma data válida.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#dc3545"
+            });
+
+        }
+
+        document.getElementById(
+            "validade"
+        ).focus();
+
+        return false;
+    }
+
+
+    // ==========================
     // RUA
+    // ==========================
+
     if(!ruaValor){
 
         Swal.fire({
             icon: "warning",
             title: "Rua não selecionada",
-            text: "Selecione uma rua.",
+            text: "Selecione a rua onde o produto será armazenado.",
             confirmButtonText: "OK",
             confirmButtonColor: "#007bff"
         });
@@ -392,11 +524,12 @@ function validarFormulario(){
         rua.focus();
 
         return false;
-
     }
 
-    // COLUNA E NÍVEL
-    // Não são necessários para Laje
+
+    // ==========================
+    // COLUNA
+    // ==========================
 
     if(!ruaValor.startsWith("Laje")){
 
@@ -405,7 +538,7 @@ function validarFormulario(){
             Swal.fire({
                 icon: "warning",
                 title: "Coluna não selecionada",
-                text: "Selecione uma coluna.",
+                text: "Selecione a coluna do endereço.",
                 confirmButtonText: "OK",
                 confirmButtonColor: "#007bff"
             });
@@ -413,15 +546,19 @@ function validarFormulario(){
             coluna.focus();
 
             return false;
-
         }
+
+
+        // ==========================
+        // NÍVEL
+        // ==========================
 
         if(!nivel.value){
 
             Swal.fire({
                 icon: "warning",
                 title: "Nível não selecionado",
-                text: "Selecione um nível.",
+                text: "Selecione o nível do endereço.",
                 confirmButtonText: "OK",
                 confirmButtonColor: "#007bff"
             });
@@ -429,10 +566,14 @@ function validarFormulario(){
             nivel.focus();
 
             return false;
-
         }
 
     }
+
+
+    // ==========================
+    // TUDO CERTO
+    // ==========================
 
     return true;
 
