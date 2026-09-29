@@ -151,6 +151,27 @@ def enviar_notificacao():
 
     enviado_por = session.get('usuario')
 
+
+
+@app.route('/limpar-notificacoes', methods=['POST'])
+def limpar_notificacoes():
+
+    if session.get('perfil') != 'admin':
+        return redirect('/menu')
+
+    Notificacao.query.delete()
+
+    db.session.commit()
+
+    flash(
+        "Todas as notificações foram apagadas!",
+        "success"
+    )
+
+    return redirect('/notificacoes')
+
+
+    
     # ==========================
     # VALIDAÇÃO
     # ==========================
