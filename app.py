@@ -151,43 +151,20 @@ def enviar_notificacao():
 
     enviado_por = session.get('usuario')
 
-
-
-@app.route('/limpar-notificacoes', methods=['POST'])
-def limpar_notificacoes():
-
-    if session.get('perfil') != 'admin':
-        return redirect('/menu')
-
-    Notificacao.query.delete()
-
-    db.session.commit()
-
-    flash(
-        "Todas as notificações foram apagadas!",
-        "success"
-    )
-
-    return redirect('/notificacoes')
-
-
-    
     # ==========================
     # VALIDAÇÃO
     # ==========================
 
     if not titulo or not mensagem:
-
         flash(
             "Preencha o título e a mensagem!",
             "error"
         )
-
         return redirect('/notificacoes')
+
 
     # ==========================
     # ATUALIZAÇÃO DO SISTEMA
-    # ENVIA PARA TODOS
     # ==========================
 
     if tipo_notificacao == 'sistema':
@@ -195,6 +172,14 @@ def limpar_notificacoes():
         usuarios_destino = Usuario.query.filter(
             Usuario.usuario != enviado_por
         ).all()
+
+        if not usuarios_destino:
+            flash(
+                "Não existem outros usuários para receber a notificação!",
+                "error"
+            )
+            return redirect('/notificacoes')
+
 
         for usuario in usuarios_destino:
 
@@ -208,6 +193,7 @@ def limpar_notificacoes():
 
             db.session.add(notificacao)
 
+
         db.session.commit()
 
         flash(
@@ -216,6 +202,67 @@ def limpar_notificacoes():
         )
 
         return redirect('/notificacoes')
+
+
+    # ==========================
+    # NOTIFICAÇÃO DIRETA
+    # ==========================
+
+    usuario_id = request.form.get('usuario_id')
+
+    if not usuario_id:
+        flash(
+            "Selecione um usuário!",
+            "error"
+        )
+        return redirect('/notificacoes')
+
+
+    try:
+
+        usuario_id = int(usuario_id)
+
+    except (ValueError, TypeError):
+
+        flash(
+            "Usuário inválido!",
+            "error"
+        )
+
+        return redirect('/notificacoes')
+
+
+    usuario_destino = Usuario.query.get(usuario_id)
+
+    if not usuario_destino:
+
+        flash(
+            "Usuário não encontrado!",
+            "error"
+        )
+
+        return redirect('/notificacoes')
+
+
+    notificacao = Notificacao(
+        titulo=titulo,
+        mensagem=mensagem,
+        usuario_id=usuario_destino.id,
+        enviado_por=enviado_por,
+        lida=False
+    )
+
+    db.session.add(notificacao)
+
+    db.session.commit()
+
+
+    flash(
+        "🔔 Notificação enviada com sucesso!",
+        "success"
+    )
+
+    return redirect('/notificacoes')
 
 
 
