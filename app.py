@@ -128,183 +128,136 @@ class Notificacao(db.Model):
 # ==========================
 # ENVIAR NOTIFICACAO
 # ==========================
+# ==========================
+# ENVIAR NOTIFICACAO
+# ==========================
 @app.route('/enviar_notificacao', methods=['POST'])
 def enviar_notificacao():
 
-    if session.get('perfil') not in ['admin','operador']:
+    if session.get('perfil') not in ['admin', 'operador']:
         return redirect('/menu')
 
+    tipo_notificacao = request.form.get(
+        'tipo_notificacao',
+        'direta'
+    )
+
+    titulo = request.form.get(
+        'titulo',
+        ''
+    ).strip()
+
+    mensagem = request.form.get(
+        'mensagem',
+        ''
+    ).strip()
+
+    enviado_por = session.get('usuario')
+
+    # ==========================
+    # VALIDAÇÃO
+    # ==========================
+
+    if not titulo or not mensagem:
+
+        flash(
+            "Preencha o título e a mensagem!",
+            "error"
+        )
+
+        return redirect('/notificacoes')
+
+
+    # ==========================
+    # ATUALIZAÇÃO DO SISTEMA
+    # ENVIA PARA TODOS
+    # ==========================
+
+    if tipo_notificacao == 'sistema':
+
+        usuarios_destino = Usuario.query.filter(
+            Usuario.usuario != enviado_por
+        ).all()
+
+        for usuario in usuarios_destino:
+
+            notificacao = Notificacao(
+                titulo=titulo,
+                mensagem=mensagem,
+                usuario_id=usuario.id,
+                enviado_por=enviado_por,
+                lida=False
+            )
+
+            db.session.add(notificacao)
+
+        db.session.commit()
+
+        flash(
+            "📢 Atualização do sistema enviada para todos os usuários!",
+            "success"
+        )
+
+        return redirect('/notificacoes')
+
+
+    # ==========================
+    # NOTIFICAÇÃO DIRETA
+    # ==========================
 
     usuario_id = request.form.get('usuario_id')
 
+    if not usuario_id:
+
+        flash(
+            "Selecione um usuário!",
+            "error"
+        )
+
+        return redirect('/notificacoes')
+
+
+    try:
+        usuario_id = int(usuario_id)
+    except (ValueError, TypeError):
+
+        flash(
+            "Usuário inválido!",
+            "error"
+        )
+
+        return redirect('/notificacoes')
+
+
+    usuario_destino = Usuario.query.get(usuario_id)
+
+    if not usuario_destino:
+
+        flash(
+            "Usuário não encontrado!",
+            "error"
+        )
+
+        return redirect('/notificacoes')
+
 
     notificacao = Notificacao(
-        titulo=request.form.get('titulo'),
-        mensagem=request.form.get('mensagem'),
-        urgencia=request.form.get('urgencia','media'),
-        usuario_id=usuario_id,
-        enviado_por=session.get('usuario')
+        titulo=titulo,
+        mensagem=mensagem,
+        usuario_id=usuario_destino.id,
+        enviado_por=enviado_por,
+        lida=False
     )
-
 
     db.session.add(notificacao)
-    db.session.commit()
-
-
-    flash(
-        "Notificação enviada com sucesso!",
-        "success"
-    )
-
-
-    return redirect('/notificacoes')
-
-
-
-# ==========================
-# CONTADOR DE NOTIFICACOES
-# ==========================
-@app.route('/api/notificacoes/count')
-def notificacoes_count():
-
-    if 'usuario_id' not in session:
-        return jsonify({
-            "total": 0
-        })
-
-
-    usuario_id = session['usuario_id']
-
-
-    total = Notificacao.query.filter_by(
-        usuario_id=usuario_id,
-        lida=False
-    ).count()
-
-
-    return jsonify({
-        "total": total
-    })
-
-
-
-# ==========================
-# LISTAR NOTIFICACOES
-@app.route('/notificacoes')
-def notificacoes():
-
-    if 'usuario_id' not in session:
-        return redirect('/')
-
-
-    usuario_id = session['usuario_id']
-    usuario = session.get('usuario')
-    perfil = session.get('perfil')
-
-
-    # ==========================
-    # BUSCA NOTIFICAÇÕES
-    # ==========================
-
-    if perfil in ['admin', 'operador']:
-
-        # Mostra recebidas + enviadas
-        lista = Notificacao.query.filter(
-            db.or_(
-                Notificacao.usuario_id == usuario_id,
-                Notificacao.enviado_por == usuario
-            )
-        ).order_by(
-            Notificacao.criada_em.desc()
-        ).all()
-
-
-    else:
-
-        # Separação vê somente o que recebeu
-        lista = Notificacao.query.filter_by(
-            usuario_id=usuario_id
-        ).order_by(
-            Notificacao.criada_em.desc()
-        ).all()
-
-
-
-    # ==========================
-    # MARCAR COMO LIDA
-    # SOMENTE QUEM RECEBEU
-    # ==========================
-
-    agora = datetime.now(
-        ZoneInfo("America/Sao_Paulo")
-    )
-
-    alterou = False
-
-
-    for n in lista:
-
-        # usuário que recebeu abriu a notificação
-        if n.usuario_id == usuario_id and not n.lida:
-
-            n.lida = True
-            n.lida_em = agora
-
-            alterou = True
-
-
-
-    if alterou:
-        db.session.commit()
-
-
-
-    # ==========================
-    # PERMISSÃO DE CRIAR
-    # ==========================
-
-    pode_criar = perfil in [
-        "admin",
-        "operador"
-    ]
-
-
-    usuarios = []
-
-
-    if pode_criar:
-
-        usuarios = Usuario.query.filter(
-            Usuario.usuario != usuario
-        ).all()
-
-
-
-    return render_template(
-        'notificacoes.html',
-        notificacoes=lista,
-        pode_criar=pode_criar,
-        usuarios=usuarios,
-        perfil=perfil
-    )
-
-@app.route('/limpar-notificacoes', methods=['POST'])
-def limpar_notificacoes():
-
-    if session.get('perfil') != 'admin':
-        return redirect('/menu')
-
-
-    Notificacao.query.delete()
 
     db.session.commit()
 
 
     flash(
-        "Todas as notificações foram apagadas!",
+        "🔔 Notificação enviada com sucesso!",
         "success"
     )
-
 
     return redirect('/notificacoes')
 # ==========================
