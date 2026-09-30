@@ -4,27 +4,54 @@
 
 {% block style %}
 
+html{
+    min-height:100%;
+    background:var(--bg) !important;
+}
+
 body{
     font-family:Arial,sans-serif;
     margin:0;
     min-height:100vh;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
-    color:white;
+    padding:0;
+    box-sizing:border-box;
+    background:var(--bg) !important;
+    color:var(--text);
+    transition:
+        background-color .25s ease,
+        color .25s ease;
 }
 
 .container{
     width:90%;
     max-width:700px;
     margin:40px auto;
+    background:transparent !important;
+    color:var(--text);
+}
+
+body.dark-mode .container{
+    background:transparent !important;
+    color:var(--text) !important;
 }
 
 .card{
-    background:rgba(255,255,255,.08);
-    backdrop-filter:blur(12px);
+    background:var(--surface);
+    color:var(--text);
+    border:1px solid var(--border);
     border-radius:20px;
     padding:30px;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
-    border:1px solid rgba(255,255,255,.1);
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+body.dark-mode .card{
+    background:var(--surface) !important;
+    color:var(--text) !important;
+    border-color:var(--border) !important;
 }
 
 .header{
@@ -36,6 +63,8 @@ body{
 
 .header h1{
     font-size:30px;
+    color:var(--text);
+    margin:0;
 }
 
 .btn-voltar{
@@ -54,7 +83,7 @@ body{
 label{
     display:block;
     margin-bottom:8px;
-    color:#cbd5e1;
+    color:var(--text-secondary);
     font-weight:bold;
 }
 
@@ -63,18 +92,23 @@ select,
 textarea{
     width:100%;
     padding:14px;
-    border:none;
+    border:1px solid var(--border);
     outline:none;
     border-radius:12px;
-    background:#111827;
-    color:white;
+    background:var(--input-bg);
+    color:var(--input-text);
     font-size:16px;
     box-sizing:border-box;
     margin-bottom:20px;
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
 }
 
-textarea{
-    resize:none;
+input::placeholder,
+textarea::placeholder{
+    color:var(--text-secondary);
 }
 
 input:focus,
@@ -102,11 +136,16 @@ button:hover{
 }
 
 .info{
-    background:#020617;
+    background:var(--surface-secondary);
+    color:var(--text-secondary);
     padding:15px;
     border-radius:12px;
     margin-bottom:25px;
-    color:#94a3b8;
+    border:1px solid var(--border);
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
 }
 
 @media(max-width:600px){
