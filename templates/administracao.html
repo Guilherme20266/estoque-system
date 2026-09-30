@@ -4,12 +4,22 @@
 
 {% block style %}
 
+html{
+    min-height:100%;
+    background:var(--bg) !important;
+}
+
 body{
     font-family:Arial,sans-serif;
-    background:#f4f4f4;
+    background:var(--bg) !important;
+    color:var(--text);
     margin:0;
     padding:15px;
     box-sizing:border-box;
+    min-height:100vh;
+    transition:
+        background-color .25s ease,
+        color .25s ease;
 }
 
 *{
@@ -20,20 +30,34 @@ body{
     width:100%;
     max-width:800px;
     margin:0 auto;
+    background:transparent !important;
 }
 
 .topo{
-    background:white;
+    background:var(--surface);
+    color:var(--text);
     padding:18px;
     border-radius:15px;
     margin-bottom:15px;
     text-align:center;
     box-shadow:0 2px 8px rgba(0,0,0,.08);
+    border:1px solid var(--border);
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+body.dark-mode .topo{
+    background:var(--surface) !important;
+    color:var(--text) !important;
+    border-color:var(--border) !important;
 }
 
 .topo h2{
     margin:0;
     font-size:22px;
+    color:var(--text);
 }
 
 .alert{
@@ -59,16 +83,29 @@ body{
 }
 
 .card{
-    background:white;
+    background:var(--surface);
+    color:var(--text);
     padding:16px;
     border-radius:12px;
     margin-bottom:15px;
     box-shadow:0 2px 8px rgba(0,0,0,.08);
+    border:1px solid var(--border);
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+body.dark-mode .card{
+    background:var(--surface) !important;
+    color:var(--text) !important;
+    border-color:var(--border) !important;
 }
 
 .card h3{
     margin:0 0 12px 0;
     font-size:18px;
+    color:var(--text);
 }
 
 .info{
@@ -76,15 +113,22 @@ body{
     justify-content:space-between;
     align-items:center;
     gap:10px;
-    background:#f8f9fa;
+    background:var(--surface-secondary);
+    color:var(--text);
     padding:13px;
     border-radius:8px;
     margin-top:9px;
     font-size:15px;
+    border:1px solid var(--border);
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
 }
 
 .info span{
     min-width:0;
+    color:var(--text);
 }
 
 .info b{
@@ -97,12 +141,27 @@ input,
 select{
     width:100%;
     padding:12px;
-    border:1px solid #ccc;
+    border:1px solid var(--border);
     border-radius:8px;
     margin-top:10px;
     box-sizing:border-box;
     font-size:15px;
-    background:white;
+    background:var(--input-bg);
+    color:var(--input-text);
+    outline:none;
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+input::placeholder{
+    color:var(--text-secondary);
+}
+
+input:focus,
+select:focus{
+    box-shadow:0 0 0 2px #2563eb;
 }
 
 button{
@@ -156,27 +215,37 @@ button:disabled{
 }
 
 .usuario{
-    border:1px solid #e5e5e5;
+    border:1px solid var(--border);
     border-radius:10px;
     padding:14px;
     margin-top:10px;
-    background:#fff;
+    background:var(--surface-secondary);
+    color:var(--text);
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
 }
 
 .usuario b{
     font-size:15px;
     word-break:break-word;
+    color:var(--text);
 }
 
 .usuario small{
     display:block;
     margin-top:4px;
-    color:#666;
+    color:var(--text-secondary);
 }
 
 .master{
     border-left:5px solid gold;
     background:#fff8dc;
+}
+
+body.dark-mode .master{
+    background:#332b0a !important;
 }
 
 .acoes-usuario{
@@ -199,22 +268,36 @@ a{
 }
 
 .modal-conteudo{
-    background:white;
+    background:var(--surface);
+    color:var(--text);
     padding:22px;
     border-radius:12px;
     width:calc(100% - 30px);
     max-width:360px;
     text-align:center;
     box-shadow:0 5px 20px rgba(0,0,0,.3);
+    border:1px solid var(--border);
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+body.dark-mode .modal-conteudo{
+    background:var(--surface) !important;
+    color:var(--text) !important;
+    border-color:var(--border) !important;
 }
 
 .modal-conteudo h3{
     margin-top:0;
+    color:var(--text);
 }
 
 .modal-conteudo p{
     line-height:1.5;
     margin-bottom:15px;
+    color:var(--text-secondary);
 }
 
 @media(max-width:600px){
