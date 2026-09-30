@@ -9,20 +9,56 @@
 
 {% block style %}
 
+:root{
+    --sep-bg:#f4f4f4;
+    --sep-surface:#ffffff;
+    --sep-text:#111827;
+    --sep-secondary:#555555;
+    --sep-border:#cccccc;
+    --sep-shadow:rgba(0,0,0,.08);
+    --sep-button:#007bff;
+    --sep-back:#6c757d;
+    --sep-input-bg:#ffffff;
+    --sep-input-text:#111827;
+    --sep-option-bg:#ffffff;
+    --sep-option-text:#111827;
+}
+
+/* MODO ESCURO */
+body.dark-mode{
+    --sep-bg:#0f172a;
+    --sep-surface:#1e293b;
+    --sep-text:#f8fafc;
+    --sep-secondary:#cbd5e1;
+    --sep-border:#475569;
+    --sep-shadow:rgba(0,0,0,.30);
+    --sep-button:#2563eb;
+    --sep-back:#475569;
+    --sep-input-bg:#0f172a;
+    --sep-input-text:#f8fafc;
+    --sep-option-bg:#1e293b;
+    --sep-option-text:#f8fafc;
+}
+
 body{
     font-family:Arial;
-    background:#f4f4f4;
+    background:var(--sep-bg);
+    color:var(--sep-text);
     margin:0;
     padding:15px;
 }
 
+/* Garante que nenhum efeito do tema fique por cima do conteúdo */
 .box{
     max-width:600px;
     margin:auto;
+    position:relative;
+    z-index:1;
 }
 
 h2{
     text-align:center;
+    color:var(--sep-text);
 }
 
 .voltar,.menu{
@@ -30,7 +66,7 @@ h2{
     padding:12px;
     border:none;
     border-radius:8px;
-    background:#6c757d;
+    background:var(--sep-back);
     color:white;
     font-size:15px;
     margin-bottom:10px;
@@ -48,8 +84,14 @@ h2{
     flex:1;
     padding:12px;
     border-radius:8px;
-    border:1px solid #ccc;
+    border:1px solid var(--sep-border);
+    background:var(--sep-input-bg);
+    color:var(--sep-input-text);
     box-sizing:border-box;
+}
+
+.busca::placeholder{
+    color:var(--sep-secondary);
 }
 
 .cam-btn{
@@ -76,32 +118,42 @@ h2{
 
 /* CARD */
 .card{
-    background:white;
+    background:var(--sep-surface);
+    color:var(--sep-text);
     padding:14px;
     border-radius:12px;
     margin-bottom:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
+    box-shadow:0 2px 8px var(--sep-shadow);
 }
 
 .nome{
     font-size:18px;
     font-weight:bold;
     margin-bottom:8px;
+    color:var(--sep-text);
 }
 
 .info{
-    color:#555;
+    color:var(--sep-secondary);
     line-height:1.8;
 }
 
 /* FORM */
-select,input[type=number]{
+select,
+input[type=number]{
     width:100%;
     padding:12px;
     margin-top:10px;
     border-radius:8px;
-    border:1px solid #ccc;
+    border:1px solid var(--sep-border);
+    background:var(--sep-input-bg);
+    color:var(--sep-input-text);
     box-sizing:border-box;
+}
+
+select option{
+    background:var(--sep-option-bg);
+    color:var(--sep-option-text);
 }
 
 button{
@@ -109,7 +161,7 @@ button{
     padding:12px;
     border:none;
     border-radius:8px;
-    background:#007bff;
+    background:var(--sep-button);
     color:white;
     margin-top:10px;
     font-size:15px;
@@ -150,7 +202,9 @@ button{
     border:1px solid #ffeeba;
 }
 
-a{text-decoration:none;}
+a{
+    text-decoration:none;
+}
 
 {% endblock %}
 
