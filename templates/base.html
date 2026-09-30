@@ -30,178 +30,254 @@
 
 {% block script %}{% endblock %}
 
+
 <style>
-    /* =========================
-       TEMA DO SISTEMA
-    ========================= */
 
-    :root {
-        --bg: #f4f4f4;
-        --text: #111827;
-        --text-secondary: #6b7280;
-        --surface: #ffffff;
-        --surface-secondary: #f8fafc;
-        --border: #e5e7eb;
-        --input-bg: #ffffff;
-        --input-text: #111827;
-    }
+/* =========================================================
+   TEMA GERAL DO SISTEMA
+========================================================= */
 
-    body {
-        background-color: var(--bg);
-        color: var(--text);
-        transition:
-            background-color 0.25s ease,
-            color 0.25s ease;
-    }
+:root {
+    --bg: #f4f4f4;
+    --text: #111827;
+    --text-secondary: #6b7280;
 
-    /* =========================
-       MODO NOITE
-    ========================= */
+    --surface: #ffffff;
+    --surface-secondary: #f8fafc;
 
-    body.dark-mode {
-        --bg: #0f172a;
-        --text: #f8fafc;
-        --text-secondary: #cbd5e1;
-        --surface: #1e293b;
-        --surface-secondary: #172033;
-        --border: #334155;
-        --input-bg: #1e293b;
-        --input-text: #f8fafc;
+    --border: #e5e7eb;
 
-        background-color: var(--bg) !important;
-        color: var(--text) !important;
-    }
-
-    /* Textos */
-
-    body.dark-mode h1,
-    body.dark-mode h2,
-    body.dark-mode h3,
-    body.dark-mode h4,
-    body.dark-mode h5,
-    body.dark-mode h6,
-    body.dark-mode p,
-    body.dark-mode label,
-    body.dark-mode span,
-    body.dark-mode div {
-        color: inherit;
-    }
-
-    /* Campos */
-
-    body.dark-mode input,
-    body.dark-mode select,
-    body.dark-mode textarea {
-        background-color: var(--input-bg) !important;
-        color: var(--input-text) !important;
-        border-color: var(--border) !important;
-    }
-
-    body.dark-mode input::placeholder,
-    body.dark-mode textarea::placeholder {
-        color: #94a3b8 !important;
-    }
-
-    /* Cards / caixas */
-
-    body.dark-mode .card,
-    body.dark-mode .box,
-    body.dark-mode .topo,
-    body.dark-mode .container,
-    body.dark-mode .painel,
-    body.dark-mode .panel {
-        background-color: var(--surface) !important;
-        color: var(--text) !important;
-        border-color: var(--border) !important;
-    }
-
-    /* Tabelas */
-
-    body.dark-mode table {
-        color: var(--text) !important;
-    }
-
-    body.dark-mode th {
-        background-color: #172033 !important;
-        color: #f8fafc !important;
-    }
-
-    body.dark-mode td {
-        background-color: var(--surface) !important;
-        color: var(--text) !important;
-        border-color: var(--border) !important;
-    }
-
-    /* Links */
-
-    body.dark-mode a:not(.btn) {
-        color: #93c5fd;
-    }
+    --input-bg: #ffffff;
+    --input-text: #111827;
+}
 
 
-    /* =========================
-       BOTÃO TEMA
-    ========================= */
+/* =========================================================
+   HTML E BODY
+========================================================= */
+
+html {
+    min-height: 100%;
+    background-color: var(--bg);
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+
+    background-color: var(--bg);
+    color: var(--text);
+
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease;
+}
+
+
+/* =========================================================
+   MODO ESCURO
+========================================================= */
+
+body.dark-mode {
+
+    --bg: #0f172a;
+    --text: #f8fafc;
+    --text-secondary: #cbd5e1;
+
+    --surface: #1e293b;
+    --surface-secondary: #172033;
+
+    --border: #334155;
+
+    --input-bg: #0f172a;
+    --input-text: #f8fafc;
+
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+html:has(body.dark-mode) {
+    background-color: #0f172a !important;
+}
+
+
+/* =========================================================
+   TEXTOS
+========================================================= */
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6,
+body.dark-mode p,
+body.dark-mode label,
+body.dark-mode span {
+    color: inherit;
+}
+
+
+/* =========================================================
+   CAMPOS
+========================================================= */
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+
+    background-color: var(--input-bg) !important;
+
+    color: var(--input-text) !important;
+
+    border-color: var(--border) !important;
+}
+
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   CARDS / CAIXAS
+========================================================= */
+
+body.dark-mode .card,
+body.dark-mode .box,
+body.dark-mode .topo,
+body.dark-mode .container,
+body.dark-mode .painel,
+body.dark-mode .panel {
+
+    background-color: var(--surface) !important;
+
+    color: var(--text) !important;
+
+    border-color: var(--border) !important;
+}
+
+
+/* =========================================================
+   TABELAS
+========================================================= */
+
+body.dark-mode table {
+
+    color: var(--text) !important;
+}
+
+
+body.dark-mode th {
+
+    background-color: #172033 !important;
+
+    color: #f8fafc !important;
+}
+
+
+body.dark-mode td {
+
+    background-color: var(--surface) !important;
+
+    color: var(--text) !important;
+
+    border-color: var(--border) !important;
+}
+
+
+/* =========================================================
+   LINKS
+========================================================= */
+
+body.dark-mode a:not(.btn) {
+
+    color: #93c5fd;
+}
+
+
+/* =========================================================
+   BOTÃO DE TEMA
+========================================================= */
+
+.theme-toggle {
+
+    position: fixed;
+
+    right: 20px;
+    bottom: 20px;
+
+    width: 48px;
+    height: 48px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #ffffff;
+    color: #111827;
+
+    font-size: 21px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,.25);
+
+    z-index: 99999;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        transform .2s ease;
+}
+
+
+.theme-toggle:hover {
+
+    transform: scale(1.08);
+}
+
+
+body.dark-mode .theme-toggle {
+
+    background: #1e293b;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,.45);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width:600px) {
 
     .theme-toggle {
-        position: fixed;
 
-        right: 20px;
-        bottom: 20px;
+        right:15px;
+        bottom:15px;
 
-        width: 48px;
-        height: 48px;
-
-        border: none;
-        border-radius: 50%;
-
-        background: #ffffff;
-        color: #111827;
-
-        font-size: 21px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        cursor: pointer;
-
-        box-shadow: 0 4px 15px rgba(0,0,0,.25);
-
-        z-index: 99999;
-
-        transition:
-            background .25s ease,
-            color .25s ease,
-            transform .2s ease;
+        width:46px;
+        height:46px;
     }
 
-    .theme-toggle:hover {
-        transform: scale(1.08);
-    }
+}
 
-    body.dark-mode .theme-toggle {
-        background: #1e293b;
-        color: #ffffff;
-        box-shadow: 0 4px 15px rgba(0,0,0,.45);
-    }
-
-    @media (max-width: 600px) {
-
-        .theme-toggle {
-            right: 15px;
-            bottom: 15px;
-
-            width: 46px;
-            height: 46px;
-        }
-
-    }
 </style>
 
-    
-</script>
 
+<!-- =======================================================
+     BOTÃO DE TEMA
+======================================================= -->
 
 <button
     id="themeToggle"
@@ -212,22 +288,30 @@
     🌙
 </button>
 
+
 <script>
+
 (function () {
 
-    const botao = document.getElementById("themeToggle");
+    const botao =
+        document.getElementById("themeToggle");
+
 
     if (!botao) return;
 
+
     function aplicarTema() {
 
-        const tema = localStorage.getItem("modoEstoque");
+        const tema =
+            localStorage.getItem("modoEstoque");
+
 
         if (tema === "dark") {
 
             document.body.classList.add("dark-mode");
 
             botao.textContent = "☀️";
+
             botao.title = "Modo dia";
 
         } else {
@@ -235,38 +319,37 @@
             document.body.classList.remove("dark-mode");
 
             botao.textContent = "🌙";
+
             botao.title = "Modo noite";
         }
+
     }
 
+
     aplicarTema();
+
 
     botao.addEventListener("click", function () {
 
         const estaNoite =
             document.body.classList.contains("dark-mode");
 
-        if (estaNoite) {
 
-            localStorage.setItem(
-                "modoEstoque",
-                "light"
-            );
+        localStorage.setItem(
+            "modoEstoque",
+            estaNoite ? "light" : "dark"
+        );
 
-        } else {
-
-            localStorage.setItem(
-                "modoEstoque",
-                "dark"
-            );
-        }
 
         aplicarTema();
 
     });
 
+
 })();
+
 </script>
-    
+
+
 </body>
 </html>
