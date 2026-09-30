@@ -9,37 +9,7 @@
 ========================== */
 
 :root{
-    --sol-bg-start:#0f172a;
-    --sol-bg-end:#1e293b;
-
-    --sol-text:#ffffff;
-    --sol-secondary:#cbd5e1;
-    --sol-muted:#94a3b8;
-
-    --sol-surface:rgba(255,255,255,.07);
-    --sol-surface-strong:rgba(255,255,255,.06);
-    --sol-border:rgba(255,255,255,.08);
-
-    --sol-input-bg:#111827;
-    --sol-input-text:#ffffff;
-
-    --sol-address-bg:#020617;
-    --sol-address-text:#e2e8f0;
-
-    --sol-button-dark:#334155;
-}
-
-
-/* ==========================
-   MODO DIA
-========================== */
-
-body:not(.dark-mode){
-
-    --sol-bg-start:#eef2f7;
-    --sol-bg-end:#f8fafc;
-
-    --sol-text:#172033;
+    --sol-text:#111827;
     --sol-secondary:#475569;
     --sol-muted:#64748b;
 
@@ -63,19 +33,16 @@ body:not(.dark-mode){
 
 body.dark-mode{
 
-    --sol-bg-start:#0f172a;
-    --sol-bg-end:#1e293b;
-
-    --sol-text:#ffffff;
+    --sol-text:#f8fafc;
     --sol-secondary:#cbd5e1;
     --sol-muted:#94a3b8;
 
-    --sol-surface:rgba(255,255,255,.07);
-    --sol-surface-strong:rgba(255,255,255,.06);
-    --sol-border:rgba(255,255,255,.08);
+    --sol-surface:#1e293b;
+    --sol-surface-strong:#1e293b;
+    --sol-border:#334155;
 
     --sol-input-bg:#111827;
-    --sol-input-text:#ffffff;
+    --sol-input-text:#f8fafc;
 
     --sol-address-bg:#020617;
     --sol-address-text:#e2e8f0;
@@ -85,8 +52,13 @@ body.dark-mode{
 
 
 /* ==========================
-   BASE
+   BASE DA PÁGINA
 ========================== */
+
+html{
+    min-height:100%;
+    background:var(--bg);
+}
 
 body{
     font-family:Arial,sans-serif;
@@ -95,17 +67,16 @@ body{
 
     min-height:100vh;
 
-    background:
-        linear-gradient(
-            135deg,
-            var(--sol-bg-start),
-            var(--sol-bg-end)
-        );
+    padding:0;
 
-    color:var(--sol-text);
+    box-sizing:border-box;
+
+    background:var(--bg) !important;
+
+    color:var(--text);
 
     transition:
-        background .25s ease,
+        background-color .25s ease,
         color .25s ease;
 }
 
@@ -120,6 +91,8 @@ body{
     max-width:1050px;
 
     margin:30px auto;
+
+    background:transparent !important;
 }
 
 
@@ -1196,7 +1169,7 @@ body{
 
     <!-- ==========================
          AÇÕES
-    ========================== -->
+========================== -->
 
     <div class="acoes">
 
