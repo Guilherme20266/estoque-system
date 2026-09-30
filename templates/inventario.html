@@ -9,17 +9,34 @@
 
 {% block style %}
 
-/* (SEU CSS INTACTO) */
-body{
-    font-family:Arial;
-    background:#f4f4f4;
-    padding:15px;
-    margin:0;
+html{
+    min-height:100%;
+    background:var(--bg) !important;
 }
 
-.box{ max-width:600px; margin:auto; }
+body{
+    font-family:Arial;
+    background:var(--bg) !important;
+    color:var(--text);
+    padding:15px;
+    margin:0;
+    min-height:100vh;
+    box-sizing:border-box;
+    transition:
+        background-color .25s ease,
+        color .25s ease;
+}
 
-h2{ text-align:center; }
+.box{
+    max-width:600px;
+    margin:auto;
+    background:transparent !important;
+}
+
+h2{
+    text-align:center;
+    color:var(--text);
+}
 
 .menu-btn{
     width:100%;
@@ -36,9 +53,24 @@ h2{ text-align:center; }
 .busca{
     width:100%;
     padding:12px;
-    border:1px solid #ccc;
+    border:1px solid var(--border);
     border-radius:8px;
     box-sizing:border-box;
+    background:var(--input-bg);
+    color:var(--input-text);
+    outline:none;
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+.busca::placeholder{
+    color:var(--text-secondary);
+}
+
+.busca:focus{
+    box-shadow:0 0 0 2px #2563eb;
 }
 
 .busca-area{
@@ -59,18 +91,41 @@ h2{ text-align:center; }
 }
 
 .card{
-    background:white;
+    background:var(--surface);
+    color:var(--text);
     padding:14px;
     margin-bottom:12px;
     border-radius:12px;
     box-shadow:0 2px 6px rgba(0,0,0,.08);
+    border:1px solid var(--border);
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
 }
 
-.urgente{ border-left:8px solid #dc3545; }
-.atencao{ border-left:8px solid #ffc107; }
-.ok{ border-left:8px solid #28a745; }
+body.dark-mode .card{
+    background:var(--surface) !important;
+    color:var(--text) !important;
+    border-color:var(--border) !important;
+}
 
-.status{ font-weight:bold; margin-bottom:8px; }
+.urgente{
+    border-left:8px solid #dc3545;
+}
+
+.atencao{
+    border-left:8px solid #ffc107;
+}
+
+.ok{
+    border-left:8px solid #28a745;
+}
+
+.status{
+    font-weight:bold;
+    margin-bottom:8px;
+}
 
 .piscando{
     color:#dc3545;
@@ -88,14 +143,17 @@ h2{ text-align:center; }
     font-size:18px;
     font-weight:bold;
     margin-bottom:8px;
+    color:var(--text);
 }
 
 .info{
-    color:#555;
+    color:var(--text-secondary);
     line-height:1.7;
 }
 
-.botoes{ margin-top:12px; }
+.botoes{
+    margin-top:12px;
+}
 
 .btn{
     width:100%;
@@ -108,12 +166,26 @@ h2{ text-align:center; }
     cursor:pointer;
 }
 
-.mov{ background:#007bff; }
-.transf{ background:#28a745; }
-.edit{ background:#ffc107; color:#000; }
-.del{ background:#dc3545; }
+.mov{
+    background:#007bff;
+}
 
-a{ text-decoration:none; }
+.transf{
+    background:#28a745;
+}
+
+.edit{
+    background:#ffc107;
+    color:#000;
+}
+
+.del{
+    background:#dc3545;
+}
+
+a{
+    text-decoration:none;
+}
 
 #reader{
     display:none;
@@ -195,7 +267,6 @@ data-texto="{{ item.produto.nome }} {{ item.produto.codigo }} {{ item.produto.en
 </div>
 
 <div class="botoes">
-
 
 <a href="/transferencia?produto_id={{ item.produto.id }}">
     <button class="btn transf">📍 Transferir</button>
