@@ -8,17 +8,82 @@
     box-sizing:border-box;
 }
 
+/* ==========================================
+   TEMA
+   ========================================== */
+
+:root{
+    --menu-bg:#eef2f7;
+    --menu-text:#172033;
+
+    --menu-surface:#ffffff;
+    --menu-border:#dfe5ec;
+    --menu-divider:#edf0f4;
+
+    --menu-item-text:#1e293b;
+    --menu-muted:#64748b;
+    --menu-description:#94a3b8;
+
+    --menu-hover:#f8fafc;
+
+    --menu-icon-bg:#eff6ff;
+
+    --menu-counter-bg:#fee2e2;
+    --menu-counter-text:#dc2626;
+
+    --menu-exit-text:#64748b;
+    --menu-exit-hover:#fffafa;
+}
+
+
+/* ==========================================
+   MODO NOITE
+   ========================================== */
+
+body.dark-mode{
+
+    --menu-bg:#0f172a;
+    --menu-text:#f8fafc;
+
+    --menu-surface:#1e293b;
+    --menu-border:#334155;
+    --menu-divider:#334155;
+
+    --menu-item-text:#f8fafc;
+    --menu-muted:#cbd5e1;
+    --menu-description:#94a3b8;
+
+    --menu-hover:#273449;
+
+    --menu-icon-bg:#263b5c;
+
+    --menu-counter-bg:#4c2028;
+    --menu-counter-text:#fda4af;
+
+    --menu-exit-text:#cbd5e1;
+    --menu-exit-hover:#273449;
+}
+
+
+/* ==========================================
+   BODY
+   ========================================== */
+
 body{
     margin:0;
     min-height:100vh;
 
     font-family:Arial,sans-serif;
 
-    background:#eef2f7;
+    background:var(--menu-bg);
 
-    color:#172033;
+    color:var(--menu-text);
 
     padding:20px 0;
+
+    transition:
+        background .25s ease,
+        color .25s ease;
 }
 
 
@@ -56,7 +121,9 @@ body{
 }
 
 
-/* detalhe decorativo */
+/* ==========================================
+   DETALHE DECORATIVO
+   ========================================== */
 
 .topo::after{
     content:"";
@@ -114,7 +181,7 @@ body{
 
 
 /* ==========================================
-   PONTO
+   PONTO NOTIFICAÇÃO
    ========================================== */
 
 .ponto-notificacao{
@@ -237,7 +304,7 @@ h1{
 
     font-weight:bold;
 
-    color:#64748b;
+    color:var(--menu-muted);
 
     text-transform:uppercase;
 
@@ -250,15 +317,19 @@ h1{
    ========================================== */
 
 .menu{
-    background:#fff;
+    background:var(--menu-surface);
 
-    border:1px solid #dfe5ec;
+    border:1px solid var(--menu-border);
 
     border-radius:15px;
 
     overflow:hidden;
 
     box-shadow:0 4px 15px rgba(15,23,42,.07);
+
+    transition:
+        background .25s ease,
+        border-color .25s ease;
 }
 
 
@@ -281,11 +352,13 @@ h1{
 
     text-decoration:none;
 
-    color:#1e293b;
+    color:var(--menu-item-text);
 
-    border-bottom:1px solid #edf0f4;
+    border-bottom:1px solid var(--menu-divider);
 
-    transition:.15s;
+    transition:
+        background .15s ease,
+        color .15s ease;
 }
 
 .menu-item:last-child{
@@ -293,7 +366,7 @@ h1{
 }
 
 .menu-item:hover{
-    background:#f8fafc;
+    background:var(--menu-hover);
 }
 
 
@@ -314,9 +387,11 @@ h1{
     align-items:center;
     justify-content:center;
 
-    background:#eff6ff;
+    background:var(--menu-icon-bg);
 
     font-size:20px;
+
+    transition:background .25s ease;
 }
 
 
@@ -333,7 +408,7 @@ h1{
 
     font-weight:bold;
 
-    color:#1e293b;
+    color:var(--menu-item-text);
 }
 
 .descricao{
@@ -341,7 +416,7 @@ h1{
 
     font-size:10px;
 
-    color:#94a3b8;
+    color:var(--menu-description);
 }
 
 
@@ -350,7 +425,7 @@ h1{
    ========================================== */
 
 .seta{
-    color:#94a3b8;
+    color:var(--menu-description);
 
     font-size:18px;
 
@@ -381,9 +456,9 @@ h1{
 
     border-radius:20px;
 
-    background:#fee2e2;
+    background:var(--menu-counter-bg);
 
-    color:#dc2626;
+    color:var(--menu-counter-text);
 
     font-size:11px;
 
@@ -425,17 +500,20 @@ h1{
 
     text-decoration:none;
 
-    color:#64748b;
+    color:var(--menu-exit-text);
 
-    background:#fff;
+    background:var(--menu-surface);
 
-    border:1px solid #dfe5ec;
+    border:1px solid var(--menu-border);
 
     font-size:13px;
 
     font-weight:bold;
 
-    transition:.2s;
+    transition:
+        color .2s ease,
+        background .2s ease,
+        border-color .2s ease;
 }
 
 .sair:hover{
@@ -443,7 +521,7 @@ h1{
 
     border-color:#fecaca;
 
-    background:#fffafa;
+    background:var(--menu-exit-hover);
 }
 
 
