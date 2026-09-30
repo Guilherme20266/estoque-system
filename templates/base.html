@@ -30,5 +30,121 @@
 
 {% block script %}{% endblock %}
 
+<!-- BOTÃO MODO DIA / NOITE -->
+<button id="themeToggle" class="theme-toggle" type="button" title="Alternar modo">
+    🌙
+</button>
+
+<style>
+    .theme-toggle {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+
+        width: 48px;
+        height: 48px;
+
+        border: none;
+        border-radius: 50%;
+
+        background: #ffffff;
+        color: #111827;
+
+        font-size: 22px;
+
+        cursor: pointer;
+
+        box-shadow: 0 4px 15px rgba(0,0,0,0.20);
+
+        z-index: 9999;
+
+        transition:
+            background 0.25s ease,
+            color 0.25s ease,
+            transform 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+        transform: scale(1.08);
+    }
+
+    /* MODO NOITE */
+    body.dark-mode {
+        background: #0f172a !important;
+        color: #e5e7eb !important;
+    }
+
+    body.dark-mode .theme-toggle {
+        background: #1e293b;
+        color: #f8fafc;
+    }
+
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+        background: #1e293b !important;
+        color: #f8fafc !important;
+        border-color: #475569 !important;
+    }
+
+    body.dark-mode input::placeholder,
+    body.dark-mode textarea::placeholder {
+        color: #94a3b8;
+    }
+
+    body.dark-mode .box,
+    body.dark-mode .card,
+    body.dark-mode .container,
+    body.dark-mode .topo {
+        color: #e5e7eb;
+    }
+
+    @media (max-width: 600px) {
+        .theme-toggle {
+            right: 15px;
+            bottom: 15px;
+            width: 45px;
+            height: 45px;
+            font-size: 20px;
+        }
+    }
+</style>
+
+<script>
+    const themeToggle = document.getElementById("themeToggle");
+
+    // Recupera o modo salvo
+    const modoSalvo = localStorage.getItem("modoEstoque");
+
+    if (modoSalvo === "dark") {
+        document.body.classList.add("dark-mode");
+        themeToggle.textContent = "☀️";
+        themeToggle.title = "Ativar modo dia";
+    } else {
+        themeToggle.textContent = "🌙";
+        themeToggle.title = "Ativar modo noite";
+    }
+
+    themeToggle.addEventListener("click", function () {
+
+        document.body.classList.toggle("dark-mode");
+
+        if (document.body.classList.contains("dark-mode")) {
+
+            localStorage.setItem("modoEstoque", "dark");
+
+            themeToggle.textContent = "☀️";
+            themeToggle.title = "Ativar modo dia";
+
+        } else {
+
+            localStorage.setItem("modoEstoque", "light");
+
+            themeToggle.textContent = "🌙";
+            themeToggle.title = "Ativar modo noite";
+        }
+    });
+</script>
+
 </body>
 </html>
