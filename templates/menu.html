@@ -4,27 +4,38 @@
 
 {% block style %}
 
-/* ==========================================
-   FUNDO
-   ========================================== */
+*{
+    box-sizing:border-box;
+}
 
 body{
     font-family:Arial,sans-serif;
     margin:0;
     min-height:100vh;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
-    padding:25px 0;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #263449 0%,
+            #172235 42%,
+            #0f172a 100%
+        );
+
+    padding:20px 0;
 }
 
 
 /* ==========================================
-   CONTAINER PRINCIPAL
+   CONTAINER
    ========================================== */
 
 .box{
-    width:92%;
-    max-width:650px;
-    margin:0 auto;
+    width:90%;
+    max-width:520px;
 }
 
 
@@ -37,16 +48,16 @@ body{
 
     background:rgba(255,255,255,.97);
 
-    border-radius:20px;
+    border-radius:18px;
 
-    padding:28px 20px 24px;
+    padding:25px 20px 22px;
 
     text-align:center;
 
-    margin-bottom:20px;
+    margin-bottom:16px;
 
     box-shadow:
-        0 15px 35px rgba(0,0,0,.28);
+        0 12px 35px rgba(0,0,0,.30);
 }
 
 
@@ -57,11 +68,11 @@ body{
 .sino-notificacao{
     position:absolute;
 
-    top:14px;
-    right:14px;
+    top:13px;
+    right:13px;
 
-    width:44px;
-    height:44px;
+    width:42px;
+    height:42px;
 
     border-radius:50%;
 
@@ -73,17 +84,17 @@ body{
 
     text-decoration:none;
 
-    box-shadow:0 4px 12px rgba(0,0,0,.15);
-
-    z-index:10;
-
     font-size:22px;
+
+    box-shadow:
+        0 3px 10px rgba(0,0,0,.15);
 
     transition:.2s;
 }
 
 .sino-notificacao:hover{
-    transform:scale(1.08);
+    transform:scale(1.06);
+
     background:#eef2ff;
 }
 
@@ -118,7 +129,7 @@ body{
     }
 
     50%{
-        transform:scale(1.45);
+        transform:scale(1.4);
         opacity:.5;
     }
 
@@ -137,14 +148,15 @@ body{
 .logo{
     display:block;
 
-    width:82px;
-    height:82px;
+    width:78px;
+    height:78px;
 
-    margin:0 auto 14px;
+    margin:0 auto 13px;
 
-    border-radius:20px;
+    border-radius:18px;
 
-    box-shadow:0 5px 15px rgba(0,0,0,.15);
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.12);
 }
 
 
@@ -155,122 +167,112 @@ body{
 h1{
     margin:0;
 
-    font-size:23px;
+    font-size:22px;
 
     font-weight:800;
 
-    color:#111827;
+    letter-spacing:.2px;
 
-    letter-spacing:.3px;
+    color:#111827;
 }
 
 
 .sub{
     color:#6b7280;
 
-    margin-top:6px;
+    margin-top:5px;
 
     font-size:13px;
 }
 
+
+/* ==========================================
+   USUÁRIO
+   ========================================== */
 
 .usuario{
     display:inline-block;
 
-    margin-top:12px;
+    margin-top:11px;
 
-    padding:7px 13px;
-
-    background:#f1f5f9;
+    padding:6px 12px;
 
     border-radius:20px;
 
-    font-size:13px;
+    background:#f1f5f9;
 
-    font-weight:bold;
-
-    color:#374151;
-}
-
-
-/* ==========================================
-   TÍTULO DAS CATEGORIAS
-   ========================================== */
-
-.secao{
-    margin:20px 0 10px;
-
-    color:#cbd5e1;
+    color:#475569;
 
     font-size:12px;
 
     font-weight:bold;
-
-    letter-spacing:1px;
-
-    text-transform:uppercase;
-
-    padding-left:4px;
 }
 
 
 /* ==========================================
-   GRID DOS BOTÕES
+   LINKS
    ========================================== */
 
-.grid{
-    display:grid;
-
-    grid-template-columns:repeat(2,1fr);
-
-    gap:12px;
+a{
+    text-decoration:none;
 }
 
 
 /* ==========================================
-   CARDS / BOTÕES
+   BOTÕES
    ========================================== */
 
-.menu-item{
+.btn{
     position:relative;
 
-    min-height:88px;
+    width:100%;
 
-    border-radius:16px;
+    min-height:56px;
 
-    text-decoration:none;
+    padding:14px 18px;
 
-    display:flex;
+    margin-bottom:10px;
 
-    flex-direction:column;
+    border:none;
 
-    justify-content:center;
-
-    align-items:flex-start;
-
-    padding:18px;
-
-    box-sizing:border-box;
+    border-radius:13px;
 
     color:white;
 
+    font-size:15px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    text-align:left;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+
     box-shadow:
-        0 7px 18px rgba(0,0,0,.25);
+        0 5px 14px rgba(0,0,0,.22);
 
     transition:
-        transform .2s,
-        box-shadow .2s;
+        transform .18s ease,
+        box-shadow .18s ease,
+        filter .18s ease;
 }
 
-.menu-item:hover{
-    transform:translateY(-3px);
+.btn:hover{
+    transform:translateY(-2px);
 
     box-shadow:
-        0 12px 24px rgba(0,0,0,.32);
+        0 8px 18px rgba(0,0,0,.28);
+
+    filter:brightness(1.04);
 }
 
-.menu-item:active{
-    transform:scale(.98);
+.btn:active{
+    transform:translateY(0);
 }
 
 
@@ -278,29 +280,8 @@ h1{
    ÍCONE
    ========================================== */
 
-.menu-icon{
-    font-size:27px;
-
-    margin-bottom:8px;
-}
-
-
-/* ==========================================
-   TEXTO
-   ========================================== */
-
-.menu-title{
-    font-size:15px;
-
-    font-weight:bold;
-}
-
-.menu-desc{
-    font-size:11px;
-
-    margin-top:4px;
-
-    opacity:.82;
+.btn::first-letter{
+    font-size:18px;
 }
 
 
@@ -308,110 +289,27 @@ h1{
    AZUL
    ========================================== */
 
-.azul{
-    background:linear-gradient(
-        135deg,
-        #3b82f6,
-        #2563eb
-    );
+.padrao{
+    background:
+        linear-gradient(
+            135deg,
+            #3b82f6,
+            #2563eb
+        );
 }
 
 
 /* ==========================================
-   AZUL ESCURO
+   ADMINISTRAÇÃO
    ========================================== */
 
-.azul-escuro{
-    background:linear-gradient(
-        135deg,
-        #2563eb,
-        #1d4ed8
-    );
-}
-
-
-/* ==========================================
-   ROXO
-   ========================================== */
-
-.roxo{
-    background:linear-gradient(
-        135deg,
-        #6366f1,
-        #4f46e5
-    );
-}
-
-
-/* ==========================================
-   VERDE
-   ========================================== */
-
-.verde{
-    background:linear-gradient(
-        135deg,
-        #10b981,
-        #059669
-    );
-}
-
-
-/* ==========================================
-   LARANJA
-   ========================================== */
-
-.laranja{
-    background:linear-gradient(
-        135deg,
-        #f59e0b,
-        #d97706
-    );
-}
-
-
-/* ==========================================
-   VERMELHO
-   ========================================== */
-
-.vermelho{
-    background:linear-gradient(
-        135deg,
-        #ef4444,
-        #dc2626
-    );
-}
-
-
-/* ==========================================
-   CONTADOR
-   ========================================== */
-
-.contador{
-    position:absolute;
-
-    top:10px;
-    right:10px;
-
-    min-width:24px;
-    height:24px;
-
-    padding:0 7px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:white;
-
-    color:#dc2626;
-
-    border-radius:20px;
-
-    font-size:12px;
-
-    font-weight:bold;
-
-    box-shadow:0 3px 8px rgba(0,0,0,.2);
+.admin{
+    background:
+        linear-gradient(
+            135deg,
+            #ef4444,
+            #dc2626
+        );
 }
 
 
@@ -419,45 +317,68 @@ h1{
    SAIR
    ========================================== */
 
-.sair{
-    display:block;
+.logout{
+    margin-top:6px;
 
-    width:100%;
+    background:
+        rgba(255,255,255,.08);
 
-    box-sizing:border-box;
+    border:1px solid rgba(255,255,255,.12);
 
-    margin-top:20px;
+    box-shadow:none;
 
-    padding:15px;
+    color:#cbd5e1;
 
-    border-radius:14px;
-
-    background:rgba(239,68,68,.12);
-
-    border:1px solid rgba(239,68,68,.35);
-
-    color:#fca5a5;
+    justify-content:center;
 
     text-align:center;
-
-    text-decoration:none;
-
-    font-size:14px;
-
-    font-weight:bold;
-
-    transition:.2s;
 }
 
-.sair:hover{
-    background:#ef4444;
+.logout:hover{
+    background:rgba(239,68,68,.15);
 
-    color:white;
+    border-color:rgba(239,68,68,.30);
+
+    color:#fecaca;
+
+    box-shadow:none;
 }
 
 
 /* ==========================================
-   RESPONSIVO
+   CONTADOR DE SOLICITAÇÕES
+   ========================================== */
+
+.contador-solicitacoes{
+    margin-left:auto;
+
+    min-width:27px;
+    height:27px;
+
+    padding:0 7px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    box-shadow:
+        0 2px 7px rgba(0,0,0,.18);
+}
+
+
+/* ==========================================
+   CELULAR
    ========================================== */
 
 @media(max-width:480px){
@@ -467,11 +388,13 @@ h1{
     }
 
     .box{
-        width:94%;
+        width:92%;
     }
 
     .topo{
-        padding:24px 15px 20px;
+        padding:22px 16px 20px;
+
+        border-radius:17px;
     }
 
     .logo{
@@ -483,43 +406,46 @@ h1{
         font-size:20px;
     }
 
-    .grid{
-        grid-template-columns:1fr 1fr;
+    .btn{
+        min-height:54px;
 
-        gap:9px;
-    }
+        font-size:14px;
 
-    .menu-item{
-        min-height:82px;
-
-        padding:14px;
-    }
-
-    .menu-icon{
-        font-size:24px;
-
-        margin-bottom:6px;
-    }
-
-    .menu-title{
-        font-size:13px;
-    }
-
-    .menu-desc{
-        font-size:10px;
+        padding:13px 16px;
     }
 
 }
 
 
 /* ==========================================
-   CELULAR MUITO PEQUENO
+   TELAS MUITO PEQUENAS
    ========================================== */
 
-@media(max-width:350px){
+@media(max-height:700px){
 
-    .grid{
-        grid-template-columns:1fr;
+    .topo{
+        padding:18px 16px;
+    }
+
+    .logo{
+        width:65px;
+        height:65px;
+
+        margin-bottom:9px;
+    }
+
+    h1{
+        font-size:19px;
+    }
+
+    .usuario{
+        margin-top:8px;
+    }
+
+    .btn{
+        min-height:50px;
+
+        margin-bottom:8px;
     }
 
 }
@@ -538,14 +464,20 @@ h1{
 
     <div class="topo">
 
+
         <!-- SINO -->
 
-        <a href="/notificacoes" class="sino-notificacao">
+        <a
+            href="/notificacoes"
+            class="sino-notificacao"
+        >
 
             🔔
 
             {% if total_notificacoes > 0 %}
+
                 <span class="ponto-notificacao"></span>
+
             {% endif %}
 
         </a>
@@ -565,6 +497,7 @@ h1{
             CONTROLE DE ESTOQUE
         </h1>
 
+
         <div class="sub">
             Sistema de Gestão
         </div>
@@ -578,100 +511,85 @@ h1{
 
         </div>
 
+
     </div>
 
 
 
     <!-- ==========================================
-         OPERAÇÃO
+         CADASTRAR
          ========================================== -->
 
     {% if perfil in ["admin", "operador", "separacao"] %}
 
-    <div class="secao">
-        📦 Operação
-    </div>
+    <a href="/cadastrar">
 
-    <div class="grid">
+        <button class="btn padrao">
 
-
-        <!-- CADASTRAR -->
-
-        <a
-            href="/cadastrar"
-            class="menu-item azul"
-        >
-
-            <div class="menu-icon">
-                ➕
-            </div>
-
-            <div class="menu-title">
+            ➕
+            <span>
                 Cadastrar Produto
-            </div>
+            </span>
 
-            <div class="menu-desc">
-                Adicionar produtos ao estoque
-            </div>
+        </button>
 
-        </a>
+    </a>
+
+    {% endif %}
 
 
 
-        <!-- SOLICITAÇÕES -->
+    <!-- ==========================================
+         SOLICITAÇÕES
+         ========================================== -->
 
-        <a
-            href="/solicitacoes"
-            class="menu-item azul-escuro"
-        >
+    {% if perfil in ["admin", "operador", "separacao"] %}
+
+    <a href="/solicitacoes">
+
+        <button class="btn padrao">
+
+            📋
+
+            <span>
+                Solicitações
+            </span>
 
             {% if total_solicitacoes > 0 %}
 
-            <div class="contador">
-                {{ total_solicitacoes }}
-            </div>
+                <span class="contador-solicitacoes">
+                    {{ total_solicitacoes }}
+                </span>
 
             {% endif %}
 
-            <div class="menu-icon">
-                📋
-            </div>
+        </button>
 
-            <div class="menu-title">
-                Solicitações
-            </div>
+    </a>
 
-            <div class="menu-desc">
-                Pedidos e abastecimentos
-            </div>
-
-        </a>
+    {% endif %}
 
 
 
-        <!-- SEPARAÇÃO -->
+    <!-- ==========================================
+         SEPARAÇÃO
+         ========================================== -->
 
-        <a
-            href="/separacao"
-            class="menu-item roxo"
-        >
+    {% if perfil in ["admin", "operador", "separacao"] %}
 
-            <div class="menu-icon">
-                📦
-            </div>
+    <a href="/separacao">
 
-            <div class="menu-title">
+        <button class="btn padrao">
+
+            📦
+
+            <span>
                 Separação
-            </div>
+            </span>
 
-            <div class="menu-desc">
-                Separar solicitações
-            </div>
+        </button>
 
-        </a>
-
-
-    </div>
+    </a>
 
     {% endif %}
 
@@ -681,90 +599,67 @@ h1{
          CONSULTA
          ========================================== -->
 
-    <div class="secao">
-        🔎 Consulta
-    </div>
+    <a href="/consulta">
 
-    <div class="grid">
+        <button class="btn padrao">
 
+            🔎
 
-        <!-- CONSULTA -->
-
-        <a
-            href="/consulta"
-            class="menu-item verde"
-        >
-
-            <div class="menu-icon">
-                🔎
-            </div>
-
-            <div class="menu-title">
+            <span>
                 Consulta
-            </div>
+            </span>
 
-            <div class="menu-desc">
-                Consultar produtos
-            </div>
+        </button>
 
-        </a>
+    </a>
 
 
 
-        <!-- INVENTÁRIO -->
+    <!-- ==========================================
+         INVENTÁRIO
+         ========================================== -->
 
-        {% if perfil in ["admin", "operador", "separacao"] %}
+    {% if perfil in ["admin", "operador", "separacao"] %}
 
-        <a
-            href="/inventario"
-            class="menu-item laranja"
-        >
+    <a href="/inventario">
 
-            <div class="menu-icon">
-                🗃️
-            </div>
+        <button class="btn padrao">
 
-            <div class="menu-title">
+            🗃️
+
+            <span>
                 Inventário
-            </div>
+            </span>
 
-            <div class="menu-desc">
-                Controle do estoque
-            </div>
+        </button>
 
-        </a>
+    </a>
 
-        {% endif %}
+    {% endif %}
 
 
 
-        <!-- HISTÓRICO -->
+    <!-- ==========================================
+         HISTÓRICO
+         ========================================== -->
 
-        {% if perfil == "admin" %}
+    {% if perfil == "admin" %}
 
-        <a
-            href="/historico"
-            class="menu-item azul-escuro"
-        >
+    <a href="/historico">
 
-            <div class="menu-icon">
-                🕒
-            </div>
+        <button class="btn padrao">
 
-            <div class="menu-title">
+            🕒
+
+            <span>
                 Histórico
-            </div>
+            </span>
 
-            <div class="menu-desc">
-                Movimentações do sistema
-            </div>
+        </button>
 
-        </a>
+    </a>
 
-        {% endif %}
-
-
-    </div>
+    {% endif %}
 
 
 
@@ -774,34 +669,19 @@ h1{
 
     {% if perfil == "admin" %}
 
-    <div class="secao">
-        ⚙️ Administração
-    </div>
+    <a href="/administracao">
 
-    <div class="grid">
+        <button class="btn admin">
 
+            ⚙️
 
-        <a
-            href="/administracao"
-            class="menu-item vermelho"
-        >
-
-            <div class="menu-icon">
-                ⚙️
-            </div>
-
-            <div class="menu-title">
+            <span>
                 Administração
-            </div>
+            </span>
 
-            <div class="menu-desc">
-                Usuários e configurações
-            </div>
+        </button>
 
-        </a>
-
-
-    </div>
+    </a>
 
     {% endif %}
 
@@ -811,11 +691,18 @@ h1{
          SAIR
          ========================================== -->
 
-    <a
-        href="/logout"
-        class="sair"
-    >
-        🚪 Sair do sistema
+    <a href="/logout">
+
+        <button class="btn logout">
+
+            🚪
+
+            <span>
+                Sair do sistema
+            </span>
+
+        </button>
+
     </a>
 
 
