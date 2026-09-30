@@ -30,14 +30,122 @@
 
 {% block script %}{% endblock %}
 
-<!-- BOTÃO MODO DIA / NOITE -->
-<button id="themeToggle" class="theme-toggle" type="button" title="Alternar modo">
-    🌙
-</button>
-
 <style>
+    /* =========================
+       TEMA DO SISTEMA
+    ========================= */
+
+    :root {
+        --bg: #f4f4f4;
+        --text: #111827;
+        --text-secondary: #6b7280;
+        --surface: #ffffff;
+        --surface-secondary: #f8fafc;
+        --border: #e5e7eb;
+        --input-bg: #ffffff;
+        --input-text: #111827;
+    }
+
+    body {
+        background-color: var(--bg);
+        color: var(--text);
+        transition:
+            background-color 0.25s ease,
+            color 0.25s ease;
+    }
+
+    /* =========================
+       MODO NOITE
+    ========================= */
+
+    body.dark-mode {
+        --bg: #0f172a;
+        --text: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --surface: #1e293b;
+        --surface-secondary: #172033;
+        --border: #334155;
+        --input-bg: #1e293b;
+        --input-text: #f8fafc;
+
+        background-color: var(--bg) !important;
+        color: var(--text) !important;
+    }
+
+    /* Textos */
+
+    body.dark-mode h1,
+    body.dark-mode h2,
+    body.dark-mode h3,
+    body.dark-mode h4,
+    body.dark-mode h5,
+    body.dark-mode h6,
+    body.dark-mode p,
+    body.dark-mode label,
+    body.dark-mode span,
+    body.dark-mode div {
+        color: inherit;
+    }
+
+    /* Campos */
+
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+        background-color: var(--input-bg) !important;
+        color: var(--input-text) !important;
+        border-color: var(--border) !important;
+    }
+
+    body.dark-mode input::placeholder,
+    body.dark-mode textarea::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    /* Cards / caixas */
+
+    body.dark-mode .card,
+    body.dark-mode .box,
+    body.dark-mode .topo,
+    body.dark-mode .container,
+    body.dark-mode .painel,
+    body.dark-mode .panel {
+        background-color: var(--surface) !important;
+        color: var(--text) !important;
+        border-color: var(--border) !important;
+    }
+
+    /* Tabelas */
+
+    body.dark-mode table {
+        color: var(--text) !important;
+    }
+
+    body.dark-mode th {
+        background-color: #172033 !important;
+        color: #f8fafc !important;
+    }
+
+    body.dark-mode td {
+        background-color: var(--surface) !important;
+        color: var(--text) !important;
+        border-color: var(--border) !important;
+    }
+
+    /* Links */
+
+    body.dark-mode a:not(.btn) {
+        color: #93c5fd;
+    }
+
+
+    /* =========================
+       BOTÃO TEMA
+    ========================= */
+
     .theme-toggle {
         position: fixed;
+
         right: 20px;
         bottom: 20px;
 
@@ -50,101 +158,115 @@
         background: #ffffff;
         color: #111827;
 
-        font-size: 22px;
+        font-size: 21px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         cursor: pointer;
 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.20);
+        box-shadow: 0 4px 15px rgba(0,0,0,.25);
 
-        z-index: 9999;
+        z-index: 99999;
 
         transition:
-            background 0.25s ease,
-            color 0.25s ease,
-            transform 0.2s ease;
+            background .25s ease,
+            color .25s ease,
+            transform .2s ease;
     }
 
     .theme-toggle:hover {
         transform: scale(1.08);
     }
 
-    /* MODO NOITE */
-    body.dark-mode {
-        background: #0f172a !important;
-        color: #e5e7eb !important;
-    }
-
     body.dark-mode .theme-toggle {
         background: #1e293b;
-        color: #f8fafc;
-    }
-
-    body.dark-mode input,
-    body.dark-mode select,
-    body.dark-mode textarea {
-        background: #1e293b !important;
-        color: #f8fafc !important;
-        border-color: #475569 !important;
-    }
-
-    body.dark-mode input::placeholder,
-    body.dark-mode textarea::placeholder {
-        color: #94a3b8;
-    }
-
-    body.dark-mode .box,
-    body.dark-mode .card,
-    body.dark-mode .container,
-    body.dark-mode .topo {
-        color: #e5e7eb;
+        color: #ffffff;
+        box-shadow: 0 4px 15px rgba(0,0,0,.45);
     }
 
     @media (max-width: 600px) {
+
         .theme-toggle {
             right: 15px;
             bottom: 15px;
-            width: 45px;
-            height: 45px;
-            font-size: 20px;
+
+            width: 46px;
+            height: 46px;
         }
+
     }
 </style>
 
+    
+</script>
+
+
+<button
+    id="themeToggle"
+    class="theme-toggle"
+    type="button"
+    aria-label="Alternar tema"
+>
+    🌙
+</button>
+
 <script>
-    const themeToggle = document.getElementById("themeToggle");
+(function () {
 
-    // Recupera o modo salvo
-    const modoSalvo = localStorage.getItem("modoEstoque");
+    const botao = document.getElementById("themeToggle");
 
-    if (modoSalvo === "dark") {
-        document.body.classList.add("dark-mode");
-        themeToggle.textContent = "☀️";
-        themeToggle.title = "Ativar modo dia";
-    } else {
-        themeToggle.textContent = "🌙";
-        themeToggle.title = "Ativar modo noite";
-    }
+    if (!botao) return;
 
-    themeToggle.addEventListener("click", function () {
+    function aplicarTema() {
 
-        document.body.classList.toggle("dark-mode");
+        const tema = localStorage.getItem("modoEstoque");
 
-        if (document.body.classList.contains("dark-mode")) {
+        if (tema === "dark") {
 
-            localStorage.setItem("modoEstoque", "dark");
+            document.body.classList.add("dark-mode");
 
-            themeToggle.textContent = "☀️";
-            themeToggle.title = "Ativar modo dia";
+            botao.textContent = "☀️";
+            botao.title = "Modo dia";
 
         } else {
 
-            localStorage.setItem("modoEstoque", "light");
+            document.body.classList.remove("dark-mode");
 
-            themeToggle.textContent = "🌙";
-            themeToggle.title = "Ativar modo noite";
+            botao.textContent = "🌙";
+            botao.title = "Modo noite";
         }
-    });
-</script>
+    }
 
+    aplicarTema();
+
+    botao.addEventListener("click", function () {
+
+        const estaNoite =
+            document.body.classList.contains("dark-mode");
+
+        if (estaNoite) {
+
+            localStorage.setItem(
+                "modoEstoque",
+                "light"
+            );
+
+        } else {
+
+            localStorage.setItem(
+                "modoEstoque",
+                "dark"
+            );
+        }
+
+        aplicarTema();
+
+    });
+
+})();
+</script>
+    
 </body>
 </html>
