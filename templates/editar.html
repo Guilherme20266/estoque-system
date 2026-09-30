@@ -4,18 +4,47 @@
 
 {% block style %}
 
+html{
+    min-height:100%;
+    background:var(--bg) !important;
+}
+
 body{
     font-family:Arial;
-    background:#f4f4f4;
+    background:var(--bg) !important;
+    color:var(--text);
     padding:15px;
+    margin:0;
+    min-height:100vh;
+    box-sizing:border-box;
+    transition:
+        background-color .25s ease,
+        color .25s ease;
 }
 
 .box{
     max-width:500px;
     margin:auto;
-    background:white;
+    background:var(--surface);
+    color:var(--text);
     padding:20px;
     border-radius:12px;
+    border:1px solid var(--border);
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+body.dark-mode .box{
+    background:var(--surface) !important;
+    color:var(--text) !important;
+    border-color:var(--border) !important;
+}
+
+h2{
+    color:var(--text);
 }
 
 input{
@@ -23,8 +52,23 @@ input{
     padding:12px;
     margin-bottom:10px;
     border-radius:8px;
-    border:1px solid #ccc;
+    border:1px solid var(--border);
+    background:var(--input-bg);
+    color:var(--input-text);
     box-sizing:border-box;
+    outline:none;
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+input::placeholder{
+    color:var(--text-secondary);
+}
+
+input:focus{
+    box-shadow:0 0 0 2px #2563eb;
 }
 
 button{
