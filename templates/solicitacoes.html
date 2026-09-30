@@ -57,7 +57,7 @@ body.dark-mode{
 
 html{
     min-height:100%;
-    background:var(--bg);
+    background:var(--bg) !important;
 }
 
 body{
@@ -93,6 +93,27 @@ body{
     margin:30px auto;
 
     background:transparent !important;
+
+    color:var(--text);
+}
+
+
+/*
+   CORREÇÃO DO MODO ESCURO
+
+   O base.html possui uma regra global
+   que pode transformar .container em
+   uma caixa escura.
+
+   Aqui o container continua transparente,
+   deixando o fundo da página aparecer
+   inteiro.
+*/
+
+body.dark-mode .container{
+    background:transparent !important;
+
+    color:var(--text) !important;
 }
 
 
@@ -728,6 +749,12 @@ body{
         width:94%;
 
         margin:20px auto;
+
+        background:transparent !important;
+    }
+
+    body.dark-mode .container{
+        background:transparent !important;
     }
 
     .header h2{
