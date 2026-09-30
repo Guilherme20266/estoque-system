@@ -9,19 +9,15 @@
 }
 
 body{
-    font-family:Arial, sans-serif;
-
     margin:0;
 
     min-height:100vh;
 
-    background:#f1f5f9;
+    font-family:Arial,sans-serif;
 
-    display:flex;
+    background:#0b1220;
 
-    justify-content:center;
-
-    align-items:center;
+    color:#fff;
 
     padding:25px 0;
 }
@@ -34,7 +30,9 @@ body{
 .box{
     width:92%;
 
-    max-width:560px;
+    max-width:600px;
+
+    margin:auto;
 }
 
 
@@ -45,19 +43,85 @@ body{
 .topo{
     position:relative;
 
-    background:#ffffff;
+    display:flex;
 
-    border:1px solid #e2e8f0;
+    align-items:center;
 
-    border-radius:14px;
+    gap:15px;
 
-    padding:28px 22px 24px;
+    padding:20px;
 
-    text-align:center;
+    margin-bottom:20px;
 
-    margin-bottom:18px;
+    background:#151f32;
 
-    box-shadow:0 4px 18px rgba(15,23,42,.08);
+    border:1px solid #243149;
+
+    border-radius:18px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+
+/* ==========================================
+   LOGO
+   ========================================== */
+
+.logo{
+    width:68px;
+
+    height:68px;
+
+    border-radius:15px;
+
+    flex-shrink:0;
+}
+
+
+/* ==========================================
+   INFORMAÇÕES
+   ========================================== */
+
+.info{
+    min-width:0;
+
+    padding-right:40px;
+}
+
+h1{
+    margin:0;
+
+    font-size:19px;
+
+    font-weight:800;
+
+    color:#fff;
+}
+
+.sub{
+    margin-top:4px;
+
+    color:#94a3b8;
+
+    font-size:12px;
+}
+
+.usuario{
+    display:inline-block;
+
+    margin-top:8px;
+
+    padding:5px 9px;
+
+    border-radius:6px;
+
+    background:#1e293b;
+
+    color:#cbd5e1;
+
+    font-size:11px;
+
+    font-weight:bold;
 }
 
 
@@ -68,13 +132,19 @@ body{
 .sino-notificacao{
     position:absolute;
 
-    top:14px;
+    top:18px;
 
-    right:14px;
+    right:18px;
 
     width:40px;
 
     height:40px;
+
+    border-radius:10px;
+
+    background:#1e293b;
+
+    border:1px solid #334155;
 
     display:flex;
 
@@ -82,46 +152,40 @@ body{
 
     justify-content:center;
 
-    border-radius:10px;
-
-    background:#f8fafc;
-
-    border:1px solid #e2e8f0;
-
     text-decoration:none;
 
-    font-size:21px;
+    font-size:20px;
 
     transition:.2s;
 }
 
 .sino-notificacao:hover{
-    background:#eff6ff;
+    background:#26344d;
 
-    border-color:#bfdbfe;
+    transform:translateY(-1px);
 }
 
 
 /* ==========================================
-   PONTO DA NOTIFICAÇÃO
+   NOTIFICAÇÃO
    ========================================== */
 
 .ponto-notificacao{
     position:absolute;
 
-    top:3px;
+    top:2px;
 
-    right:3px;
+    right:2px;
 
-    width:10px;
+    width:9px;
 
-    height:10px;
+    height:9px;
 
     background:#ef4444;
 
     border-radius:50%;
 
-    border:2px solid white;
+    border:2px solid #1e293b;
 
     animation:pulsar 1.2s infinite;
 }
@@ -133,7 +197,7 @@ body{
     }
 
     50%{
-        transform:scale(1.35);
+        transform:scale(1.4);
     }
 
     100%{
@@ -144,141 +208,88 @@ body{
 
 
 /* ==========================================
-   LOGO
+   TÍTULO MENU
    ========================================== */
 
-.logo{
-    width:76px;
-
-    height:76px;
-
-    object-fit:cover;
-
-    border-radius:16px;
-
-    margin-bottom:12px;
-}
-
-
-/* ==========================================
-   TÍTULO
-   ========================================== */
-
-h1{
-    margin:0;
-
-    font-size:22px;
-
-    font-weight:700;
-
-    color:#0f172a;
-}
-
-.sub{
-    margin-top:5px;
+.titulo-menu{
+    margin:0 0 10px 3px;
 
     color:#64748b;
 
-    font-size:13px;
+    font-size:11px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
 }
 
 
 /* ==========================================
-   USUÁRIO
+   GRID
    ========================================== */
 
-.usuario{
-    margin-top:12px;
+.menu-grid{
+    display:grid;
 
-    display:inline-block;
+    grid-template-columns:1fr 1fr;
 
-    padding:6px 11px;
-
-    background:#f8fafc;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:7px;
-
-    color:#475569;
-
-    font-size:12px;
-
-    font-weight:600;
+    gap:12px;
 }
 
 
 /* ==========================================
-   BOTÕES
+   BOTÃO
    ========================================== */
 
-a{
-    text-decoration:none;
-}
-
-.btn{
+.menu-item{
     position:relative;
 
-    width:100%;
+    min-height:105px;
 
-    height:58px;
-
-    margin-bottom:10px;
-
-    padding:0 18px;
+    padding:18px;
 
     display:flex;
 
-    align-items:center;
+    flex-direction:column;
 
-    gap:14px;
+    justify-content:center;
 
-    background:#ffffff;
+    align-items:flex-start;
 
-    border:1px solid #e2e8f0;
+    text-decoration:none;
 
-    border-radius:11px;
+    background:#151f32;
 
-    color:#1e293b;
+    border:1px solid #243149;
 
-    font-size:15px;
+    border-radius:16px;
 
-    font-weight:600;
+    color:#fff;
 
-    cursor:pointer;
+    transition:.2s;
 
-    box-shadow:0 2px 7px rgba(15,23,42,.06);
-
-    transition:
-        background .15s,
-        border-color .15s,
-        transform .15s,
-        box-shadow .15s;
+    box-shadow:0 6px 18px rgba(0,0,0,.18);
 }
 
-.btn:hover{
-    background:#f8fafc;
+.menu-item:hover{
+    border-color:#3b82f6;
 
-    border-color:#cbd5e1;
+    background:#18253b;
 
-    transform:translateY(-1px);
-
-    box-shadow:0 5px 12px rgba(15,23,42,.09);
-}
-
-.btn:active{
-    transform:translateY(0);
+    transform:translateY(-2px);
 }
 
 
 /* ==========================================
-   ÍCONES
+   ÍCONE
    ========================================== */
 
-.icone{
-    width:36px;
+.menu-icon{
+    width:40px;
 
-    height:36px;
+    height:40px;
 
     display:flex;
 
@@ -286,15 +297,39 @@ a{
 
     justify-content:center;
 
-    border-radius:9px;
+    border-radius:11px;
 
-    background:#eff6ff;
+    background:#1e3a8a;
 
-    color:#2563eb;
+    font-size:21px;
 
-    font-size:19px;
+    margin-bottom:10px;
+}
 
-    flex-shrink:0;
+
+/* ==========================================
+   NOME
+   ========================================== */
+
+.menu-name{
+    font-size:14px;
+
+    font-weight:bold;
+
+    color:#f8fafc;
+}
+
+
+/* ==========================================
+   DESCRIÇÃO
+   ========================================== */
+
+.menu-desc{
+    margin-top:3px;
+
+    color:#64748b;
+
+    font-size:10px;
 }
 
 
@@ -302,14 +337,20 @@ a{
    CONTADOR
    ========================================== */
 
-.contador-solicitacoes{
-    margin-left:auto;
+.contador{
+    position:absolute;
 
-    min-width:27px;
+    top:12px;
 
-    height:27px;
+    right:12px;
 
-    padding:0 8px;
+    min-width:24px;
+
+    height:24px;
+
+    padding:0 6px;
+
+    border-radius:20px;
 
     display:flex;
 
@@ -317,61 +358,71 @@ a{
 
     justify-content:center;
 
-    border-radius:20px;
+    background:#ef4444;
 
-    background:#fee2e2;
+    color:white;
 
-    color:#dc2626;
-
-    font-size:12px;
+    font-size:11px;
 
     font-weight:bold;
 }
 
 
 /* ==========================================
-   ADMINISTRAÇÃO
+   ADMIN
    ========================================== */
 
-.btn-admin .icone{
-    background:#fef2f2;
+.admin .menu-icon{
+    background:#7f1d1d;
+}
 
-    color:#dc2626;
+.admin:hover{
+    border-color:#ef4444;
 }
 
 
 /* ==========================================
-   SAIR
+   RODAPÉ
    ========================================== */
 
 .logout{
+    width:100%;
+
+    height:48px;
+
+    margin-top:15px;
+
+    border-radius:13px;
+
+    display:flex;
+
+    align-items:center;
+
     justify-content:center;
 
-    margin-top:6px;
+    gap:8px;
+
+    text-decoration:none;
 
     background:transparent;
 
-    border-color:transparent;
-
-    box-shadow:none;
+    border:1px solid #243149;
 
     color:#64748b;
-}
 
-.logout .icone{
-    background:#f1f5f9;
+    font-size:13px;
 
-    color:#64748b;
+    font-weight:bold;
+
+    transition:.2s;
 }
 
 .logout:hover{
-    background:#fff1f2;
+    color:#fca5a5;
 
-    border-color:#fecdd3;
+    border-color:#7f1d1d;
 
-    color:#dc2626;
-
-    box-shadow:none;
+    background:#180f14;
 }
 
 
@@ -379,7 +430,7 @@ a{
    CELULAR
    ========================================== */
 
-@media(max-width:480px){
+@media(max-width:450px){
 
     body{
         padding:15px 0;
@@ -390,58 +441,56 @@ a{
     }
 
     .topo{
-        padding:23px 16px 20px;
-    }
+        padding:17px;
 
-    .logo{
-        width:70px;
-
-        height:70px;
-    }
-
-    h1{
-        font-size:20px;
-    }
-
-    .btn{
-        height:55px;
-
-        font-size:14px;
-
-        padding:0 14px;
-    }
-
-    .icone{
-        width:34px;
-
-        height:34px;
-    }
-
-}
-
-
-/* ==========================================
-   TELAS BAIXAS
-   ========================================== */
-
-@media(max-height:700px){
-
-    .topo{
-        padding:18px 16px;
+        gap:12px;
     }
 
     .logo{
         width:60px;
 
         height:60px;
+    }
+
+    h1{
+        font-size:17px;
+    }
+
+    .menu-grid{
+        gap:9px;
+    }
+
+    .menu-item{
+        min-height:98px;
+
+        padding:14px;
+    }
+
+    .menu-icon{
+        width:36px;
+
+        height:36px;
+
+        font-size:19px;
 
         margin-bottom:8px;
     }
 
-    .btn{
-        height:51px;
+    .menu-name{
+        font-size:13px;
+    }
 
-        margin-bottom:7px;
+}
+
+
+/* ==========================================
+   CELULAR PEQUENO
+   ========================================== */
+
+@media(max-width:340px){
+
+    .menu-grid{
+        grid-template-columns:1fr;
     }
 
 }
@@ -461,6 +510,29 @@ a{
     <div class="topo">
 
 
+        <img
+            src="/static/icon-192.png"
+            class="logo"
+        >
+
+
+        <div class="info">
+
+            <h1>
+                CONTROLE DE ESTOQUE
+            </h1>
+
+            <div class="sub">
+                Sistema de Gestão
+            </div>
+
+            <div class="usuario">
+                👤 {{ usuario }} · {{ perfil }}
+            </div>
+
+        </div>
+
+
         <!-- NOTIFICAÇÕES -->
 
         <a
@@ -471,227 +543,221 @@ a{
             🔔
 
             {% if total_notificacoes > 0 %}
-
                 <span class="ponto-notificacao"></span>
-
             {% endif %}
 
         </a>
 
-
-        <!-- LOGO -->
-
-        <img
-            src="/static/icon-192.png"
-            class="logo"
-        >
-
-
-        <!-- TÍTULO -->
-
-        <h1>
-            CONTROLE DE ESTOQUE
-        </h1>
-
-        <div class="sub">
-            Sistema de Gestão
-        </div>
-
-
-        <!-- USUÁRIO -->
-
-        <div class="usuario">
-            👤 {{ usuario }} | {{ perfil }}
-        </div>
 
     </div>
 
 
 
     <!-- ==========================================
-         CADASTRAR
+         MENU
          ========================================== -->
 
-    {% if perfil in ["admin", "operador", "separacao"] %}
+    <div class="titulo-menu">
+        Menu principal
+    </div>
 
-    <a href="/cadastrar">
 
-        <button class="btn">
+    <div class="menu-grid">
 
-            <span class="icone">
+
+        <!-- CADASTRAR -->
+
+        {% if perfil in ["admin", "operador", "separacao"] %}
+
+        <a
+            href="/cadastrar"
+            class="menu-item"
+        >
+
+            <div class="menu-icon">
                 ➕
-            </span>
+            </div>
 
-            <span>
-                Cadastrar Produto
-            </span>
+            <div class="menu-name">
+                Cadastrar
+            </div>
 
-        </button>
+            <div class="menu-desc">
+                Novo produto
+            </div>
 
-    </a>
+        </a>
 
-    {% endif %}
+        {% endif %}
 
 
 
-    <!-- ==========================================
-         SOLICITAÇÕES
-         ========================================== -->
+        <!-- SOLICITAÇÕES -->
 
-    {% if perfil in ["admin", "operador", "separacao"] %}
+        {% if perfil in ["admin", "operador", "separacao"] %}
 
-    <a href="/solicitacoes">
-
-        <button class="btn">
-
-            <span class="icone">
-                📋
-            </span>
-
-            <span>
-                Solicitações
-            </span>
-
+        <a
+            href="/solicitacoes"
+            class="menu-item"
+        >
 
             {% if total_solicitacoes > 0 %}
 
-            <span class="contador-solicitacoes">
+            <div class="contador">
                 {{ total_solicitacoes }}
-            </span>
+            </div>
 
             {% endif %}
 
-        </button>
+            <div class="menu-icon">
+                📋
+            </div>
 
-    </a>
+            <div class="menu-name">
+                Solicitações
+            </div>
 
-    {% endif %}
+            <div class="menu-desc">
+                Pedidos pendentes
+            </div>
+
+        </a>
+
+        {% endif %}
 
 
 
-    <!-- ==========================================
-         SEPARAÇÃO
-         ========================================== -->
+        <!-- SEPARAÇÃO -->
 
-    {% if perfil in ["admin", "operador", "separacao"] %}
+        {% if perfil in ["admin", "operador", "separacao"] %}
 
-    <a href="/separacao">
+        <a
+            href="/separacao"
+            class="menu-item"
+        >
 
-        <button class="btn">
-
-            <span class="icone">
+            <div class="menu-icon">
                 📦
-            </span>
+            </div>
 
-            <span>
+            <div class="menu-name">
                 Separação
-            </span>
+            </div>
 
-        </button>
+            <div class="menu-desc">
+                Separar pedidos
+            </div>
 
-    </a>
+        </a>
 
-    {% endif %}
+        {% endif %}
 
 
 
-    <!-- ==========================================
-         CONSULTA
-         ========================================== -->
+        <!-- CONSULTA -->
 
-    <a href="/consulta">
+        <a
+            href="/consulta"
+            class="menu-item"
+        >
 
-        <button class="btn">
-
-            <span class="icone">
+            <div class="menu-icon">
                 🔎
-            </span>
+            </div>
 
-            <span>
+            <div class="menu-name">
                 Consulta
-            </span>
+            </div>
 
-        </button>
+            <div class="menu-desc">
+                Buscar produtos
+            </div>
 
-    </a>
+        </a>
 
 
 
-    <!-- ==========================================
-         INVENTÁRIO
-         ========================================== -->
+        <!-- INVENTÁRIO -->
 
-    {% if perfil in ["admin", "operador", "separacao"] %}
+        {% if perfil in ["admin", "operador", "separacao"] %}
 
-    <a href="/inventario">
+        <a
+            href="/inventario"
+            class="menu-item"
+        >
 
-        <button class="btn">
-
-            <span class="icone">
+            <div class="menu-icon">
                 🗃️
-            </span>
+            </div>
 
-            <span>
+            <div class="menu-name">
                 Inventário
-            </span>
+            </div>
 
-        </button>
+            <div class="menu-desc">
+                Controle do estoque
+            </div>
 
-    </a>
+        </a>
 
-    {% endif %}
+        {% endif %}
 
 
 
-    <!-- ==========================================
-         HISTÓRICO
-         ========================================== -->
+        <!-- HISTÓRICO -->
 
-    {% if perfil == "admin" %}
+        {% if perfil == "admin" %}
 
-    <a href="/historico">
+        <a
+            href="/historico"
+            class="menu-item"
+        >
 
-        <button class="btn">
-
-            <span class="icone">
+            <div class="menu-icon">
                 🕒
-            </span>
+            </div>
 
-            <span>
+            <div class="menu-name">
                 Histórico
-            </span>
+            </div>
 
-        </button>
+            <div class="menu-desc">
+                Movimentações
+            </div>
 
-    </a>
+        </a>
 
-    {% endif %}
+        {% endif %}
 
 
 
-    <!-- ==========================================
-         ADMINISTRAÇÃO
-         ========================================== -->
+        <!-- ADMINISTRAÇÃO -->
 
-    {% if perfil == "admin" %}
+        {% if perfil == "admin" %}
 
-    <a href="/administracao">
+        <a
+            href="/administracao"
+            class="menu-item admin"
+        >
 
-        <button class="btn btn-admin">
-
-            <span class="icone">
+            <div class="menu-icon">
                 ⚙️
-            </span>
+            </div>
 
-            <span>
+            <div class="menu-name">
                 Administração
-            </span>
+            </div>
 
-        </button>
+            <div class="menu-desc">
+                Gerenciar sistema
+            </div>
 
-    </a>
+        </a>
 
-    {% endif %}
+        {% endif %}
+
+
+    </div>
 
 
 
@@ -699,19 +765,14 @@ a{
          SAIR
          ========================================== -->
 
-    <a href="/logout">
+    <a
+        href="/logout"
+        class="logout"
+    >
 
-        <button class="btn logout">
+        🚪
 
-            <span class="icone">
-                🚪
-            </span>
-
-            <span>
-                Sair do sistema
-            </span>
-
-        </button>
+        Sair do sistema
 
     </a>
 
