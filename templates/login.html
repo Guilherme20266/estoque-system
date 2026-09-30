@@ -4,106 +4,291 @@
 
 {% block style %}
 
-body{
-    font-family:Arial;
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(135deg, #0f172a, #1e293b);
+/* ==========================================
+   TEMA DO LOGIN
+   ========================================== */
+
+:root{
+    --login-bg-start:#0f172a;
+    --login-bg-end:#1e293b;
+
+    --login-surface:rgba(255,255,255,.95);
+
+    --login-text:#111827;
+    --login-secondary:#6b7280;
+    --login-muted:#9ca3af;
+
+    --login-input-bg:#ffffff;
+    --login-input-text:#111827;
+    --login-input-border:#e5e7eb;
+
+    --login-link:#64748b;
+    --login-divider:#cbd5e1;
+
+    --login-modal-bg:#ffffff;
+    --login-modal-text:#111827;
+    --login-modal-description:#555;
 }
 
-.box{
-    background:rgba(255,255,255,0.95);
-    width:90%;
-    max-width:380px;
-    padding:30px;
-    border-radius:16px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.25);
-    backdrop-filter:blur(10px);
+
+/* ==========================================
+   MODO NOITE
+   ========================================== */
+
+body.dark-mode{
+
+    --login-bg-start:#020617;
+    --login-bg-end:#0f172a;
+
+    --login-surface:#1e293b;
+
+    --login-text:#f8fafc;
+    --login-secondary:#cbd5e1;
+    --login-muted:#94a3b8;
+
+    --login-input-bg:#0f172a;
+    --login-input-text:#f8fafc;
+    --login-input-border:#475569;
+
+    --login-link:#cbd5e1;
+    --login-divider:#475569;
+
+    --login-modal-bg:#1e293b;
+    --login-modal-text:#f8fafc;
+    --login-modal-description:#cbd5e1;
 }
+
+
+/* ==========================================
+   BODY
+   ========================================== */
+
+body{
+    font-family:Arial,sans-serif;
+
+    margin:0;
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--login-bg-start),
+            var(--login-bg-end)
+        );
+
+    color:var(--login-text);
+
+    transition:
+        background .25s ease,
+        color .25s ease;
+}
+
+
+/* ==========================================
+   CAIXA LOGIN
+   ========================================== */
+
+.box{
+    background:var(--login-surface);
+
+    width:90%;
+
+    max-width:380px;
+
+    padding:30px;
+
+    border-radius:16px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+
+    backdrop-filter:blur(10px);
+
+    transition:
+        background .25s ease,
+        color .25s ease;
+}
+
+
+/* ==========================================
+   LOGO
+   ========================================== */
 
 .logo{
     display:block;
+
     width:70px;
     height:70px;
+
     margin:0 auto 15px auto;
+
     border-radius:16px;
 }
 
+
+/* ==========================================
+   TÍTULO
+   ========================================== */
+
 h1{
     text-align:center;
+
     margin-bottom:5px;
+
     font-size:26px;
-    color:#111827;
+
+    color:var(--login-text);
 }
+
+
+/* ==========================================
+   SUBTÍTULO
+   ========================================== */
 
 .subtitle{
     text-align:center;
+
     font-size:13px;
-    color:#6b7280;
+
+    color:var(--login-secondary);
+
     margin-bottom:25px;
 }
 
+
+/* ==========================================
+   CAMPOS
+   ========================================== */
+
 input{
     width:100%;
+
     padding:13px;
+
     margin-bottom:12px;
-    border:1px solid #e5e7eb;
+
+    border:1px solid var(--login-input-border);
+
     border-radius:10px;
+
     box-sizing:border-box;
+
     outline:none;
+
     font-size:14px;
-    transition:0.2s;
+
+    background:var(--login-input-bg);
+
+    color:var(--login-input-text);
+
+    transition:
+        border .2s ease,
+        box-shadow .2s ease,
+        background .25s ease,
+        color .25s ease;
+}
+
+input::placeholder{
+    color:var(--login-muted);
 }
 
 input:focus{
     border-color:#2563eb;
-    box-shadow:0 0 0 3px rgba(37,99,235,0.2);
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.2);
 }
+
+
+/* ==========================================
+   BOTÃO
+   ========================================== */
 
 button{
     width:100%;
+
     padding:13px;
+
     border:none;
+
     border-radius:10px;
-    background:linear-gradient(90deg, #2563eb, #1d4ed8);
+
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #1d4ed8
+        );
+
     color:white;
+
     font-size:15px;
+
     font-weight:bold;
+
     cursor:pointer;
+
+    transition:.2s;
 }
 
 button:hover{
-    opacity:0.95;
+    opacity:.95;
 }
+
+
+/* ==========================================
+   INFORMAÇÕES
+   ========================================== */
 
 .info{
     text-align:center;
+
     margin-top:18px;
-    color:#9ca3af;
+
+    color:var(--login-muted);
+
     font-size:12px;
 }
 
 .badge{
     display:block;
+
     text-align:center;
+
     font-size:11px;
-    color:#64748b;
+
+    color:var(--login-muted);
+
     margin-top:5px;
 }
 
+
+/* ==========================================
+   LINKS
+   ========================================== */
+
 .links{
     text-align:center;
+
     margin-top:15px;
+
     font-size:12px;
 }
 
 .links a{
-    color:#64748b;
+    color:var(--login-link);
+
     text-decoration:none;
+
     font-weight:bold;
+
+    transition:.2s;
 }
 
 .links a:hover{
@@ -112,73 +297,159 @@ button:hover{
 
 .links span{
     margin:0 6px;
-    color:#cbd5e1;
+
+    color:var(--login-divider);
 }
 
-/* MODAL */
+
+/* ==========================================
+   MODAL
+   ========================================== */
 
 .modal{
     display:none;
+
     position:fixed;
+
     top:0;
     left:0;
+
     width:100%;
     height:100%;
+
     background:rgba(0,0,0,.6);
+
     z-index:9999;
 }
 
+
+/* ==========================================
+   CONTEÚDO MODAL
+   ========================================== */
+
 .modal-content{
-    background:white;
+    background:var(--login-modal-bg);
+
     width:90%;
+
     max-width:450px;
+
     margin:80px auto;
+
     padding:20px;
+
     border-radius:15px;
+
     position:relative;
+
     box-shadow:0 10px 30px rgba(0,0,0,.25);
+
+    color:var(--login-modal-text);
+
+    transition:
+        background .25s ease,
+        color .25s ease;
 }
+
+
+/* ==========================================
+   FECHAR MODAL
+   ========================================== */
 
 .fechar{
     position:absolute;
+
     top:12px;
     right:15px;
+
     cursor:pointer;
+
     font-size:22px;
+
     font-weight:bold;
-    color:#666;
+
+    color:var(--login-secondary);
+
+    transition:.2s;
 }
 
 .fechar:hover{
-    color:red;
+    color:#ef4444;
 }
+
+
+/* ==========================================
+   TÍTULO MODAL
+   ========================================== */
 
 .modal-content h3{
     margin-top:0;
-    color:#111827;
+
+    color:var(--login-modal-text);
 }
 
+
+/* ==========================================
+   TEXTO MODAL
+   ========================================== */
+
 .modal-content p{
-    color:#555;
+    color:var(--login-modal-description);
+
     line-height:1.6;
+
     font-size:14px;
 }
 
+
+/* ==========================================
+   CELULAR
+   ========================================== */
+
+@media(max-width:480px){
+
+    .box{
+        width:92%;
+
+        padding:25px;
+    }
+
+    h1{
+        font-size:23px;
+    }
+
+    .logo{
+        width:64px;
+        height:64px;
+    }
+
+}
+
 {% endblock %}
+
 
 {% block content %}
 
 <div class="box">
 
-    <img src="/static/icon-192.png" class="logo">
+    <img
+        src="/static/icon-192.png"
+        class="logo"
+    >
 
-    <h1>ATACA-TUDO</h1>
+    <h1>
+        ATACA-TUDO
+    </h1>
 
     <div class="subtitle">
         Sistema de Estoque e Controle
     </div>
 
-    <form action="/entrar" method="POST">
+
+    <form
+        action="/entrar"
+        method="POST"
+    >
 
         <input
             type="text"
@@ -200,41 +471,63 @@ button:hover{
 
     </form>
 
+
     <div class="links">
 
-        <a href="#" onclick="abrirModal('termos')">
+        <a
+            href="#"
+            onclick="abrirModal('termos')"
+        >
             Termos de Uso
         </a>
 
         <span>•</span>
 
-        <a href="#" onclick="abrirModal('privacidade')">
+        <a
+            href="#"
+            onclick="abrirModal('privacidade')"
+        >
             Privacidade
         </a>
 
         <span>•</span>
 
-        <a href="#" onclick="abrirModal('sobre')">
+        <a
+            href="#"
+            onclick="abrirModal('sobre')"
+        >
             Sobre
         </a>
 
     </div>
 
+
     <div class="info">
+
         <span class="badge">
             Versão 4.5.8 • Atualização: 29/09/2026
         </span>
-     </div>
+
+    </div>
 
 </div>
 
-<!-- MODAL -->
 
-<div id="modal" class="modal">
+<!-- ==========================================
+     MODAL
+     ========================================== -->
+
+<div
+    id="modal"
+    class="modal"
+>
 
     <div class="modal-content">
 
-        <span class="fechar" onclick="fecharModal()">
+        <span
+            class="fechar"
+            onclick="fecharModal()"
+        >
             ×
         </span>
 
@@ -248,58 +541,91 @@ button:hover{
 
 {% endblock %}
 
+
 {% block script %}
 
 <script>
 
 if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/static/sw.js");
+
+    navigator.serviceWorker.register(
+        "/static/sw.js"
+    );
+
 }
+
 
 function abrirModal(tipo){
 
     let titulo = "";
     let texto = "";
 
+
     if(tipo === "termos"){
 
-    titulo = "Termos de Uso";
+        titulo = "Termos de Uso";
 
-    texto = "Este sistema é destinado exclusivamente ao controle interno de estoque e operações relacionadas. O sistema encontra-se em constante desenvolvimento e aprimoramento, podendo receber alterações, correções e novas funcionalidades sem aviso prévio. Embora sejam adotadas boas práticas de desenvolvimento, não é garantida a disponibilidade ininterrupta do sistema nem a preservação integral dos dados em caso de falhas técnicas, problemas de infraestrutura, uso indevido ou eventos externos. Recomenda-se que informações importantes sejam conferidas e mantidas também por meios próprios da empresa quando necessário O uso do sistema implica ciência e concordância com estas condições.";
+        texto =
+        "Este sistema é destinado exclusivamente ao controle interno de estoque e operações relacionadas. O sistema encontra-se em constante desenvolvimento e aprimoramento, podendo receber alterações, correções e novas funcionalidades sem aviso prévio. Embora sejam adotadas boas práticas de desenvolvimento, não é garantida a disponibilidade ininterrupta do sistema nem a preservação integral dos dados em caso de falhas técnicas, problemas de infraestrutura, uso indevido ou eventos externos. Recomenda-se que informações importantes sejam conferidas e mantidas também por meios próprios da empresa quando necessário. O uso do sistema implica ciência e concordância com estas condições.";
+
+    }
+
+
+    if(tipo === "privacidade"){
+
+        titulo = "Política de Privacidade";
+
+        texto =
+        "O sistema armazena exclusivamente informações relacionadas ao controle operacional de estoque, incluindo produtos, códigos, endereços de armazenamento, movimentações e usuários autorizados. Não são coletados dados bancários, financeiros ou informações pessoais sensíveis. As informações registradas destinam-se exclusivamente à organização interna das operações e podem ser utilizadas para fins de auditoria, rastreabilidade e histórico das atividades realizadas no sistema.";
+
+    }
+
+
+    if(tipo === "sobre"){
+
+        titulo = "Sobre o Sistema";
+
+        texto =
+        "ATACA-TUDO - Sistema de Estoque e Controle. Sistema desenvolvido por Guilherme Silva para apoio à organização e gestão interna de estoque. A plataforma encontra-se em evolução contínua, podendo receber atualizações, melhorias e correções conforme as necessidades operacionais.";
+
+    }
+
+
+    document.getElementById(
+        "tituloModal"
+    ).innerText = titulo;
+
+
+    document.getElementById(
+        "textoModal"
+    ).innerText = texto;
+
+
+    document.getElementById(
+        "modal"
+    ).style.display = "block";
 
 }
 
-if(tipo === "privacidade"){
-
-    titulo = "Política de Privacidade";
-
-    texto = "O sistema armazena exclusivamente informações relacionadas ao controle operacional de estoque, incluindo produtos, códigos, endereços de armazenamento, movimentações e usuários autorizados. Não são coletados dados bancários, financeiros ou informações pessoais sensíveis. As informações registradas destinam-se exclusivamente à organização interna das operações e podem ser utilizadas para fins de auditoria, rastreabilidade e histórico das atividades realizadas no sistema.";
-
-}
-
-if(tipo === "sobre"){
-
-    titulo = "Sobre o Sistema";
-
-    texto = "ATACA-TUDO - Sistema de Estoque e Controle. Sistema desenvolvido por Guilherme Silva para apoio à organização e gestão interna de estoque. A plataforma encontra-se em evolução contínua, podendo receber atualizações, melhorias e correções conforme as necessidades operacionais.";
-
-}
-    document.getElementById("tituloModal").innerText = titulo;
-    document.getElementById("textoModal").innerText = texto;
-
-    document.getElementById("modal").style.display = "block";
-}
 
 function fecharModal(){
-    document.getElementById("modal").style.display = "none";
+
+    document.getElementById(
+        "modal"
+    ).style.display = "none";
+
 }
+
 
 window.onclick = function(event){
 
-    let modal = document.getElementById("modal");
+    let modal =
+        document.getElementById("modal");
 
-    if(event.target == modal){
+    if(event.target === modal){
+
         modal.style.display = "none";
+
     }
 
 }
