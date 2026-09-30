@@ -9,23 +9,21 @@
 }
 
 body{
-    font-family:Arial,sans-serif;
+    font-family:Arial, sans-serif;
+
     margin:0;
+
     min-height:100vh;
 
+    background:#f1f5f9;
+
     display:flex;
+
     justify-content:center;
+
     align-items:center;
 
-    background:
-        radial-gradient(
-            circle at top,
-            #263449 0%,
-            #172235 42%,
-            #0f172a 100%
-        );
-
-    padding:20px 0;
+    padding:25px 0;
 }
 
 
@@ -34,30 +32,32 @@ body{
    ========================================== */
 
 .box{
-    width:90%;
-    max-width:520px;
+    width:92%;
+
+    max-width:560px;
 }
 
 
 /* ==========================================
-   TOPO
+   CABEÇALHO
    ========================================== */
 
 .topo{
     position:relative;
 
-    background:rgba(255,255,255,.97);
+    background:#ffffff;
 
-    border-radius:18px;
+    border:1px solid #e2e8f0;
 
-    padding:25px 20px 22px;
+    border-radius:14px;
+
+    padding:28px 22px 24px;
 
     text-align:center;
 
-    margin-bottom:16px;
+    margin-bottom:18px;
 
-    box-shadow:
-        0 12px 35px rgba(0,0,0,.30);
+    box-shadow:0 4px 18px rgba(15,23,42,.08);
 }
 
 
@@ -68,49 +68,54 @@ body{
 .sino-notificacao{
     position:absolute;
 
-    top:13px;
-    right:13px;
+    top:14px;
 
-    width:42px;
-    height:42px;
+    right:14px;
 
-    border-radius:50%;
+    width:40px;
+
+    height:40px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:10px;
 
     background:#f8fafc;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    border:1px solid #e2e8f0;
 
     text-decoration:none;
 
-    font-size:22px;
-
-    box-shadow:
-        0 3px 10px rgba(0,0,0,.15);
+    font-size:21px;
 
     transition:.2s;
 }
 
 .sino-notificacao:hover{
-    transform:scale(1.06);
+    background:#eff6ff;
 
-    background:#eef2ff;
+    border-color:#bfdbfe;
 }
 
 
 /* ==========================================
-   BOLINHA NOTIFICAÇÃO
+   PONTO DA NOTIFICAÇÃO
    ========================================== */
 
 .ponto-notificacao{
     position:absolute;
 
-    top:1px;
-    right:1px;
+    top:3px;
 
-    width:11px;
-    height:11px;
+    right:3px;
+
+    width:10px;
+
+    height:10px;
 
     background:#ef4444;
 
@@ -118,24 +123,21 @@ body{
 
     border:2px solid white;
 
-    animation:pulsar-notificacao 1.2s infinite;
+    animation:pulsar 1.2s infinite;
 }
 
-@keyframes pulsar-notificacao{
+@keyframes pulsar{
 
     0%{
         transform:scale(1);
-        opacity:1;
     }
 
     50%{
-        transform:scale(1.4);
-        opacity:.5;
+        transform:scale(1.35);
     }
 
     100%{
         transform:scale(1);
-        opacity:1;
     }
 
 }
@@ -146,17 +148,15 @@ body{
    ========================================== */
 
 .logo{
-    display:block;
+    width:76px;
 
-    width:78px;
-    height:78px;
+    height:76px;
 
-    margin:0 auto 13px;
+    object-fit:cover;
 
-    border-radius:18px;
+    border-radius:16px;
 
-    box-shadow:
-        0 5px 15px rgba(0,0,0,.12);
+    margin-bottom:12px;
 }
 
 
@@ -169,18 +169,15 @@ h1{
 
     font-size:22px;
 
-    font-weight:800;
+    font-weight:700;
 
-    letter-spacing:.2px;
-
-    color:#111827;
+    color:#0f172a;
 }
 
-
 .sub{
-    color:#6b7280;
-
     margin-top:5px;
+
+    color:#64748b;
 
     font-size:13px;
 }
@@ -191,30 +188,23 @@ h1{
    ========================================== */
 
 .usuario{
+    margin-top:12px;
+
     display:inline-block;
 
-    margin-top:11px;
+    padding:6px 11px;
 
-    padding:6px 12px;
+    background:#f8fafc;
 
-    border-radius:20px;
+    border:1px solid #e2e8f0;
 
-    background:#f1f5f9;
+    border-radius:7px;
 
     color:#475569;
 
     font-size:12px;
 
-    font-weight:bold;
-}
-
-
-/* ==========================================
-   LINKS
-   ========================================== */
-
-a{
-    text-decoration:none;
+    font-weight:600;
 }
 
 
@@ -222,53 +212,58 @@ a{
    BOTÕES
    ========================================== */
 
+a{
+    text-decoration:none;
+}
+
 .btn{
     position:relative;
 
     width:100%;
 
-    min-height:56px;
-
-    padding:14px 18px;
+    height:58px;
 
     margin-bottom:10px;
 
-    border:none;
-
-    border-radius:13px;
-
-    color:white;
-
-    font-size:15px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    text-align:left;
+    padding:0 18px;
 
     display:flex;
 
     align-items:center;
 
-    gap:11px;
+    gap:14px;
 
-    box-shadow:
-        0 5px 14px rgba(0,0,0,.22);
+    background:#ffffff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:11px;
+
+    color:#1e293b;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    box-shadow:0 2px 7px rgba(15,23,42,.06);
 
     transition:
-        transform .18s ease,
-        box-shadow .18s ease,
-        filter .18s ease;
+        background .15s,
+        border-color .15s,
+        transform .15s,
+        box-shadow .15s;
 }
 
 .btn:hover{
-    transform:translateY(-2px);
+    background:#f8fafc;
 
-    box-shadow:
-        0 8px 18px rgba(0,0,0,.28);
+    border-color:#cbd5e1;
 
-    filter:brightness(1.04);
+    transform:translateY(-1px);
+
+    box-shadow:0 5px 12px rgba(15,23,42,.09);
 }
 
 .btn:active{
@@ -277,25 +272,60 @@ a{
 
 
 /* ==========================================
-   ÍCONE
+   ÍCONES
    ========================================== */
 
-.btn::first-letter{
-    font-size:18px;
+.icone{
+    width:36px;
+
+    height:36px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:9px;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    font-size:19px;
+
+    flex-shrink:0;
 }
 
 
 /* ==========================================
-   AZUL
+   CONTADOR
    ========================================== */
 
-.padrao{
-    background:
-        linear-gradient(
-            135deg,
-            #3b82f6,
-            #2563eb
-        );
+.contador-solicitacoes{
+    margin-left:auto;
+
+    min-width:27px;
+
+    height:27px;
+
+    padding:0 8px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:20px;
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+    font-size:12px;
+
+    font-weight:bold;
 }
 
 
@@ -303,13 +333,10 @@ a{
    ADMINISTRAÇÃO
    ========================================== */
 
-.admin{
-    background:
-        linear-gradient(
-            135deg,
-            #ef4444,
-            #dc2626
-        );
+.btn-admin .icone{
+    background:#fef2f2;
+
+    color:#dc2626;
 }
 
 
@@ -318,62 +345,33 @@ a{
    ========================================== */
 
 .logout{
+    justify-content:center;
+
     margin-top:6px;
 
-    background:
-        rgba(255,255,255,.08);
+    background:transparent;
 
-    border:1px solid rgba(255,255,255,.12);
+    border-color:transparent;
 
     box-shadow:none;
 
-    color:#cbd5e1;
+    color:#64748b;
+}
 
-    justify-content:center;
+.logout .icone{
+    background:#f1f5f9;
 
-    text-align:center;
+    color:#64748b;
 }
 
 .logout:hover{
-    background:rgba(239,68,68,.15);
+    background:#fff1f2;
 
-    border-color:rgba(239,68,68,.30);
+    border-color:#fecdd3;
 
-    color:#fecaca;
+    color:#dc2626;
 
     box-shadow:none;
-}
-
-
-/* ==========================================
-   CONTADOR DE SOLICITAÇÕES
-   ========================================== */
-
-.contador-solicitacoes{
-    margin-left:auto;
-
-    min-width:27px;
-    height:27px;
-
-    padding:0 7px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    background:white;
-
-    color:#2563eb;
-
-    border-radius:20px;
-
-    font-size:12px;
-
-    font-weight:bold;
-
-    box-shadow:
-        0 2px 7px rgba(0,0,0,.18);
 }
 
 
@@ -388,18 +386,17 @@ a{
     }
 
     .box{
-        width:92%;
+        width:94%;
     }
 
     .topo{
-        padding:22px 16px 20px;
-
-        border-radius:17px;
+        padding:23px 16px 20px;
     }
 
     .logo{
-        width:72px;
-        height:72px;
+        width:70px;
+
+        height:70px;
     }
 
     h1{
@@ -407,18 +404,24 @@ a{
     }
 
     .btn{
-        min-height:54px;
+        height:55px;
 
         font-size:14px;
 
-        padding:13px 16px;
+        padding:0 14px;
+    }
+
+    .icone{
+        width:34px;
+
+        height:34px;
     }
 
 }
 
 
 /* ==========================================
-   TELAS MUITO PEQUENAS
+   TELAS BAIXAS
    ========================================== */
 
 @media(max-height:700px){
@@ -428,24 +431,17 @@ a{
     }
 
     .logo{
-        width:65px;
-        height:65px;
+        width:60px;
 
-        margin-bottom:9px;
-    }
+        height:60px;
 
-    h1{
-        font-size:19px;
-    }
-
-    .usuario{
-        margin-top:8px;
+        margin-bottom:8px;
     }
 
     .btn{
-        min-height:50px;
+        height:51px;
 
-        margin-bottom:8px;
+        margin-bottom:7px;
     }
 
 }
@@ -459,13 +455,13 @@ a{
 
 
     <!-- ==========================================
-         TOPO
+         CABEÇALHO
          ========================================== -->
 
     <div class="topo">
 
 
-        <!-- SINO -->
+        <!-- NOTIFICAÇÕES -->
 
         <a
             href="/notificacoes"
@@ -497,7 +493,6 @@ a{
             CONTROLE DE ESTOQUE
         </h1>
 
-
         <div class="sub">
             Sistema de Gestão
         </div>
@@ -506,11 +501,8 @@ a{
         <!-- USUÁRIO -->
 
         <div class="usuario">
-
             👤 {{ usuario }} | {{ perfil }}
-
         </div>
-
 
     </div>
 
@@ -524,9 +516,12 @@ a{
 
     <a href="/cadastrar">
 
-        <button class="btn padrao">
+        <button class="btn">
 
-            ➕
+            <span class="icone">
+                ➕
+            </span>
+
             <span>
                 Cadastrar Produto
             </span>
@@ -547,19 +542,22 @@ a{
 
     <a href="/solicitacoes">
 
-        <button class="btn padrao">
+        <button class="btn">
 
-            📋
+            <span class="icone">
+                📋
+            </span>
 
             <span>
                 Solicitações
             </span>
 
+
             {% if total_solicitacoes > 0 %}
 
-                <span class="contador-solicitacoes">
-                    {{ total_solicitacoes }}
-                </span>
+            <span class="contador-solicitacoes">
+                {{ total_solicitacoes }}
+            </span>
 
             {% endif %}
 
@@ -579,9 +577,11 @@ a{
 
     <a href="/separacao">
 
-        <button class="btn padrao">
+        <button class="btn">
 
-            📦
+            <span class="icone">
+                📦
+            </span>
 
             <span>
                 Separação
@@ -601,9 +601,11 @@ a{
 
     <a href="/consulta">
 
-        <button class="btn padrao">
+        <button class="btn">
 
-            🔎
+            <span class="icone">
+                🔎
+            </span>
 
             <span>
                 Consulta
@@ -623,9 +625,11 @@ a{
 
     <a href="/inventario">
 
-        <button class="btn padrao">
+        <button class="btn">
 
-            🗃️
+            <span class="icone">
+                🗃️
+            </span>
 
             <span>
                 Inventário
@@ -647,9 +651,11 @@ a{
 
     <a href="/historico">
 
-        <button class="btn padrao">
+        <button class="btn">
 
-            🕒
+            <span class="icone">
+                🕒
+            </span>
 
             <span>
                 Histórico
@@ -671,9 +677,11 @@ a{
 
     <a href="/administracao">
 
-        <button class="btn admin">
+        <button class="btn btn-admin">
 
-            ⚙️
+            <span class="icone">
+                ⚙️
+            </span>
 
             <span>
                 Administração
@@ -695,7 +703,9 @@ a{
 
         <button class="btn logout">
 
-            🚪
+            <span class="icone">
+                🚪
+            </span>
 
             <span>
                 Sair do sistema
