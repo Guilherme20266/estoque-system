@@ -8,20 +8,33 @@
 
 {% block style %}
 
+html{
+    min-height:100%;
+    background:var(--bg) !important;
+}
+
 body{
     font-family:Arial;
-    background:#f4f4f4;
+    background:var(--bg) !important;
+    color:var(--text);
     margin:0;
     padding:15px;
+    min-height:100vh;
+    box-sizing:border-box;
+    transition:
+        background-color .25s ease,
+        color .25s ease;
 }
 
 .box{
     max-width:600px;
     margin:auto;
+    background:transparent !important;
 }
 
 h2{
     text-align:center;
+    color:var(--text);
 }
 
 /* botões */
@@ -48,8 +61,23 @@ h2{
     height:44px;
     padding:0 12px;
     border-radius:8px;
-    border:1px solid #ccc;
+    border:1px solid var(--border);
+    background:var(--input-bg);
+    color:var(--input-text);
     font-size:15px;
+    outline:none;
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+.search::placeholder{
+    color:var(--text-secondary);
+}
+
+.search:focus{
+    box-shadow:0 0 0 2px #2563eb;
 }
 
 .cam-btn{
@@ -68,11 +96,23 @@ h2{
 
 /* card */
 .card{
-    background:white;
+    background:var(--surface);
+    color:var(--text);
     padding:15px;
     border-radius:12px;
     margin-bottom:12px;
     box-shadow:0 2px 8px rgba(0,0,0,.08);
+    border:1px solid var(--border);
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+body.dark-mode .card{
+    background:var(--surface) !important;
+    color:var(--text) !important;
+    border-color:var(--border) !important;
 }
 
 input,button{
@@ -80,9 +120,28 @@ input,button{
     height:44px;
     margin-top:10px;
     border-radius:8px;
-    border:1px solid #ccc;
     font-size:15px;
     box-sizing:border-box;
+}
+
+input{
+    padding:0 12px;
+    border:1px solid var(--border);
+    background:var(--input-bg);
+    color:var(--input-text);
+    outline:none;
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+input::placeholder{
+    color:var(--text-secondary);
+}
+
+input:focus{
+    box-shadow:0 0 0 2px #2563eb;
 }
 
 button{
@@ -94,11 +153,11 @@ button{
 
 /* infos */
 .info{
-    color:#555;
+    color:var(--text-secondary);
     line-height:1.8;
 }
 
-/* FLASH ISOLADO (não vaza pra outras telas) */
+/* FLASH ISOLADO */
 .flash-box{
     margin-bottom:12px;
 }
@@ -123,7 +182,9 @@ button{
     border:1px solid #f5c6cb;
 }
 
-a{ text-decoration:none; }
+a{
+    text-decoration:none;
+}
 
 #reader{
     display:none;
