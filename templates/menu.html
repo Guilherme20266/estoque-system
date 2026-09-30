@@ -4,64 +4,68 @@
 
 {% block style %}
 
+/* ==========================================
+   FUNDO
+   ========================================== */
+
 body{
     font-family:Arial,sans-serif;
     margin:0;
     min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
     background:linear-gradient(135deg,#0f172a,#1e293b);
-}
-
-.notificacao-alerta{
-    background:#ef4444;
-    color:white;
-    padding:3px 8px;
-    border-radius:20px;
-    font-size:12px;
-}
-
-.box{
-    width:90%;
-    max-width:520px;
+    padding:25px 0;
 }
 
 
 /* ==========================================
-   TOPO / CAIXINHA BRANCA
+   CONTAINER PRINCIPAL
+   ========================================== */
+
+.box{
+    width:92%;
+    max-width:650px;
+    margin:0 auto;
+}
+
+
+/* ==========================================
+   TOPO
    ========================================== */
 
 .topo{
-    background:rgba(255,255,255,0.95);
-    border-radius:16px;
-    padding:20px;
-    text-align:center;
-    margin-bottom:18px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.25);
-
-    /* necessário para o sino ficar
-       dentro da caixinha */
     position:relative;
+
+    background:rgba(255,255,255,.97);
+
+    border-radius:20px;
+
+    padding:28px 20px 24px;
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.28);
 }
 
 
 /* ==========================================
-   SINO DE NOTIFICAÇÕES
+   SINO
    ========================================== */
 
 .sino-notificacao{
     position:absolute;
 
-    top:12px;
-    right:12px;
+    top:14px;
+    right:14px;
 
-    width:42px;
-    height:42px;
+    width:44px;
+    height:44px;
 
     border-radius:50%;
 
-    background:rgba(255,255,255,0.95);
+    background:#f8fafc;
 
     display:flex;
     align-items:center;
@@ -69,22 +73,23 @@ body{
 
     text-decoration:none;
 
-    box-shadow:0 4px 12px rgba(0,0,0,.20);
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
 
     z-index:10;
 
-    font-size:23px;
+    font-size:22px;
 
     transition:.2s;
 }
 
 .sino-notificacao:hover{
     transform:scale(1.08);
+    background:#eef2ff;
 }
 
 
 /* ==========================================
-   BOLINHA VERMELHA
+   BOLINHA NOTIFICAÇÃO
    ========================================== */
 
 .ponto-notificacao{
@@ -131,64 +136,236 @@ body{
 
 .logo{
     display:block;
-    width:80px;
-    height:80px;
-    margin:0 auto 15px auto;
-    border-radius:18px;
+
+    width:82px;
+    height:82px;
+
+    margin:0 auto 14px;
+
+    border-radius:20px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
 }
 
 
+/* ==========================================
+   TÍTULO
+   ========================================== */
+
 h1{
     margin:0;
-    font-size:22px;
+
+    font-size:23px;
+
+    font-weight:800;
+
     color:#111827;
+
+    letter-spacing:.3px;
 }
 
 
 .sub{
     color:#6b7280;
+
     margin-top:6px;
+
     font-size:13px;
 }
 
 
 .usuario{
-    margin-top:10px;
+    display:inline-block;
+
+    margin-top:12px;
+
+    padding:7px 13px;
+
+    background:#f1f5f9;
+
+    border-radius:20px;
+
     font-size:13px;
+
+    font-weight:bold;
+
     color:#374151;
 }
 
 
 /* ==========================================
-   BOTÕES
+   TÍTULO DAS CATEGORIAS
    ========================================== */
 
-.btn{
-    width:100%;
-    padding:15px;
-    margin-bottom:12px;
-    border:none;
-    border-radius:12px;
-    color:white;
-    font-size:15px;
+.secao{
+    margin:20px 0 10px;
+
+    color:#cbd5e1;
+
+    font-size:12px;
+
     font-weight:bold;
-    cursor:pointer;
-    transition:.2s;
-    box-shadow:0 6px 15px rgba(0,0,0,.3);
-}
 
+    letter-spacing:1px;
 
-.btn:hover{
-    transform:translateY(-2px);
+    text-transform:uppercase;
+
+    padding-left:4px;
 }
 
 
 /* ==========================================
-   AZUL PADRÃO
+   GRID DOS BOTÕES
    ========================================== */
 
-.padrao{
-    background:linear-gradient(90deg,#3b82f6,#2563eb);
+.grid{
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:12px;
+}
+
+
+/* ==========================================
+   CARDS / BOTÕES
+   ========================================== */
+
+.menu-item{
+    position:relative;
+
+    min-height:88px;
+
+    border-radius:16px;
+
+    text-decoration:none;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:flex-start;
+
+    padding:18px;
+
+    box-sizing:border-box;
+
+    color:white;
+
+    box-shadow:
+        0 7px 18px rgba(0,0,0,.25);
+
+    transition:
+        transform .2s,
+        box-shadow .2s;
+}
+
+.menu-item:hover{
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 12px 24px rgba(0,0,0,.32);
+}
+
+.menu-item:active{
+    transform:scale(.98);
+}
+
+
+/* ==========================================
+   ÍCONE
+   ========================================== */
+
+.menu-icon{
+    font-size:27px;
+
+    margin-bottom:8px;
+}
+
+
+/* ==========================================
+   TEXTO
+   ========================================== */
+
+.menu-title{
+    font-size:15px;
+
+    font-weight:bold;
+}
+
+.menu-desc{
+    font-size:11px;
+
+    margin-top:4px;
+
+    opacity:.82;
+}
+
+
+/* ==========================================
+   AZUL
+   ========================================== */
+
+.azul{
+    background:linear-gradient(
+        135deg,
+        #3b82f6,
+        #2563eb
+    );
+}
+
+
+/* ==========================================
+   AZUL ESCURO
+   ========================================== */
+
+.azul-escuro{
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+}
+
+
+/* ==========================================
+   ROXO
+   ========================================== */
+
+.roxo{
+    background:linear-gradient(
+        135deg,
+        #6366f1,
+        #4f46e5
+    );
+}
+
+
+/* ==========================================
+   VERDE
+   ========================================== */
+
+.verde{
+    background:linear-gradient(
+        135deg,
+        #10b981,
+        #059669
+    );
+}
+
+
+/* ==========================================
+   LARANJA
+   ========================================== */
+
+.laranja{
+    background:linear-gradient(
+        135deg,
+        #f59e0b,
+        #d97706
+    );
 }
 
 
@@ -196,18 +373,155 @@ h1{
    VERMELHO
    ========================================== */
 
-.admin{
-    background:linear-gradient(90deg,#ef4444,#dc2626);
+.vermelho{
+    background:linear-gradient(
+        135deg,
+        #ef4444,
+        #dc2626
+    );
 }
 
 
-.logout{
-    background:linear-gradient(90deg,#ef4444,#dc2626);
+/* ==========================================
+   CONTADOR
+   ========================================== */
+
+.contador{
+    position:absolute;
+
+    top:10px;
+    right:10px;
+
+    min-width:24px;
+    height:24px;
+
+    padding:0 7px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:white;
+
+    color:#dc2626;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    box-shadow:0 3px 8px rgba(0,0,0,.2);
 }
 
 
-a{
+/* ==========================================
+   SAIR
+   ========================================== */
+
+.sair{
+    display:block;
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    margin-top:20px;
+
+    padding:15px;
+
+    border-radius:14px;
+
+    background:rgba(239,68,68,.12);
+
+    border:1px solid rgba(239,68,68,.35);
+
+    color:#fca5a5;
+
+    text-align:center;
+
     text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    transition:.2s;
+}
+
+.sair:hover{
+    background:#ef4444;
+
+    color:white;
+}
+
+
+/* ==========================================
+   RESPONSIVO
+   ========================================== */
+
+@media(max-width:480px){
+
+    body{
+        padding:15px 0;
+    }
+
+    .box{
+        width:94%;
+    }
+
+    .topo{
+        padding:24px 15px 20px;
+    }
+
+    .logo{
+        width:72px;
+        height:72px;
+    }
+
+    h1{
+        font-size:20px;
+    }
+
+    .grid{
+        grid-template-columns:1fr 1fr;
+
+        gap:9px;
+    }
+
+    .menu-item{
+        min-height:82px;
+
+        padding:14px;
+    }
+
+    .menu-icon{
+        font-size:24px;
+
+        margin-bottom:6px;
+    }
+
+    .menu-title{
+        font-size:13px;
+    }
+
+    .menu-desc{
+        font-size:10px;
+    }
+
+}
+
+
+/* ==========================================
+   CELULAR MUITO PEQUENO
+   ========================================== */
+
+@media(max-width:350px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
 }
 
 {% endblock %}
@@ -219,16 +533,12 @@ a{
 
 
     <!-- ==========================================
-         TOPO / CAIXINHA BRANCA
+         TOPO
          ========================================== -->
 
     <div class="topo">
 
-
-        <!-- ==========================================
-             SINO DE NOTIFICAÇÕES
-             FICA DENTRO DA CAIXINHA
-             ========================================== -->
+        <!-- SINO -->
 
         <a href="/notificacoes" class="sino-notificacao">
 
@@ -241,134 +551,221 @@ a{
         </a>
 
 
-        <!-- ==========================================
-             LOGO
-             ========================================== -->
+        <!-- LOGO -->
 
-        <img src="/static/icon-192.png" class="logo">
+        <img
+            src="/static/icon-192.png"
+            class="logo"
+        >
 
 
-        <!-- ==========================================
-             TÍTULO
-             ========================================== -->
+        <!-- TÍTULO -->
 
-        <h1>CONTROLE DE ESTOQUE</h1>
-
+        <h1>
+            CONTROLE DE ESTOQUE
+        </h1>
 
         <div class="sub">
             Sistema de Gestão
         </div>
 
 
+        <!-- USUÁRIO -->
+
         <div class="usuario">
+
             👤 {{ usuario }} | {{ perfil }}
+
         </div>
 
     </div>
 
 
+
     <!-- ==========================================
-         CADASTRAR
+         OPERAÇÃO
          ========================================== -->
 
     {% if perfil in ["admin", "operador", "separacao"] %}
 
-    <a href="/cadastrar">
+    <div class="secao">
+        📦 Operação
+    </div>
 
-        <button class="btn padrao">
-            ➕ Cadastrar Produto
-        </button>
-
-    </a>
-
-    {% endif %}
+    <div class="grid">
 
 
-    <!-- ==========================================
-         SOLICITAÇÕES
-         ========================================== -->
+        <!-- CADASTRAR -->
 
-    {% if perfil in ["admin", "operador", "separacao"] %}
+        <a
+            href="/cadastrar"
+            class="menu-item azul"
+        >
 
-    <a href="/solicitacoes">
+            <div class="menu-icon">
+                ➕
+            </div>
 
-        <button class="btn padrao">
+            <div class="menu-title">
+                Cadastrar Produto
+            </div>
 
-            📋 Solicitações
+            <div class="menu-desc">
+                Adicionar produtos ao estoque
+            </div>
+
+        </a>
+
+
+
+        <!-- SOLICITAÇÕES -->
+
+        <a
+            href="/solicitacoes"
+            class="menu-item azul-escuro"
+        >
 
             {% if total_solicitacoes > 0 %}
-                ({{ total_solicitacoes }})
+
+            <div class="contador">
+                {{ total_solicitacoes }}
+            </div>
+
             {% endif %}
 
-        </button>
+            <div class="menu-icon">
+                📋
+            </div>
 
-    </a>
+            <div class="menu-title">
+                Solicitações
+            </div>
+
+            <div class="menu-desc">
+                Pedidos e abastecimentos
+            </div>
+
+        </a>
+
+
+
+        <!-- SEPARAÇÃO -->
+
+        <a
+            href="/separacao"
+            class="menu-item roxo"
+        >
+
+            <div class="menu-icon">
+                📦
+            </div>
+
+            <div class="menu-title">
+                Separação
+            </div>
+
+            <div class="menu-desc">
+                Separar solicitações
+            </div>
+
+        </a>
+
+
+    </div>
 
     {% endif %}
 
-
-    <!-- ==========================================
-         SEPARAÇÃO
-         ========================================== -->
-
-    {% if perfil in ["admin", "operador", "separacao"] %}
-
-    <a href="/separacao">
-
-        <button class="btn padrao">
-            📦 Separação
-        </button>
-
-    </a>
-
-    {% endif %}
 
 
     <!-- ==========================================
          CONSULTA
          ========================================== -->
 
-    <a href="/consulta">
+    <div class="secao">
+        🔎 Consulta
+    </div>
 
-        <button class="btn padrao">
-            🔎 Consulta
-        </button>
-
-    </a>
+    <div class="grid">
 
 
-    <!-- ==========================================
-         INVENTÁRIO
-         ========================================== -->
+        <!-- CONSULTA -->
 
-    {% if perfil in ["admin", "operador", "separacao"] %}
+        <a
+            href="/consulta"
+            class="menu-item verde"
+        >
 
-    <a href="/inventario">
+            <div class="menu-icon">
+                🔎
+            </div>
 
-        <button class="btn padrao">
-            🗃️ Inventário
-        </button>
+            <div class="menu-title">
+                Consulta
+            </div>
 
-    </a>
+            <div class="menu-desc">
+                Consultar produtos
+            </div>
 
-    {% endif %}
+        </a>
 
 
-    <!-- ==========================================
-         HISTÓRICO
-         ========================================== -->
 
-    {% if perfil == "admin" %}
+        <!-- INVENTÁRIO -->
 
-    <a href="/historico">
+        {% if perfil in ["admin", "operador", "separacao"] %}
 
-        <button class="btn padrao">
-            🕒 Histórico
-        </button>
+        <a
+            href="/inventario"
+            class="menu-item laranja"
+        >
 
-    </a>
+            <div class="menu-icon">
+                🗃️
+            </div>
 
-    {% endif %}
+            <div class="menu-title">
+                Inventário
+            </div>
+
+            <div class="menu-desc">
+                Controle do estoque
+            </div>
+
+        </a>
+
+        {% endif %}
+
+
+
+        <!-- HISTÓRICO -->
+
+        {% if perfil == "admin" %}
+
+        <a
+            href="/historico"
+            class="menu-item azul-escuro"
+        >
+
+            <div class="menu-icon">
+                🕒
+            </div>
+
+            <div class="menu-title">
+                Histórico
+            </div>
+
+            <div class="menu-desc">
+                Movimentações do sistema
+            </div>
+
+        </a>
+
+        {% endif %}
+
+
+    </div>
+
 
 
     <!-- ==========================================
@@ -377,27 +774,48 @@ a{
 
     {% if perfil == "admin" %}
 
-    <a href="/administracao">
+    <div class="secao">
+        ⚙️ Administração
+    </div>
 
-        <button class="btn admin">
-            ⚙️ Administração
-        </button>
+    <div class="grid">
 
-    </a>
+
+        <a
+            href="/administracao"
+            class="menu-item vermelho"
+        >
+
+            <div class="menu-icon">
+                ⚙️
+            </div>
+
+            <div class="menu-title">
+                Administração
+            </div>
+
+            <div class="menu-desc">
+                Usuários e configurações
+            </div>
+
+        </a>
+
+
+    </div>
 
     {% endif %}
+
 
 
     <!-- ==========================================
          SAIR
          ========================================== -->
 
-    <a href="/logout">
-
-        <button class="btn logout">
-            🚪 Sair
-        </button>
-
+    <a
+        href="/logout"
+        class="sair"
+    >
+        🚪 Sair do sistema
     </a>
 
 
