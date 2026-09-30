@@ -5,20 +5,120 @@
 {% block style %}
 
 /* ==========================
+   VARIÁVEIS DO TEMA
+========================== */
+
+:root{
+    --sol-bg-start:#0f172a;
+    --sol-bg-end:#1e293b;
+
+    --sol-text:#ffffff;
+    --sol-secondary:#cbd5e1;
+    --sol-muted:#94a3b8;
+
+    --sol-surface:rgba(255,255,255,.07);
+    --sol-surface-strong:rgba(255,255,255,.06);
+    --sol-border:rgba(255,255,255,.08);
+
+    --sol-input-bg:#111827;
+    --sol-input-text:#ffffff;
+
+    --sol-address-bg:#020617;
+    --sol-address-text:#e2e8f0;
+
+    --sol-button-dark:#334155;
+}
+
+
+/* ==========================
+   MODO DIA
+========================== */
+
+body:not(.dark-mode){
+
+    --sol-bg-start:#eef2f7;
+    --sol-bg-end:#f8fafc;
+
+    --sol-text:#172033;
+    --sol-secondary:#475569;
+    --sol-muted:#64748b;
+
+    --sol-surface:#ffffff;
+    --sol-surface-strong:#ffffff;
+    --sol-border:#dfe5ec;
+
+    --sol-input-bg:#ffffff;
+    --sol-input-text:#172033;
+
+    --sol-address-bg:#f1f5f9;
+    --sol-address-text:#334155;
+
+    --sol-button-dark:#64748b;
+}
+
+
+/* ==========================
+   MODO NOITE
+========================== */
+
+body.dark-mode{
+
+    --sol-bg-start:#0f172a;
+    --sol-bg-end:#1e293b;
+
+    --sol-text:#ffffff;
+    --sol-secondary:#cbd5e1;
+    --sol-muted:#94a3b8;
+
+    --sol-surface:rgba(255,255,255,.07);
+    --sol-surface-strong:rgba(255,255,255,.06);
+    --sol-border:rgba(255,255,255,.08);
+
+    --sol-input-bg:#111827;
+    --sol-input-text:#ffffff;
+
+    --sol-address-bg:#020617;
+    --sol-address-text:#e2e8f0;
+
+    --sol-button-dark:#334155;
+}
+
+
+/* ==========================
    BASE
 ========================== */
 
 body{
     font-family:Arial,sans-serif;
+
     margin:0;
+
     min-height:100vh;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
-    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--sol-bg-start),
+            var(--sol-bg-end)
+        );
+
+    color:var(--sol-text);
+
+    transition:
+        background .25s ease,
+        color .25s ease;
 }
+
+
+/* ==========================
+   CONTAINER
+========================== */
 
 .container{
     width:92%;
+
     max-width:1050px;
+
     margin:30px auto;
 }
 
@@ -29,15 +129,22 @@ body{
 
 .header{
     display:flex;
+
     flex-direction:column;
+
     align-items:center;
+
     margin-bottom:20px;
 }
 
 .header h2{
     margin:0 0 20px 0;
+
     font-size:28px;
+
     text-align:center;
+
+    color:var(--sol-text);
 }
 
 
@@ -47,20 +154,32 @@ body{
 
 .filtros-status{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+
+    grid-template-columns:
+        repeat(4,1fr);
+
     gap:8px;
+
     width:100%;
+
     margin-bottom:12px;
 }
 
 .filtro-btn{
     height:46px;
+
     border:none;
+
     border-radius:10px;
+
     font-size:14px;
+
     font-weight:bold;
+
     color:white;
+
     cursor:pointer;
+
     transition:.2s;
 }
 
@@ -85,7 +204,9 @@ body{
 }
 
 .filtro-ativo{
-    box-shadow:0 0 0 3px rgba(255,255,255,.9);
+    box-shadow:
+        0 0 0 3px
+        rgba(255,255,255,.9);
 }
 
 
@@ -95,58 +216,109 @@ body{
 
 .filtros-box{
     width:100%;
-    background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.08);
+
+    background:var(--sol-surface-strong);
+
+    border:1px solid var(--sol-border);
+
     border-radius:14px;
+
     padding:14px;
+
     box-sizing:border-box;
+
     margin-bottom:15px;
+
+    box-shadow:
+        0 4px 15px
+        rgba(0,0,0,.08);
+
+    transition:
+        background .25s ease,
+        border-color .25s ease;
 }
 
 .filtros-titulo{
     font-size:14px;
+
     font-weight:bold;
-    color:#cbd5e1;
+
+    color:var(--sol-secondary);
+
     margin-bottom:10px;
 }
 
 .filtros-campos{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+
+    grid-template-columns:
+        repeat(4,1fr);
+
     gap:8px;
 }
 
 .filtro-input{
     width:100%;
+
     height:43px;
-    border:none;
+
+    border:1px solid var(--sol-border);
+
     outline:none;
+
     border-radius:9px;
+
     padding:0 11px;
-    background:#111827;
-    color:white;
+
+    background:var(--sol-input-bg);
+
+    color:var(--sol-input-text);
+
     font-size:14px;
+
     box-sizing:border-box;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        border-color .2s ease;
+}
+
+.filtro-input:focus{
+    border-color:#2563eb;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37,99,235,.18);
 }
 
 .filtro-input::placeholder{
-    color:#94a3b8;
+    color:var(--sol-muted);
 }
 
 .filtro-input option{
-    background:#111827;
-    color:white;
+    background:var(--sol-input-bg);
+
+    color:var(--sol-input-text);
 }
 
 .btn-limpar{
     width:100%;
+
     height:43px;
+
     border:none;
+
     border-radius:9px;
-    background:#334155;
+
+    background:var(--sol-button-dark);
+
     color:white;
+
     font-weight:bold;
+
     cursor:pointer;
+
     transition:.2s;
 }
 
@@ -161,48 +333,78 @@ body{
 
 .top-buttons{
     width:100%;
+
     display:grid;
+
     grid-template-columns:1fr 1fr;
+
     gap:8px;
+
     margin-bottom:20px;
 }
 
 .top-buttons a,
 .top-buttons form{
     width:100%;
+
     margin:0;
 }
 
 .top-buttons .btn{
     width:100%;
+
     height:48px;
+
     display:flex;
+
     justify-content:center;
+
     align-items:center;
+
     border:none;
+
     border-radius:10px;
+
     font-size:15px;
+
     font-weight:bold;
+
     text-decoration:none;
+
     box-sizing:border-box;
+
     cursor:pointer;
 }
 
 .btn{
     display:flex;
+
     justify-content:center;
+
     align-items:center;
+
     width:100%;
+
     height:48px;
+
     padding:0 15px;
+
     border:none;
+
     border-radius:10px;
+
     color:#fff;
+
     font-size:15px;
+
     font-weight:bold;
+
     text-decoration:none;
+
     cursor:pointer;
+
     transition:.2s;
+
     box-sizing:border-box;
 }
 
@@ -228,6 +430,7 @@ body{
 
 .btn-delete{
     background:#7f1d1d;
+
     color:white;
 }
 
@@ -237,13 +440,26 @@ body{
 ========================== */
 
 .card{
-    background:rgba(255,255,255,.07);
+    background:var(--sol-surface);
+
     backdrop-filter:blur(10px);
+
     border-radius:14px;
+
     padding:16px;
+
     margin-bottom:12px;
-    box-shadow:0 6px 20px rgba(0,0,0,.22);
-    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        0 6px 20px
+        rgba(0,0,0,.12);
+
+    border:1px solid var(--sol-border);
+
+    transition:
+        background .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
 }
 
 .card-pendente{
@@ -261,21 +477,29 @@ body{
 
 .card-topo{
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
+
     gap:10px;
+
     margin-bottom:10px;
 }
 
 .produto{
     font-size:18px;
+
     font-weight:bold;
-    color:white;
+
+    color:var(--sol-text);
 }
 
 .quantidade{
-    color:#94a3b8;
+    color:var(--sol-muted);
+
     font-size:13px;
+
     margin-top:3px;
 }
 
@@ -286,32 +510,43 @@ body{
 
 .status{
     display:inline-flex;
+
     align-items:center;
+
     justify-content:center;
+
     padding:6px 10px;
+
     border-radius:20px;
+
     font-size:12px;
+
     font-weight:bold;
+
     white-space:nowrap;
 }
 
 .pendente{
     background:#facc15;
+
     color:#111;
 }
 
 .andamento{
     background:#2563eb;
+
     color:white;
 }
 
 .concluido{
     background:#22c55e;
+
     color:white;
 }
 
 .erro{
     background:#ef4444;
+
     color:white;
 }
 
@@ -322,10 +557,15 @@ body{
 
 .detalhes{
     display:flex;
+
     flex-wrap:wrap;
+
     gap:6px 15px;
-    color:#cbd5e1;
+
+    color:var(--sol-secondary);
+
     font-size:13px;
+
     margin-bottom:10px;
 }
 
@@ -339,16 +579,25 @@ body{
 ========================== */
 
 .endereco{
-    background:#020617;
+    background:var(--sol-address-bg);
+
     border-radius:9px;
+
     padding:10px 12px;
-    color:#e2e8f0;
+
+    color:var(--sol-address-text);
+
     font-size:14px;
+
     margin-top:8px;
+
+    transition:
+        background .25s ease,
+        color .25s ease;
 }
 
 .endereco b{
-    color:white;
+    color:var(--sol-text);
 }
 
 
@@ -358,8 +607,11 @@ body{
 
 .acoes{
     display:flex;
+
     gap:8px;
+
     flex-wrap:wrap;
+
     margin-top:12px;
 }
 
@@ -369,11 +621,17 @@ body{
 
 .acoes button{
     border:none;
+
     padding:10px 14px;
+
     border-radius:8px;
+
     cursor:pointer;
+
     font-weight:bold;
+
     font-size:13px;
+
     transition:.2s;
 }
 
@@ -383,36 +641,47 @@ body{
 
 .btn-ok{
     background:#22c55e;
+
     color:white;
 }
 
 .btn-nao{
     background:#ef4444;
+
     color:white;
 }
 
 .btn-andamento{
     background:#2563eb;
+
     color:white;
 }
 
 .status-info{
     width:100%;
+
     padding:10px;
+
     border-radius:8px;
+
     text-align:center;
+
     font-weight:bold;
+
     font-size:13px;
+
     box-sizing:border-box;
 }
 
 .status-info.andamento{
     background:#1d4ed8;
+
     color:white;
 }
 
 .acoes .btn-delete{
     background:#7f1d1d;
+
     color:white;
 }
 
@@ -423,18 +692,23 @@ body{
 
 .alert{
     padding:12px 15px;
+
     margin-bottom:15px;
+
     border-radius:10px;
+
     font-weight:bold;
 }
 
 .alert.success{
     background:#22c55e;
+
     color:white;
 }
 
 .alert.error{
     background:#ef4444;
+
     color:white;
 }
 
@@ -445,9 +719,14 @@ body{
 
 .vazio{
     text-align:center;
+
     padding:45px 20px;
+
     font-size:17px;
-    opacity:.7;
+
+    color:var(--sol-secondary);
+
+    opacity:.8;
 }
 
 
@@ -458,19 +737,23 @@ body{
 @media(max-width:800px){
 
     .filtros-status{
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns:
+            repeat(2,1fr);
     }
 
     .filtros-campos{
-        grid-template-columns:1fr 1fr;
+        grid-template-columns:
+            1fr 1fr;
     }
 
 }
+
 
 @media(max-width:600px){
 
     .container{
         width:94%;
+
         margin:20px auto;
     }
 
@@ -479,12 +762,15 @@ body{
     }
 
     .filtros-status{
-        grid-template-columns:1fr 1fr;
+        grid-template-columns:
+            1fr 1fr;
+
         gap:6px;
     }
 
     .filtro-btn{
         height:43px;
+
         font-size:12px;
     }
 
@@ -510,6 +796,7 @@ body{
 
     .detalhes{
         flex-direction:column;
+
         gap:5px;
     }
 
@@ -689,7 +976,7 @@ body{
                 class="filtro-input"
                 placeholder="📦 Pesquisar produto..."
                 oninput="aplicarFiltros()"
-             >
+            >
 
 
             <!-- DATA -->
@@ -1163,63 +1450,45 @@ function aplicarFiltros(){
                 card.dataset.data;
 
 
-            /* ==========================
-               STATUS
-            ========================== */
+            /* STATUS */
 
             let statusOk =
                 filtroStatus === "TODOS" ||
                 status === filtroStatus;
 
 
-            /* ==========================
-               RUA
-            ========================== */
+            /* RUA */
 
             let ruaOk =
                 rua === "" ||
                 ruaCard.startsWith(rua);
 
 
-            /* ==========================
-               USUÁRIO
-            ========================== */
+            /* USUÁRIO */
 
             let usuarioOk =
                 usuario === "" ||
                 solicitante === usuario;
 
 
-            /* ==========================
-               PRODUTO
-            ========================== */
+            /* PRODUTO */
 
             let produtoOk =
                 produto === "" ||
                 produtoCard.includes(produto);
 
 
-            /* ==========================
-               DATA
-            ========================== */
+            /* DATA */
 
             let dataOk = true;
 
 
             if(data !== ""){
 
-                /*
-                 * O banco guarda:
-                 *
-                 * DD/MM/YYYY HH:MM
-                 *
-                 * O input date fornece:
-                 *
-                 * YYYY-MM-DD
-                 */
-
                 let partes =
-                    dataCard.split(" ")[0].split("/");
+                    dataCard
+                        .split(" ")[0]
+                        .split("/");
 
 
                 if(partes.length === 3){
@@ -1244,9 +1513,7 @@ function aplicarFiltros(){
             }
 
 
-            /* ==========================
-               MOSTRAR / ESCONDER
-            ========================== */
+            /* MOSTRAR / ESCONDER */
 
             if(
                 statusOk &&
@@ -1417,9 +1684,7 @@ function restaurarFiltros(){
     }
 
 
-    /* ==========================
-       BOTÃO DE STATUS
-    ========================== */
+    /* BOTÃO DE STATUS */
 
     let botoes =
         document.querySelectorAll(
@@ -1587,9 +1852,7 @@ setInterval(() => {
         ){
 
 
-            /* ==========================
-               SOM
-            ========================== */
+            /* SOM */
 
             let som =
                 document.getElementById(
@@ -1606,9 +1869,7 @@ setInterval(() => {
             }
 
 
-            /* ==========================
-               SALVAR FILTROS
-            ========================== */
+            /* SALVAR FILTROS */
 
             localStorage.setItem(
                 "filtroStatus",
@@ -1697,7 +1958,7 @@ setInterval(() => {
     });
 
 
-}, 10000);
+},10000);
 
 </script>
 
