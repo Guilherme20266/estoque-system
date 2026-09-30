@@ -4,179 +4,455 @@
 
 {% block style %}
 
-body{
-    font-family:Arial;
-    background:#f4f4f4;
-    padding:15px;
+/* ==========================================
+   VARIÁVEIS DO TEMA
+   ========================================== */
+
+:root{
+    --cad-bg:#f4f4f4;
+    --cad-surface:#ffffff;
+    --cad-text:#111827;
+    --cad-secondary:#6b7280;
+    --cad-border:#d1d5db;
+    --cad-input-bg:#ffffff;
+    --cad-input-text:#111827;
+    --cad-select-option:#ffffff;
+    --cad-shadow:rgba(0,0,0,.08);
+    --cad-back:#6c757d;
 }
+
+
+/* ==========================================
+   MODO NOITE
+   ========================================== */
+
+body.dark-mode{
+
+    --cad-bg:#0f172a;
+    --cad-surface:#1e293b;
+    --cad-text:#f8fafc;
+    --cad-secondary:#cbd5e1;
+    --cad-border:#475569;
+    --cad-input-bg:#0f172a;
+    --cad-input-text:#f8fafc;
+    --cad-select-option:#1e293b;
+    --cad-shadow:rgba(0,0,0,.30);
+    --cad-back:#475569;
+}
+
+
+/* ==========================================
+   BODY
+   ========================================== */
+
+body{
+    font-family:Arial,sans-serif;
+
+    background:var(--cad-bg);
+
+    color:var(--cad-text);
+
+    padding:15px;
+
+    margin:0;
+
+    transition:
+        background .25s ease,
+        color .25s ease;
+}
+
+
+/* ==========================================
+   CAIXA
+   ========================================== */
 
 .box{
-    background:white;
+    background:var(--cad-surface);
+
+    color:var(--cad-text);
+
     max-width:500px;
+
     width:100%;
+
     margin:auto;
+
     padding:20px;
+
     border-radius:10px;
+
     box-sizing:border-box;
+
+    box-shadow:
+        0 4px 15px var(--cad-shadow);
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        box-shadow .25s ease;
 }
 
-input,select{
+
+/* ==========================================
+   CAMPOS
+   ========================================== */
+
+input,
+select{
+
     width:100%;
+
     padding:12px;
+
     margin-bottom:12px;
+
     font-size:16px;
+
     box-sizing:border-box;
+
+    background:var(--cad-input-bg);
+
+    color:var(--cad-input-text);
+
+    border:1px solid var(--cad-border);
+
+    border-radius:8px;
+
+    outline:none;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
 }
+
+
+input:focus,
+select:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.18);
+
+}
+
+
+/* ==========================================
+   OPÇÕES DOS SELECTS
+   ========================================== */
+
+select option{
+
+    background:var(--cad-select-option);
+
+    color:var(--cad-input-text);
+
+}
+
+
+/* ==========================================
+   BOTÃO SALVAR
+   ========================================== */
 
 button{
+
     width:100%;
+
     padding:14px;
+
     background:#007bff;
+
     color:white;
+
     border:none;
+
     border-radius:8px;
+
     font-size:16px;
+
     cursor:pointer;
-}
 
-.codigo-box{
-    display:flex;
-    gap:8px;
-    margin-bottom:12px;
-}
-
-.codigo-box input{
-    flex:1;
-    margin-bottom:0;
-}
-
-.scan-icon{
-    width:55px;
-    min-width:55px;
-    padding:0;
-    background:#28a745;
-    font-size:22px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.alert{
-    padding:12px;
-    border-radius:8px;
-    margin-bottom:10px;
-    text-align:center;
-    font-weight:bold;
-    color:white;
-}
-
-.sucesso{
-    background:#28a745;
-}
-
-.erro{
-    background:#dc3545;
-}
-
-#reader{
-    margin-bottom:15px;
-    border-radius:10px;
-    overflow:hidden;
-}
-
-#alerta-max{
-    display:none;
-    padding:12px;
-    border-radius:8px;
-    margin-bottom:10px;
-    text-align:center;
-    font-weight:bold;
-    color:white;
-    background:#dc3545;
-}
-
-@media (max-width: 768px){
-
-    body{
-        padding:10px;
-    }
-
-    .box{
-        padding:15px;
-    }
-
-    input,select,button{
-        font-size:16px;
-        padding:14px;
-    }
-
-    h2{
-        font-size:20px;
-    }
+    transition:.2s;
 
 }
+
+button:hover{
+
+    background:#0069d9;
+
+}
+
+
+/* ==========================================
+   BOTÃO VOLTAR
+   ========================================== */
 
 a{
     text-decoration:none;
 }
 
+
+/* ==========================================
+   CÓDIGO
+   ========================================== */
+
+.codigo-box{
+
+    display:flex;
+
+    gap:8px;
+
+    margin-bottom:12px;
+
+}
+
+.codigo-box input{
+
+    flex:1;
+
+    margin-bottom:0;
+
+}
+
+
+.scan-icon{
+
+    width:55px;
+
+    min-width:55px;
+
+    padding:0;
+
+    background:#28a745;
+
+    font-size:22px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+
+/* ==========================================
+   ALERTAS
+   ========================================== */
+
+.alert{
+
+    padding:12px;
+
+    border-radius:8px;
+
+    margin-bottom:10px;
+
+    text-align:center;
+
+    font-weight:bold;
+
+    color:white;
+
+}
+
+.sucesso{
+
+    background:#28a745;
+
+}
+
+.erro{
+
+    background:#dc3545;
+
+}
+
+
+/* ==========================================
+   LEITOR QR
+   ========================================== */
+
+#reader{
+
+    margin-bottom:15px;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+}
+
+
+/* ==========================================
+   ALERTA QUANTIDADE MÁXIMA
+   ========================================== */
+
+#alerta-max{
+
+    display:none;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    margin-bottom:10px;
+
+    text-align:center;
+
+    font-weight:bold;
+
+    color:white;
+
+    background:#dc3545;
+
+}
+
+
+/* ==========================================
+   TÍTULO
+   ========================================== */
+
+h2{
+
+    color:var(--cad-text);
+
+    transition:color .25s ease;
+
+}
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+@media (max-width:768px){
+
+    body{
+
+        padding:10px;
+
+    }
+
+    .box{
+
+        padding:15px;
+
+    }
+
+    input,
+    select,
+    button{
+
+        font-size:16px;
+
+        padding:14px;
+
+    }
+
+    h2{
+
+        font-size:20px;
+
+    }
+
+}
+
 {% endblock %}
+
 
 {% block content %}
 
 <a href="/menu">
-<button style="
-width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
-background:#6c757d;
-color:white;
-font-size:15px;
-margin-bottom:10px;
-cursor:pointer;
-">
-🏠 Voltar ao Menu
-</button>
+
+    <button
+        type="button"
+        style="
+        width:100%;
+        padding:12px;
+        border:none;
+        border-radius:8px;
+        background:var(--cad-back);
+        color:white;
+        font-size:15px;
+        margin-bottom:10px;
+        cursor:pointer;
+        "
+    >
+        🏠 Voltar ao Menu
+    </button>
+
 </a>
+
 
 <div class="box">
 
+
 {% if request.args.get('sucesso') %}
+
 <div class="alert sucesso">
-✅ Produto cadastrado com sucesso!
+
+    ✅ Produto cadastrado com sucesso!
+
 </div>
+
 {% endif %}
+
 
 {% if request.args.get('erro') == 'endereco' %}
+
 <div class="alert erro">
-❌ Selecione a rua, coluna e nível corretamente!
+
+    ❌ Selecione a rua, coluna e nível corretamente!
+
 </div>
+
 {% endif %}
+
 
 {% if request.args.get('erro') == 'validade' %}
+
 <div class="alert erro">
-❌ Informe uma data de validade válida!
+
+    ❌ Informe uma data de validade válida!
+
 </div>
+
 {% endif %}
+
 
 {% if request.args.get('erro') == 'quantidade' %}
+
 <div class="alert erro">
-❌ A quantidade deve estar entre 1 e 1000!
+
+    ❌ A quantidade deve estar entre 1 e 1000!
+
 </div>
+
 {% endif %}
 
+
 <div id="alerta-max">
-🚫 Quantidade máxima permitida é 1000
+
+    🚫 Quantidade máxima permitida é 1000
+
 </div>
 
-<h2>➕ Cadastrar Produto</h2>
+
+<h2>
+    ➕ Cadastrar Produto
+</h2>
+
 
 <form
     method="POST"
     id="formCadastro"
     onsubmit="return validarFormulario()"
+    novalidate
 >
+
 
 <input
     id="nome"
@@ -185,11 +461,13 @@ cursor:pointer;
     required
 >
 
+
 <input
     type="hidden"
     name="codigo"
     value="Null"
 >
+
 
 <input
     type="number"
@@ -201,6 +479,7 @@ cursor:pointer;
     oninput="verificarQuantidade()"
 >
 
+
 <input
     id="validade"
     name="validade"
@@ -211,11 +490,15 @@ cursor:pointer;
     oninput="mascaraData(this)"
 >
 
+
 <select
     name="rua"
     required
 >
-    <option value="">Selecione a Rua</option>
+
+    <option value="">
+        Selecione a Rua
+    </option>
 
     <option value="A">A</option>
     <option value="B">B</option>
@@ -242,21 +525,30 @@ cursor:pointer;
 
 </select>
 
+
 <div id="grupo-coluna">
 
 <select
     name="coluna"
     id="coluna"
 >
-    <option value="">Selecione a Coluna</option>
+
+    <option value="">
+        Selecione a Coluna
+    </option>
 
     {% for i in range(1,81) %}
-    <option value="{{i}}">{{i}}</option>
+
+    <option value="{{i}}">
+        {{i}}
+    </option>
+
     {% endfor %}
 
 </select>
 
 </div>
+
 
 <div id="grupo-nivel">
 
@@ -264,7 +556,10 @@ cursor:pointer;
     name="nivel"
     id="nivel"
 >
-    <option value="">Selecione o Nível</option>
+
+    <option value="">
+        Selecione o Nível
+    </option>
 
     <option value="1">1</option>
     <option value="2">2</option>
@@ -277,9 +572,13 @@ cursor:pointer;
 
 </div>
 
+
 <button type="submit">
-Salvar
+
+    Salvar
+
 </button>
+
 
 </form>
 
@@ -287,9 +586,15 @@ Salvar
 
 {% endblock %}
 
+
 {% block script %}
 
 <script>
+
+
+// ==========================================
+// VERIFICAR QUANTIDADE
+// ==========================================
 
 function verificarQuantidade(){
 
@@ -300,6 +605,7 @@ function verificarQuantidade(){
     let alerta = document.getElementById(
         "alerta-max"
     );
+
 
     if(parseInt(q.value) > 1000){
 
@@ -316,13 +622,17 @@ function verificarQuantidade(){
 }
 
 
-// ==========================
+// ==========================================
 // MÁSCARA DA DATA
-// ==========================
+// ==========================================
 
 function mascaraData(input){
 
-    let v = input.value.replace(/\D/g, "");
+    let v = input.value.replace(
+        /\D/g,
+        ""
+    );
+
 
     if(v.length > 2){
 
@@ -333,6 +643,7 @@ function mascaraData(input){
 
     }
 
+
     if(v.length > 4){
 
         v = v.replace(
@@ -342,50 +653,85 @@ function mascaraData(input){
 
     }
 
+
     input.value = v;
 
 }
 
 
-// ==========================
+// ==========================================
 // VALIDAR DATA REAL
-// ==========================
+// ==========================================
 
 function dataValida(data){
 
     let partes = data.split("/");
 
+
     if(partes.length !== 3){
+
         return false;
+
     }
 
-    let dia = parseInt(partes[0], 10);
-    let mes = parseInt(partes[1], 10);
-    let ano = parseInt(partes[2], 10);
+
+    let dia = parseInt(
+        partes[0],
+        10
+    );
+
+    let mes = parseInt(
+        partes[1],
+        10
+    );
+
+    let ano = parseInt(
+        partes[2],
+        10
+    );
+
 
     if(
         isNaN(dia) ||
         isNaN(mes) ||
         isNaN(ano)
     ){
+
         return false;
+
     }
+
 
     if(
         partes[0].length !== 2 ||
         partes[1].length !== 2 ||
         partes[2].length !== 4
     ){
+
         return false;
+
     }
 
-    if(mes < 1 || mes > 12){
+
+    if(
+        mes < 1 ||
+        mes > 12
+    ){
+
         return false;
+
     }
 
-    if(dia < 1 || dia > 31){
+
+    if(
+        dia < 1 ||
+        dia > 31
+    ){
+
         return false;
+
     }
+
 
     let dataTeste = new Date(
         ano,
@@ -393,33 +739,56 @@ function dataValida(data){
         dia
     );
 
+
     // Verifica se a data realmente existe
+
     if(
         dataTeste.getFullYear() !== ano ||
         dataTeste.getMonth() !== mes - 1 ||
         dataTeste.getDate() !== dia
     ){
+
         return false;
+
     }
+
 
     // Pega a data de hoje
+
     let hoje = new Date();
 
-    hoje.setHours(0, 0, 0, 0);
-    dataTeste.setHours(0, 0, 0, 0);
+    hoje.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+    dataTeste.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
 
     // Não permite data vencida
+
     if(dataTeste < hoje){
+
         return false;
+
     }
 
+
     return true;
+
 }
 
-// ==========================
-// ESCONDER COLUNA E NÍVEL
-// NAS LAJES
-// ==========================
+
+// ==========================================
+// ESCONDER COLUNA E NÍVEL NAS LAJES
+// ==========================================
 
 const rua = document.querySelector(
     'select[name="rua"]'
@@ -433,56 +802,122 @@ const nivel = document.querySelector(
     'select[name="nivel"]'
 );
 
+
 function atualizarLaje(){
 
-    if(rua.value.startsWith("Laje")){
+    if(
+        rua.value.startsWith("Laje")
+    ){
 
-        coluna.parentElement.style.display = "none";
-        nivel.parentElement.style.display = "none";
+        coluna.parentElement.style.display =
+            "none";
+
+        nivel.parentElement.style.display =
+            "none";
+
 
         coluna.required = false;
+
         nivel.required = false;
 
+
         coluna.value = "";
+
         nivel.value = "";
 
     }else{
 
-        coluna.parentElement.style.display = "";
-        nivel.parentElement.style.display = "";
+        coluna.parentElement.style.display =
+            "";
+
+        nivel.parentElement.style.display =
+            "";
+
 
         coluna.required = true;
+
         nivel.required = true;
 
     }
 
 }
 
+
 rua.addEventListener(
     "change",
     atualizarLaje
 );
 
+
 atualizarLaje();
 
 
-// ==========================
+// ==========================================
 // VALIDAR FORMULÁRIO
-// ==========================
+// ==========================================
 
 function validarFormulario(){
 
-    let validade = document.getElementById(
-        "validade"
-    ).value.trim();
+    let validade =
+        document.getElementById(
+            "validade"
+        ).value.trim();
+
 
     let ruaValor = rua.value;
 
-    // DATA
-    if(!dataValida(validade)){
+
+    // ======================================
+    // QUANTIDADE
+    // ======================================
+
+    let quantidade =
+        document.querySelector(
+            'input[name="quantidade"]'
+        ).value.trim();
+
+
+    if(!quantidade){
 
         alert(
-            "❌ Informe uma data válida no formato DD/MM/AAAA."
+            "⚠️ Informe a quantidade do produto."
+        );
+
+        document.querySelector(
+            'input[name="quantidade"]'
+        ).focus();
+
+        return false;
+
+    }
+
+
+    if(
+        parseInt(quantidade) < 1 ||
+        parseInt(quantidade) > 1000
+    ){
+
+        alert(
+            "❌ A quantidade deve estar entre 1 e 1000."
+        );
+
+        document.querySelector(
+            'input[name="quantidade"]'
+        ).focus();
+
+        return false;
+
+    }
+
+
+    // ======================================
+    // DATA
+    // ======================================
+
+    if(!validade){
+
+        alert(
+            "⚠️ Informe a data de validade do produto."
         );
 
         document.getElementById(
@@ -493,11 +928,49 @@ function validarFormulario(){
 
     }
 
+
+    if(
+        !/^\d{2}\/\d{2}\/\d{4}$/.test(
+            validade
+        )
+    ){
+
+        alert(
+            "❌ Digite a data no formato DD/MM/AAAA."
+        );
+
+        document.getElementById(
+            "validade"
+        ).focus();
+
+        return false;
+
+    }
+
+
+    if(!dataValida(validade)){
+
+        alert(
+            "❌ A data de validade não pode ser anterior à data atual."
+        );
+
+        document.getElementById(
+            "validade"
+        ).focus();
+
+        return false;
+
+    }
+
+
+    // ======================================
     // RUA
+    // ======================================
+
     if(!ruaValor){
 
         alert(
-            "❌ Selecione uma rua."
+            "⚠️ Selecione a rua onde o produto será armazenado."
         );
 
         rua.focus();
@@ -506,15 +979,17 @@ function validarFormulario(){
 
     }
 
-    // COLUNA E NÍVEL
-    // Não são necessários para Laje
+
+    // ======================================
+    // COLUNA
+    // ======================================
 
     if(!ruaValor.startsWith("Laje")){
 
         if(!coluna.value){
 
             alert(
-                "❌ Selecione uma coluna."
+                "⚠️ Selecione a coluna do endereço."
             );
 
             coluna.focus();
@@ -523,10 +998,15 @@ function validarFormulario(){
 
         }
 
+
+        // ==================================
+        // NÍVEL
+        // ==================================
+
         if(!nivel.value){
 
             alert(
-                "❌ Selecione um nível."
+                "⚠️ Selecione o nível do endereço."
             );
 
             nivel.focus();
@@ -536,6 +1016,7 @@ function validarFormulario(){
         }
 
     }
+
 
     return true;
 
