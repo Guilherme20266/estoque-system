@@ -4,567 +4,524 @@
 
 {% block style %}
 
-*{
-    box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-/* ==========================================
-   TEMA
-   ========================================== */
-
-:root{
-    --menu-bg:#eef2f7;
-    --menu-text:#172033;
-
-    --menu-surface:#ffffff;
-    --menu-border:#dfe5ec;
-    --menu-divider:#edf0f4;
-
-    --menu-item-text:#1e293b;
-    --menu-muted:#64748b;
-    --menu-description:#94a3b8;
-
-    --menu-hover:#f8fafc;
-
-    --menu-icon-bg:#eff6ff;
-
-    --menu-counter-bg:#fee2e2;
-    --menu-counter-text:#dc2626;
-
-    --menu-exit-text:#64748b;
-    --menu-exit-hover:#fffafa;
+:root {
+    --menu-bg: #f3f6fb;
+    --menu-text: #172033;
+    --menu-surface: #ffffff;
+    --menu-border: #e3e8f0;
+    --menu-item-text: #1e293b;
+    --menu-muted: #64748b;
+    --menu-description: #94a3b8;
+    --menu-hover: #f8faff;
+    --menu-counter-bg: #fee2e2;
+    --menu-counter-text: #dc2626;
+    --menu-exit-text: #64748b;
+    --menu-exit-hover: #fff1f2;
+    --menu-shadow: 0 5px 20px rgba(15, 23, 42, .045);
 }
 
-
-/* ==========================================
-   MODO NOITE
-   ========================================== */
-
-body.dark-mode{
-
-    --menu-bg:#0f172a;
-    --menu-text:#f8fafc;
-
-    --menu-surface:#1e293b;
-    --menu-border:#334155;
-    --menu-divider:#334155;
-
-    --menu-item-text:#f8fafc;
-    --menu-muted:#cbd5e1;
-    --menu-description:#94a3b8;
-
-    --menu-hover:#273449;
-
-    --menu-icon-bg:#263b5c;
-
-    --menu-counter-bg:#4c2028;
-    --menu-counter-text:#fda4af;
-
-    --menu-exit-text:#cbd5e1;
-    --menu-exit-hover:#273449;
+body.dark-mode {
+    --menu-bg: #0b1120;
+    --menu-text: #f8fafc;
+    --menu-surface: #151f32;
+    --menu-border: #29364c;
+    --menu-item-text: #f1f5f9;
+    --menu-muted: #b6c3d6;
+    --menu-description: #94a3b8;
+    --menu-hover: #1c2a40;
+    --menu-counter-bg: #4c2028;
+    --menu-counter-text: #fda4af;
+    --menu-exit-text: #cbd5e1;
+    --menu-exit-hover: #38202a;
+    --menu-shadow: 0 5px 20px rgba(0, 0, 0, .12);
 }
 
-
-/* ==========================================
-   BODY
-   ========================================== */
-
-body{
-    margin:0;
-    min-height:100vh;
-
-    font-family:Arial,sans-serif;
-
-    background:var(--menu-bg);
-
-    color:var(--menu-text);
-
-    padding:20px 0;
-
-    transition:
-        background .25s ease,
-        color .25s ease;
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: var(--menu-bg);
+    color: var(--menu-text);
+    padding: 30px 0;
+    transition: background .25s ease, color .25s ease;
 }
 
-
-/* ==========================================
-   CONTAINER
-   ========================================== */
-
-.box{
-    width:92%;
-    max-width:520px;
-    margin:auto;
+.box {
+    width: 92%;
+    max-width: 1000px;
+    margin: auto;
 }
 
+/* CABEÇALHO */
 
-/* ==========================================
-   CABEÇALHO AZUL
-   ========================================== */
-
-.topo{
-    position:relative;
-
-    background:#1d4ed8;
-
-    color:white;
-
-    border-radius:18px;
-
-    padding:26px 22px 23px;
-
-    margin-bottom:18px;
-
-    overflow:hidden;
-
-    box-shadow:0 8px 24px rgba(30,64,175,.25);
+.topo {
+    position: relative;
+    overflow: hidden;
+    padding: 30px;
+    margin-bottom: 30px;
+    color: #fff;
+    background: linear-gradient(120deg, #1d4ed8, #2563eb 60%, #3b82f6);
+    border-radius: 22px;
+    box-shadow: 0 12px 30px rgba(37, 99, 235, .18);
 }
 
-
-/* ==========================================
-   DETALHE DECORATIVO
-   ========================================== */
-
-.topo::after{
-    content:"";
-
-    position:absolute;
-
-    width:170px;
-    height:170px;
-
-    border-radius:50%;
-
-    background:rgba(255,255,255,.06);
-
-    right:-70px;
-    top:-80px;
+.topo::before {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.055);
+    right: -75px;
+    top: -135px;
 }
 
-
-/* ==========================================
-   SINO
-   ========================================== */
-
-.sino-notificacao{
-    position:absolute;
-
-    right:15px;
-    top:15px;
-
-    z-index:2;
-
-    width:42px;
-    height:42px;
-
-    border-radius:11px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    background:rgba(255,255,255,.14);
-
-    border:1px solid rgba(255,255,255,.18);
-
-    text-decoration:none;
-
-    font-size:21px;
-
-    transition:.2s;
+.topo::after {
+    content: "";
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.045);
+    right: 100px;
+    bottom: -120px;
 }
 
-.sino-notificacao:hover{
-    background:rgba(255,255,255,.23);
+.sino-notificacao {
+    position: absolute;
+    z-index: 3;
+    right: 22px;
+    top: 22px;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 14px;
+    background: rgba(255,255,255,.12);
+    text-decoration: none;
+    font-size: 21px;
+    transition: .2s;
 }
 
-
-/* ==========================================
-   PONTO NOTIFICAÇÃO
-   ========================================== */
-
-.ponto-notificacao{
-    position:absolute;
-
-    top:1px;
-    right:1px;
-
-    width:10px;
-    height:10px;
-
-    background:#f43f5e;
-
-    border:2px solid #1d4ed8;
-
-    border-radius:50%;
-
-    animation:pulsar 1.2s infinite;
+.sino-notificacao:hover {
+    background: rgba(255,255,255,.24);
+    transform: translateY(-2px);
 }
 
-@keyframes pulsar{
+.ponto-notificacao {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 10px;
+    height: 10px;
+    background: #fb3556;
+    border: 2px solid #2563eb;
+    border-radius: 50%;
+    animation: pulsar 1.2s infinite;
+}
 
-    0%{
-        transform:scale(1);
+@keyframes pulsar {
+    50% { transform: scale(1.3); }
+}
+
+.logo {
+    position: relative;
+    z-index: 1;
+    width: 62px;
+    height: 62px;
+    display: block;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 22px;
+    box-shadow: 0 5px 14px rgba(0,0,0,.16);
+}
+
+h1 {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding-right: 35px;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+.sub {
+    position: relative;
+    z-index: 1;
+    margin-top: 8px;
+    color: #dbeafe;
+    font-size: 13px;
+}
+
+.usuario {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 20px;
+    padding: 9px 13px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 10px;
+    background: rgba(255,255,255,.12);
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* TÍTULO DA SEÇÃO */
+
+.secao-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.titulo-menu {
+    margin: 0;
+    color: var(--menu-text);
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.subtitulo-menu {
+    margin-top: 5px;
+    color: var(--menu-muted);
+    font-size: 12px;
+}
+
+/* GRADE DE CARTÕES */
+
+.menu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.menu-item {
+    position: relative;
+    min-width: 0;
+    min-height: 166px;
+    padding: 21px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid var(--menu-border);
+    border-radius: 18px;
+    background: var(--menu-surface);
+    box-shadow: var(--menu-shadow);
+    color: var(--menu-item-text);
+    text-decoration: none;
+    transition: transform .2s ease, border-color .2s ease,
+                background .2s ease, box-shadow .2s ease;
+}
+
+.menu-item:hover {
+    transform: translateY(-4px);
+    border-color: #93b4ff;
+    background: var(--menu-hover);
+    box-shadow: 0 12px 25px rgba(37,99,235,.09);
+}
+
+.menu-item:focus-visible,
+.sair:focus-visible,
+.sino-notificacao:focus-visible {
+    outline: 3px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+/* ÍCONES */
+
+.icone {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 17px;
+    border-radius: 14px;
+    background: #eff6ff;
+    font-size: 23px;
+}
+
+.item-cadastrar .icone {
+    background: #e0f2fe;
+}
+
+.item-solicitacoes .icone {
+    background: #fef3c7;
+}
+
+.item-separacao .icone {
+    background: #dcfce7;
+}
+
+.item-consulta .icone {
+    background: #ede9fe;
+}
+
+.item-inventario .icone {
+    background: #cffafe;
+}
+
+.item-historico .icone {
+    background: #f3e8ff;
+}
+
+.admin .icone {
+    background: #fee2e2;
+}
+
+body.dark-mode .icone {
+    background: #263752;
+}
+
+body.dark-mode .item-cadastrar .icone {
+    background: #18394e;
+}
+
+body.dark-mode .item-solicitacoes .icone {
+    background: #443921;
+}
+
+body.dark-mode .item-separacao .icone {
+    background: #173c32;
+}
+
+body.dark-mode .item-consulta .icone {
+    background: #352b55;
+}
+
+body.dark-mode .item-inventario .icone {
+    background: #173d43;
+}
+
+body.dark-mode .item-historico .icone {
+    background: #3b294e;
+}
+
+body.dark-mode .admin .icone {
+    background: #482630;
+}
+
+/* TEXTOS DOS CARTÕES */
+
+.texto {
+    width: 100%;
+    flex: 1;
+}
+
+.nome {
+    padding-right: 30px;
+    color: var(--menu-item-text);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.descricao {
+    margin-top: 7px;
+    color: var(--menu-description);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.seta {
+    position: absolute;
+    right: 20px;
+    bottom: 21px;
+    color: var(--menu-description);
+    font-size: 22px;
+    transition: transform .2s ease, color .2s ease;
+}
+
+.menu-item:hover .seta {
+    color: #3b82f6;
+    transform: translateX(4px);
+}
+
+/* CONTADOR DE SOLICITAÇÕES */
+
+.contador {
+    position: absolute;
+    top: 19px;
+    right: 19px;
+    min-width: 27px;
+    height: 27px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: var(--menu-counter-bg);
+    color: var(--menu-counter-text);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* ADMINISTRAÇÃO */
+
+.admin:hover {
+    border-color: #fca5a5;
+}
+
+.admin .nome {
+    color: var(--menu-item-text);
+}
+
+.admin .seta {
+    color: #ef4444;
+}
+
+/* SAIR */
+
+.sair {
+    min-height: 54px;
+    margin-top: 25px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border: 1px solid var(--menu-border);
+    border-radius: 15px;
+    background: var(--menu-surface);
+    color: var(--menu-exit-text);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 800;
+    transition: .2s;
+}
+
+.sair:hover {
+    border-color: #fecaca;
+    background: var(--menu-exit-hover);
+    color: #dc2626;
+}
+
+/* TABLETS E CELULARES */
+
+@media (max-width: 600px) {
+    body {
+        padding: 16px 0 24px;
     }
 
-    50%{
-        transform:scale(1.35);
+    .box {
+        width: 94%;
     }
 
-    100%{
-        transform:scale(1);
+    .topo {
+        padding: 24px 20px;
+        margin-bottom: 25px;
+        border-radius: 19px;
     }
 
-}
-
-
-/* ==========================================
-   LOGO
-   ========================================== */
-
-.logo{
-    position:relative;
-    z-index:1;
-
-    width:66px;
-    height:66px;
-
-    border-radius:15px;
-
-    display:block;
-
-    margin-bottom:14px;
-
-    box-shadow:0 4px 12px rgba(0,0,0,.18);
-}
-
-
-/* ==========================================
-   TÍTULO
-   ========================================== */
-
-h1{
-    position:relative;
-    z-index:1;
-
-    margin:0;
-
-    font-size:21px;
-
-    font-weight:800;
-}
-
-.sub{
-    position:relative;
-    z-index:1;
-
-    margin-top:5px;
-
-    font-size:12px;
-
-    color:#dbeafe;
-}
-
-
-/* ==========================================
-   USUÁRIO
-   ========================================== */
-
-.usuario{
-    position:relative;
-    z-index:1;
-
-    display:inline-block;
-
-    margin-top:12px;
-
-    padding:6px 10px;
-
-    border-radius:7px;
-
-    background:rgba(255,255,255,.13);
-
-    color:white;
-
-    font-size:11px;
-
-    font-weight:bold;
-}
-
-
-/* ==========================================
-   TÍTULO MENU
-   ========================================== */
-
-.titulo-menu{
-    margin:0 0 9px 3px;
-
-    font-size:11px;
-
-    font-weight:bold;
-
-    color:var(--menu-muted);
-
-    text-transform:uppercase;
-
-    letter-spacing:.8px;
-}
-
-
-/* ==========================================
-   MENU
-   ========================================== */
-
-.menu{
-    background:var(--menu-surface);
-
-    border:1px solid var(--menu-border);
-
-    border-radius:15px;
-
-    overflow:hidden;
-
-    box-shadow:0 4px 15px rgba(15,23,42,.07);
-
-    transition:
-        background .25s ease,
-        border-color .25s ease;
-}
-
-
-/* ==========================================
-   ITEM
-   ========================================== */
-
-.menu-item{
-    position:relative;
-
-    min-height:67px;
-
-    padding:11px 16px;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:13px;
-
-    text-decoration:none;
-
-    color:var(--menu-item-text);
-
-    border-bottom:1px solid var(--menu-divider);
-
-    transition:
-        background .15s ease,
-        color .15s ease;
-}
-
-.menu-item:last-child{
-    border-bottom:none;
-}
-
-.menu-item:hover{
-    background:var(--menu-hover);
-}
-
-
-/* ==========================================
-   ÍCONE
-   ========================================== */
-
-.icone{
-    width:40px;
-    height:40px;
-
-    flex-shrink:0;
-
-    border-radius:10px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    background:var(--menu-icon-bg);
-
-    font-size:20px;
-
-    transition:background .25s ease;
-}
-
-
-/* ==========================================
-   TEXTO
-   ========================================== */
-
-.texto{
-    flex:1;
-}
-
-.nome{
-    font-size:14px;
-
-    font-weight:bold;
-
-    color:var(--menu-item-text);
-}
-
-.descricao{
-    margin-top:3px;
-
-    font-size:10px;
-
-    color:var(--menu-description);
-}
-
-
-/* ==========================================
-   SETA
-   ========================================== */
-
-.seta{
-    color:var(--menu-description);
-
-    font-size:18px;
-
-    transition:.15s;
-}
-
-.menu-item:hover .seta{
-    transform:translateX(3px);
-
-    color:#2563eb;
-}
-
-
-/* ==========================================
-   CONTADOR
-   ========================================== */
-
-.contador{
-    min-width:24px;
-    height:24px;
-
-    padding:0 7px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    border-radius:20px;
-
-    background:var(--menu-counter-bg);
-
-    color:var(--menu-counter-text);
-
-    font-size:11px;
-
-    font-weight:bold;
-}
-
-
-/* ==========================================
-   ADMINISTRAÇÃO
-   ========================================== */
-
-.admin .icone{
-    background:#fef2f2;
-}
-
-.admin .seta{
-    color:#ef4444;
-}
-
-
-/* ==========================================
-   SAIR
-   ========================================== */
-
-.sair{
-    margin-top:14px;
-
-    height:52px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:8px;
-
-    border-radius:13px;
-
-    text-decoration:none;
-
-    color:var(--menu-exit-text);
-
-    background:var(--menu-surface);
-
-    border:1px solid var(--menu-border);
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    transition:
-        color .2s ease,
-        background .2s ease,
-        border-color .2s ease;
-}
-
-.sair:hover{
-    color:#dc2626;
-
-    border-color:#fecaca;
-
-    background:var(--menu-exit-hover);
-}
-
-
-/* ==========================================
-   CELULAR
-   ========================================== */
-
-@media(max-width:480px){
-
-    body{
-        padding:14px 0;
+    .logo {
+        width: 54px;
+        height: 54px;
+        margin-bottom: 18px;
     }
 
-    .box{
-        width:94%;
+    h1 {
+        font-size: 20px;
+        line-height: 1.35;
     }
 
-    .topo{
-        padding:22px 18px 20px;
+    .sub {
+        font-size: 12px;
     }
 
-    .logo{
-        width:60px;
-        height:60px;
+    .sino-notificacao {
+        right: 15px;
+        top: 15px;
+        width: 40px;
+        height: 40px;
     }
 
-    h1{
-        font-size:19px;
+    .usuario {
+        max-width: 100%;
+        flex-wrap: wrap;
+        line-height: 1.5;
     }
 
-    .menu-item{
-        min-height:63px;
-
-        padding:10px 13px;
+    .titulo-menu {
+        font-size: 17px;
     }
 
-    .icone{
-        width:37px;
-        height:37px;
-
-        font-size:18px;
+    .menu {
+        gap: 11px;
     }
 
+    .menu-item {
+        min-height: 157px;
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+    .icone {
+        width: 42px;
+        height: 42px;
+        margin-bottom: 14px;
+        border-radius: 12px;
+        font-size: 21px;
+    }
+
+    .nome {
+        font-size: 13px;
+        overflow-wrap: anywhere;
+    }
+
+    .descricao {
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+    .contador {
+        top: 13px;
+        right: 13px;
+        min-width: 24px;
+        height: 24px;
+        padding: 0 6px;
+        font-size: 11px;
+    }
+
+    .seta {
+        right: 14px;
+        bottom: 13px;
+        font-size: 20px;
+    }
+
+    .sair {
+        margin-top: 18px;
+    }
+}
+
+@media (max-width: 350px) {
+    .menu {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-item {
+        min-height: 135px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
 }
 
 {% endblock %}
@@ -574,20 +531,13 @@ h1{
 
 <div class="box">
 
-
-    <!-- ==========================================
-         CABEÇALHO
-         ========================================== -->
+    <!-- CABEÇALHO -->
 
     <div class="topo">
 
-
-        <!-- NOTIFICAÇÕES -->
-
-        <a
-            href="/notificacoes"
-            class="sino-notificacao"
-        >
+        <a href="/notificacoes"
+           class="sino-notificacao"
+           aria-label="Notificações">
 
             🔔
 
@@ -597,315 +547,193 @@ h1{
 
         </a>
 
-
-        <!-- LOGO -->
-
         <img
             src="/static/icon-192.png"
             class="logo"
+            alt="Logo do sistema"
         >
 
-
-        <h1>
-            CONTROLE DE ESTOQUE
-        </h1>
-
+        <h1>CONTROLE DE ESTOQUE</h1>
 
         <div class="sub">
             Sistema de Gestão
         </div>
 
-
         <div class="usuario">
             👤 {{ usuario }} · {{ perfil }}
         </div>
 
-
     </div>
 
 
+    <!-- TÍTULO DO MENU -->
 
-    <!-- ==========================================
-         MENU
-         ========================================== -->
-
-    <div class="titulo-menu">
-        Menu principal
+    <div class="secao-cabecalho">
+        <div>
+            <div class="titulo-menu">Menu principal</div>
+            <div class="subtitulo-menu">
+                Acesse as ferramentas do sistema
+            </div>
+        </div>
     </div>
 
+
+    <!-- CARTÕES -->
 
     <div class="menu">
 
-
-        <!-- CADASTRAR -->
-
         {% if perfil in ["admin", "operador", "separacao"] %}
 
-        <a
-            href="/cadastrar"
-            class="menu-item"
-        >
+        <a href="/cadastrar"
+           class="menu-item item-cadastrar">
 
-            <div class="icone">
-                ➕
-            </div>
+            <div class="icone">➕</div>
 
             <div class="texto">
-
-                <div class="nome">
-                    Cadastrar Produto
-                </div>
-
+                <div class="nome">Cadastrar Produto</div>
                 <div class="descricao">
                     Adicionar produto ao estoque
                 </div>
-
             </div>
 
-            <div class="seta">
-                ›
-            </div>
+            <div class="seta">›</div>
 
         </a>
 
         {% endif %}
 
 
-
-        <!-- SOLICITAÇÕES -->
-
         {% if perfil in ["admin", "operador", "separacao"] %}
 
-        <a
-            href="/solicitacoes"
-            class="menu-item"
-        >
+        <a href="/solicitacoes"
+           class="menu-item item-solicitacoes">
 
-            <div class="icone">
-                📋
-            </div>
+            <div class="icone">📋</div>
 
             <div class="texto">
-
-                <div class="nome">
-                    Solicitações
-                </div>
-
+                <div class="nome">Solicitações</div>
                 <div class="descricao">
                     Pedidos e abastecimentos
                 </div>
-
             </div>
 
-
             {% if total_solicitacoes > 0 %}
-
                 <div class="contador">
                     {{ total_solicitacoes }}
                 </div>
-
             {% endif %}
 
-
-            <div class="seta">
-                ›
-            </div>
+            <div class="seta">›</div>
 
         </a>
 
         {% endif %}
 
 
-
-        <!-- SEPARAÇÃO -->
-
         {% if perfil in ["admin", "operador", "separacao"] %}
 
-        <a
-            href="/separacao"
-            class="menu-item"
-        >
+        <a href="/separacao"
+           class="menu-item item-separacao">
 
-            <div class="icone">
-                📦
-            </div>
+            <div class="icone">📦</div>
 
             <div class="texto">
-
-                <div class="nome">
-                    Separação
-                </div>
-
+                <div class="nome">Separação</div>
                 <div class="descricao">
                     Separar solicitações
                 </div>
-
             </div>
 
-            <div class="seta">
-                ›
-            </div>
+            <div class="seta">›</div>
 
         </a>
 
         {% endif %}
 
 
+        <a href="/consulta"
+           class="menu-item item-consulta">
 
-        <!-- CONSULTA -->
-
-        <a
-            href="/consulta"
-            class="menu-item"
-        >
-
-            <div class="icone">
-                🔎
-            </div>
+            <div class="icone">🔎</div>
 
             <div class="texto">
-
-                <div class="nome">
-                    Consulta
-                </div>
-
+                <div class="nome">Consulta</div>
                 <div class="descricao">
                     Localizar produtos e endereços
                 </div>
-
             </div>
 
-            <div class="seta">
-                ›
-            </div>
+            <div class="seta">›</div>
 
         </a>
 
-
-
-        <!-- INVENTÁRIO -->
 
         {% if perfil in ["admin", "operador", "separacao"] %}
 
-        <a
-            href="/inventario"
-            class="menu-item"
-        >
+        <a href="/inventario"
+           class="menu-item item-inventario">
 
-            <div class="icone">
-                🗃️
-            </div>
+            <div class="icone">🗃️</div>
 
             <div class="texto">
-
-                <div class="nome">
-                    Inventário
-                </div>
-
+                <div class="nome">Inventário</div>
                 <div class="descricao">
                     Conferência do estoque
                 </div>
-
             </div>
 
-            <div class="seta">
-                ›
-            </div>
+            <div class="seta">›</div>
 
         </a>
 
         {% endif %}
 
 
-
-        <!-- HISTÓRICO -->
-
         {% if perfil == "admin" %}
 
-        <a
-            href="/historico"
-            class="menu-item"
-        >
+        <a href="/historico"
+           class="menu-item item-historico">
 
-            <div class="icone">
-                🕒
-            </div>
+            <div class="icone">🕒</div>
 
             <div class="texto">
-
-                <div class="nome">
-                    Histórico
-                </div>
-
+                <div class="nome">Histórico</div>
                 <div class="descricao">
                     Movimentações do sistema
                 </div>
-
             </div>
 
-            <div class="seta">
-                ›
-            </div>
+            <div class="seta">›</div>
 
         </a>
 
-        {% endif %}
 
+        <a href="/administracao"
+           class="menu-item admin">
 
-
-        <!-- ADMINISTRAÇÃO -->
-
-        {% if perfil == "admin" %}
-
-        <a
-            href="/administracao"
-            class="menu-item admin"
-        >
-
-            <div class="icone">
-                ⚙️
-            </div>
+            <div class="icone">⚙️</div>
 
             <div class="texto">
-
-                <div class="nome">
-                    Administração
-                </div>
-
+                <div class="nome">Administração</div>
                 <div class="descricao">
                     Usuários e configurações
                 </div>
-
             </div>
 
-            <div class="seta">
-                ›
-            </div>
+            <div class="seta">›</div>
 
         </a>
 
         {% endif %}
-
 
     </div>
 
 
+    <!-- SAIR -->
 
-    <!-- ==========================================
-         SAIR
-         ========================================== -->
-
-    <a
-        href="/logout"
-        class="sair"
-    >
-
-        🚪
-
-        Sair do sistema
-
+    <a href="/logout" class="sair">
+        🚪 Sair do sistema
     </a>
-
 
 </div>
 
