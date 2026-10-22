@@ -1,740 +1,927 @@
 {% extends "base.html" %}
 
-{% block title %}Menu{% endblock %}
+{% block title %}Painel de Controle{% endblock %}
 
 {% block style %}
-
-* {
-    box-sizing: border-box;
-}
-
+<style>
 :root {
-    --menu-bg: #f3f6fb;
-    --menu-text: #172033;
-    --menu-surface: #ffffff;
-    --menu-border: #e3e8f0;
-    --menu-item-text: #1e293b;
-    --menu-muted: #64748b;
-    --menu-description: #94a3b8;
-    --menu-hover: #f8faff;
-    --menu-counter-bg: #fee2e2;
-    --menu-counter-text: #dc2626;
-    --menu-exit-text: #64748b;
-    --menu-exit-hover: #fff1f2;
-    --menu-shadow: 0 5px 20px rgba(15, 23, 42, .045);
+    --dash-bg: #f4f6fb;
+    --dash-card: #ffffff;
+    --dash-text: #172033;
+    --dash-muted: #7c879c;
+    --dash-border: #e7ebf3;
+    --dash-primary: #4263eb;
+    --dash-primary-light: #edf1ff;
+    --dash-sidebar: #151c2c;
+    --dash-sidebar-text: #aeb8ca;
+    --dash-shadow: 0 8px 28px rgba(25, 42, 75, .045);
 }
 
 body.dark-mode {
-    --menu-bg: #0b1120;
-    --menu-text: #f8fafc;
-    --menu-surface: #151f32;
-    --menu-border: #29364c;
-    --menu-item-text: #f1f5f9;
-    --menu-muted: #b6c3d6;
-    --menu-description: #94a3b8;
-    --menu-hover: #1c2a40;
-    --menu-counter-bg: #4c2028;
-    --menu-counter-text: #fda4af;
-    --menu-exit-text: #cbd5e1;
-    --menu-exit-hover: #38202a;
-    --menu-shadow: 0 5px 20px rgba(0, 0, 0, .12);
+    --dash-bg: #0d1320;
+    --dash-card: #151d2d;
+    --dash-text: #edf2fc;
+    --dash-muted: #9aa8bf;
+    --dash-border: #273249;
+    --dash-primary: #8195ff;
+    --dash-primary-light: #222e4c;
+    --dash-sidebar: #101725;
+    --dash-sidebar-text: #b6c0d2;
+    --dash-shadow: 0 8px 28px rgba(0, 0, 0, .12);
 }
 
 body {
-    margin: 0;
+    background: var(--dash-bg);
+}
+
+.dashboard {
     min-height: 100vh;
-    font-family: Arial, sans-serif;
-    background: var(--menu-bg);
-    color: var(--menu-text);
-    padding: 30px 0;
-    transition: background .25s ease, color .25s ease;
+    display: flex;
+    color: var(--dash-text);
+    background: var(--dash-bg);
+    margin: -0px;
+    font-family: inherit;
 }
 
-.box {
-    width: 92%;
-    max-width: 1000px;
-    margin: auto;
+/* BARRA LATERAL */
+
+.dashboard-sidebar {
+    width: 255px;
+    min-width: 255px;
+    background: var(--dash-sidebar);
+    color: white;
+    padding: 28px 17px 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
-/* CABEÇALHO */
+.dashboard-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 10px 30px;
+    border-bottom: 1px solid rgba(255,255,255,.09);
+}
 
-.topo {
-    position: relative;
-    overflow: hidden;
-    padding: 30px;
-    margin-bottom: 30px;
+.dashboard-brand img {
+    width: 43px;
+    height: 43px;
+    object-fit: contain;
+    border-radius: 12px;
+    background: white;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+.dashboard-brand h2 {
+    font-size: 15px;
+    line-height: 1.3;
+    margin: 0;
+    font-weight: 800;
+    letter-spacing: .2px;
     color: #fff;
-    background: linear-gradient(120deg, #1d4ed8, #2563eb 60%, #3b82f6);
-    border-radius: 22px;
-    box-shadow: 0 12px 30px rgba(37, 99, 235, .18);
 }
 
-.topo::before {
-    content: "";
-    position: absolute;
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.055);
-    right: -75px;
-    top: -135px;
+.dashboard-brand span {
+    display: block;
+    color: #8e9bb2;
+    font-size: 11px;
+    margin-top: 4px;
+    font-weight: 500;
 }
 
-.topo::after {
-    content: "";
-    position: absolute;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.045);
-    right: 100px;
-    bottom: -120px;
+.dashboard-section-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #77849b;
+    padding: 27px 12px 12px;
 }
 
-.sino-notificacao {
-    position: absolute;
-    z-index: 3;
-    right: 22px;
-    top: 22px;
-    width: 46px;
-    height: 46px;
+.dashboard-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dashboard-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 12px;
+    text-decoration: none;
+    color: var(--dash-sidebar-text);
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: background .2s, color .2s;
+}
+
+.dashboard-nav a:hover {
+    background: rgba(255,255,255,.07);
+    color: #fff;
+}
+
+.dashboard-nav a.active {
+    background: #4263eb;
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(66,99,235,.24);
+}
+
+.dashboard-nav .nav-icon {
+    width: 23px;
+    text-align: center;
+    font-size: 17px;
+    flex-shrink: 0;
+}
+
+.nav-badge {
+    margin-left: auto;
+    min-width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    box-sizing: border-box;
+    border-radius: 7px;
+    background: #f04452;
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.dashboard-sidebar-bottom {
+    margin-top: auto;
+    padding-top: 25px;
+}
+
+.dashboard-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 10px;
+    border-top: 1px solid rgba(255,255,255,.09);
+    border-bottom: 1px solid rgba(255,255,255,.09);
+    margin-bottom: 12px;
+    min-width: 0;
+}
+
+.dashboard-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: #2c3d62;
+    color: #dce5ff;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(255,255,255,.22);
-    border-radius: 14px;
-    background: rgba(255,255,255,.12);
-    text-decoration: none;
-    font-size: 21px;
-    transition: .2s;
-}
-
-.sino-notificacao:hover {
-    background: rgba(255,255,255,.24);
-    transform: translateY(-2px);
-}
-
-.ponto-notificacao {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 10px;
-    height: 10px;
-    background: #fb3556;
-    border: 2px solid #2563eb;
-    border-radius: 50%;
-    animation: pulsar 1.2s infinite;
-}
-
-@keyframes pulsar {
-    50% { transform: scale(1.3); }
-}
-
-.logo {
-    position: relative;
-    z-index: 1;
-    width: 62px;
-    height: 62px;
-    display: block;
-    object-fit: cover;
-    border-radius: 16px;
-    margin-bottom: 22px;
-    box-shadow: 0 5px 14px rgba(0,0,0,.16);
-}
-
-h1 {
-    position: relative;
-    z-index: 1;
-    margin: 0;
-    padding-right: 35px;
-    font-size: 25px;
+    font-size: 16px;
     font-weight: 800;
-    letter-spacing: -.5px;
+    flex-shrink: 0;
 }
 
-.sub {
-    position: relative;
-    z-index: 1;
-    margin-top: 8px;
-    color: #dbeafe;
-    font-size: 13px;
+.dashboard-user-info {
+    min-width: 0;
 }
 
-.usuario {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    margin-top: 20px;
-    padding: 9px 13px;
-    border: 1px solid rgba(255,255,255,.15);
-    border-radius: 10px;
-    background: rgba(255,255,255,.12);
+.dashboard-user-info strong {
+    display: block;
     color: #fff;
     font-size: 12px;
-    font-weight: bold;
+    overflow-wrap: anywhere;
 }
 
-/* TÍTULO DA SEÇÃO */
+.dashboard-user-info span {
+    display: block;
+    color: #8997af;
+    font-size: 10px;
+    margin-top: 4px;
+    text-transform: capitalize;
+}
 
-.secao-cabecalho {
+.dashboard-logout {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 10px;
+    color: #ff9b9b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.dashboard-logout:hover {
+    background: rgba(240,68,82,.12);
+}
+
+/* CONTEÚDO PRINCIPAL */
+
+.dashboard-main {
+    flex: 1;
+    min-width: 0;
+    padding: 35px 42px 45px;
+    box-sizing: border-box;
+}
+
+.dashboard-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 34px;
+}
+
+.dashboard-breadcrumb {
+    color: var(--dash-muted);
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.dashboard-breadcrumb strong {
+    color: var(--dash-primary);
+}
+
+.dashboard-heading {
+    margin: 0;
+    font-size: clamp(23px, 2.5vw, 31px);
+    font-weight: 850;
+    letter-spacing: -.8px;
+    color: var(--dash-text);
+}
+
+.dashboard-subtitle {
+    margin: 9px 0 0;
+    font-size: 13px;
+    color: var(--dash-muted);
+    line-height: 1.6;
+}
+
+.dashboard-top-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.dashboard-icon-button {
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--dash-card);
+    color: var(--dash-text);
+    border: 1px solid var(--dash-border);
+    text-decoration: none;
+    font-size: 19px;
+    position: relative;
+    box-shadow: var(--dash-shadow);
+}
+
+.dashboard-icon-button:hover {
+    border-color: var(--dash-primary);
+    color: var(--dash-primary);
+}
+
+.dashboard-icon-button .notification-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    background: #f04452;
+    border: 2px solid var(--dash-card);
+    border-radius: 50%;
+}
+
+.dashboard-date-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--dash-muted);
+    background: var(--dash-card);
+    border: 1px solid var(--dash-border);
+    padding: 12px 14px;
+    border-radius: 12px;
+}
+
+/* DESTAQUE */
+
+.dashboard-welcome {
+    position: relative;
+    overflow: hidden;
+    border-radius: 19px;
+    padding: 30px 32px;
+    background: linear-gradient(115deg, #3556dc 0%, #526ff0 58%, #7387ff 100%);
+    color: #fff;
+    margin-bottom: 32px;
+    box-shadow: 0 12px 28px rgba(66,99,235,.18);
+}
+
+.dashboard-welcome::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    right: -55px;
+    top: -105px;
+    border: 35px solid rgba(255,255,255,.08);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.dashboard-welcome::before {
+    content: "";
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    right: 90px;
+    bottom: -80px;
+    border: 24px solid rgba(255,255,255,.07);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.dashboard-welcome small {
+    display: block;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    font-weight: 800;
+    color: #dce4ff;
+    margin-bottom: 12px;
+}
+
+.dashboard-welcome h2 {
+    font-size: clamp(20px, 2vw, 27px);
+    margin: 0;
+    font-weight: 850;
+    letter-spacing: -.5px;
+    color: #fff;
+}
+
+.dashboard-welcome p {
+    font-size: 13px;
+    line-height: 1.7;
+    max-width: 470px;
+    color: #e2e8ff;
+    margin: 10px 0 0;
+}
+
+/* SEÇÕES E CARDS */
+
+.dashboard-section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 17px;
+}
+
+.dashboard-section-head h3 {
+    font-size: 17px;
+    margin: 0;
+    font-weight: 800;
+    color: var(--dash-text);
+}
+
+.dashboard-section-head p {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: var(--dash-muted);
+}
+
+.dashboard-section-tag {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--dash-primary);
+    background: var(--dash-primary-light);
+    padding: 8px 11px;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+    margin-bottom: 32px;
+}
+
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 180px;
+    position: relative;
+    padding: 22px;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: var(--dash-text);
+    background: var(--dash-card);
+    border: 1px solid var(--dash-border);
+    border-radius: 16px;
+    box-shadow: var(--dash-shadow);
+    transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--dash-primary);
+    box-shadow: 0 12px 28px rgba(45,70,120,.09);
+    color: var(--dash-text);
+}
+
+.dashboard-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.dashboard-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 47px;
+    height: 47px;
+    border-radius: 14px;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.icon-blue { background: #eaf0ff; }
+.icon-green { background: #e5f8ef; }
+.icon-orange { background: #fff1df; }
+.icon-purple { background: #f0eaff; }
+.icon-cyan { background: #e0f7fb; }
+.icon-red { background: #ffebeb; }
+.icon-yellow { background: #fff7d9; }
+
+body.dark-mode .icon-blue { background: #253354; }
+body.dark-mode .icon-green { background: #1b3b34; }
+body.dark-mode .icon-orange { background: #443322; }
+body.dark-mode .icon-purple { background: #352b4f; }
+body.dark-mode .icon-cyan { background: #1b3a44; }
+body.dark-mode .icon-red { background: #472b35; }
+body.dark-mode .icon-yellow { background: #453c24; }
+
+.dashboard-card-arrow {
+    color: var(--dash-muted);
+    font-size: 19px;
+    transition: color .2s, transform .2s;
+}
+
+.dashboard-card:hover .dashboard-card-arrow {
+    color: var(--dash-primary);
+    transform: translate(3px, -3px);
+}
+
+.dashboard-card h4 {
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 800;
+    margin: 0 0 7px;
+    color: var(--dash-text);
+}
+
+.dashboard-card p {
+    font-size: 11px;
+    line-height: 1.65;
+    color: var(--dash-muted);
+    margin: 0;
+}
+
+.dashboard-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 17px;
+}
+
+.dashboard-card-action {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--dash-primary);
+}
+
+.dashboard-card-count {
+    background: #fff0f0;
+    color: #d92d3a;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 5px 8px;
+    border-radius: 7px;
+}
+
+body.dark-mode .dashboard-card-count {
+    background: #472b35;
+    color: #ff9ca5;
+}
+
+/* RODAPÉ */
+
+.dashboard-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 16px;
+    padding-top: 22px;
+    border-top: 1px solid var(--dash-border);
+    color: var(--dash-muted);
+    font-size: 10px;
+    line-height: 1.6;
 }
 
-.titulo-menu {
-    margin: 0;
-    color: var(--menu-text);
-    font-size: 19px;
-    font-weight: 800;
-}
+/* RESPONSIVIDADE */
 
-.subtitulo-menu {
-    margin-top: 5px;
-    color: var(--menu-muted);
-    font-size: 12px;
-}
-
-/* GRADE DE CARTÕES */
-
-.menu {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-}
-
-.menu-item {
-    position: relative;
-    min-width: 0;
-    min-height: 166px;
-    padding: 21px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    border: 1px solid var(--menu-border);
-    border-radius: 18px;
-    background: var(--menu-surface);
-    box-shadow: var(--menu-shadow);
-    color: var(--menu-item-text);
-    text-decoration: none;
-    transition: transform .2s ease, border-color .2s ease,
-                background .2s ease, box-shadow .2s ease;
-}
-
-.menu-item:hover {
-    transform: translateY(-4px);
-    border-color: #93b4ff;
-    background: var(--menu-hover);
-    box-shadow: 0 12px 25px rgba(37,99,235,.09);
-}
-
-.menu-item:focus-visible,
-.sair:focus-visible,
-.sino-notificacao:focus-visible {
-    outline: 3px solid #60a5fa;
-    outline-offset: 3px;
-}
-
-/* ÍCONES */
-
-.icone {
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 17px;
-    border-radius: 14px;
-    background: #eff6ff;
-    font-size: 23px;
-}
-
-.item-cadastrar .icone {
-    background: #e0f2fe;
-}
-
-.item-solicitacoes .icone {
-    background: #fef3c7;
-}
-
-.item-separacao .icone {
-    background: #dcfce7;
-}
-
-.item-consulta .icone {
-    background: #ede9fe;
-}
-
-.item-inventario .icone {
-    background: #cffafe;
-}
-
-.item-historico .icone {
-    background: #f3e8ff;
-}
-
-.admin .icone {
-    background: #fee2e2;
-}
-
-body.dark-mode .icone {
-    background: #263752;
-}
-
-body.dark-mode .item-cadastrar .icone {
-    background: #18394e;
-}
-
-body.dark-mode .item-solicitacoes .icone {
-    background: #443921;
-}
-
-body.dark-mode .item-separacao .icone {
-    background: #173c32;
-}
-
-body.dark-mode .item-consulta .icone {
-    background: #352b55;
-}
-
-body.dark-mode .item-inventario .icone {
-    background: #173d43;
-}
-
-body.dark-mode .item-historico .icone {
-    background: #3b294e;
-}
-
-body.dark-mode .admin .icone {
-    background: #482630;
-}
-
-/* TEXTOS DOS CARTÕES */
-
-.texto {
-    width: 100%;
-    flex: 1;
-}
-
-.nome {
-    padding-right: 30px;
-    color: var(--menu-item-text);
-    font-size: 15px;
-    font-weight: 800;
-    line-height: 1.35;
-}
-
-.descricao {
-    margin-top: 7px;
-    color: var(--menu-description);
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-.seta {
-    position: absolute;
-    right: 20px;
-    bottom: 21px;
-    color: var(--menu-description);
-    font-size: 22px;
-    transition: transform .2s ease, color .2s ease;
-}
-
-.menu-item:hover .seta {
-    color: #3b82f6;
-    transform: translateX(4px);
-}
-
-/* CONTADOR DE SOLICITAÇÕES */
-
-.contador {
-    position: absolute;
-    top: 19px;
-    right: 19px;
-    min-width: 27px;
-    height: 27px;
-    padding: 0 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 9px;
-    background: var(--menu-counter-bg);
-    color: var(--menu-counter-text);
-    font-size: 12px;
-    font-weight: 800;
-}
-
-/* ADMINISTRAÇÃO */
-
-.admin:hover {
-    border-color: #fca5a5;
-}
-
-.admin .nome {
-    color: var(--menu-item-text);
-}
-
-.admin .seta {
-    color: #ef4444;
-}
-
-/* SAIR */
-
-.sair {
-    min-height: 54px;
-    margin-top: 25px;
-    padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    border: 1px solid var(--menu-border);
-    border-radius: 15px;
-    background: var(--menu-surface);
-    color: var(--menu-exit-text);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 800;
-    transition: .2s;
-}
-
-.sair:hover {
-    border-color: #fecaca;
-    background: var(--menu-exit-hover);
-    color: #dc2626;
-}
-
-/* TABLETS E CELULARES */
-
-@media (max-width: 600px) {
-    body {
-        padding: 16px 0 24px;
+@media (max-width: 1200px) {
+    .dashboard-main {
+        padding: 30px 25px;
     }
 
-    .box {
-        width: 94%;
+    .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 800px) {
+    .dashboard {
+        flex-direction: column;
     }
 
-    .topo {
-        padding: 24px 20px;
-        margin-bottom: 25px;
-        border-radius: 19px;
+    .dashboard-sidebar {
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        padding: 16px;
     }
 
-    .logo {
-        width: 54px;
-        height: 54px;
-        margin-bottom: 18px;
+    .dashboard-brand {
+        padding: 0 3px 15px;
     }
 
-    h1 {
-        font-size: 20px;
-        line-height: 1.35;
+    .dashboard-brand img {
+        width: 38px;
+        height: 38px;
     }
 
-    .sub {
-        font-size: 12px;
+    .dashboard-section-label {
+        padding: 17px 4px 10px;
     }
 
-    .sino-notificacao {
-        right: 15px;
-        top: 15px;
+    .dashboard-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .dashboard-nav a {
+        padding: 11px 9px;
+        font-size: 11px;
+        gap: 8px;
+    }
+
+    .dashboard-nav .nav-icon {
+        font-size: 15px;
+        width: 19px;
+    }
+
+    .dashboard-sidebar-bottom {
+        margin-top: 15px;
+        padding-top: 0;
+    }
+
+    .dashboard-user {
+        padding: 12px 4px;
+        margin-bottom: 5px;
+    }
+
+    .dashboard-logout {
+        padding: 10px 4px;
+    }
+
+    .dashboard-main {
+        padding: 24px 17px 28px;
+    }
+
+    .dashboard-topbar {
+        margin-bottom: 24px;
+        align-items: flex-start;
+    }
+
+    .dashboard-heading {
+        font-size: 24px;
+    }
+
+    .dashboard-date-label {
+        display: none;
+    }
+
+    .dashboard-welcome {
+        padding: 24px 21px;
+        margin-bottom: 27px;
+    }
+
+    .dashboard-grid {
+        gap: 12px;
+    }
+
+    .dashboard-card {
+        padding: 17px;
+        min-height: 170px;
+    }
+
+    .dashboard-card-icon {
         width: 40px;
         height: 40px;
+        font-size: 19px;
     }
 
-    .usuario {
-        max-width: 100%;
-        flex-wrap: wrap;
-        line-height: 1.5;
-    }
-
-    .titulo-menu {
-        font-size: 17px;
-    }
-
-    .menu {
-        gap: 11px;
-    }
-
-    .menu-item {
-        min-height: 157px;
-        padding: 15px;
-        border-radius: 15px;
-    }
-
-    .icone {
-        width: 42px;
-        height: 42px;
-        margin-bottom: 14px;
-        border-radius: 12px;
-        font-size: 21px;
-    }
-
-    .nome {
-        font-size: 13px;
-        overflow-wrap: anywhere;
-    }
-
-    .descricao {
-        font-size: 11px;
-        line-height: 1.45;
-    }
-
-    .contador {
-        top: 13px;
-        right: 13px;
-        min-width: 24px;
-        height: 24px;
-        padding: 0 6px;
-        font-size: 11px;
-    }
-
-    .seta {
-        right: 14px;
-        bottom: 13px;
-        font-size: 20px;
-    }
-
-    .sair {
-        margin-top: 18px;
+    .dashboard-section-head h3 {
+        font-size: 16px;
     }
 }
 
-@media (max-width: 350px) {
-    .menu {
+@media (max-width: 390px) {
+    .dashboard-main {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .dashboard-grid {
         grid-template-columns: 1fr;
     }
 
-    .menu-item {
-        min-height: 135px;
+    .dashboard-card {
+        min-height: 150px;
+    }
+
+    .dashboard-welcome h2 {
+        font-size: 21px;
+    }
+
+    .dashboard-topbar {
+        gap: 8px;
+    }
+
+    .dashboard-heading {
+        font-size: 21px;
     }
 }
-
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important;
-    }
-}
-
+</style>
 {% endblock %}
 
-
 {% block content %}
+<div class="dashboard">
 
-<div class="box">
+    <!-- MENU LATERAL -->
+    <aside class="dashboard-sidebar">
 
-    <!-- CABEÇALHO -->
+        <div class="dashboard-brand">
+            <img src="{{ url_for('static', filename='icon-192.png') }}"
+                 alt="Logo do sistema"
+                 onerror="this.style.display='none'">
+            <div>
+                <h2>CONTROLE DE ESTOQUE</h2>
+                <span>Sistema de Gestão</span>
+            </div>
+        </div>
 
-    <div class="topo">
+        <div class="dashboard-section-label">MENU PRINCIPAL</div>
 
-        <a href="/notificacoes"
-           class="sino-notificacao"
-           aria-label="Notificações">
+        <nav class="dashboard-nav">
 
-            🔔
-
-            {% if total_notificacoes > 0 %}
-                <span class="ponto-notificacao"></span>
+            {% if perfil in ["admin", "operador", "separacao"] %}
+            <a href="/cadastrar" class="active">
+                <span class="nav-icon">▦</span>
+                <span>Cadastrar produto</span>
+            </a>
             {% endif %}
 
-        </a>
-
-        <img
-            src="/static/icon-192.png"
-            class="logo"
-            alt="Logo do sistema"
-        >
-
-        <h1>CONTROLE DE ESTOQUE</h1>
-
-        <div class="sub">
-            Sistema de Gestão
-        </div>
-
-        <div class="usuario">
-            👤 {{ usuario }} · {{ perfil }}
-        </div>
-
-    </div>
-
-
-    <!-- TÍTULO DO MENU -->
-
-    <div class="secao-cabecalho">
-        <div>
-            <div class="titulo-menu">Menu principal</div>
-            <div class="subtitulo-menu">
-                Acesse as ferramentas do sistema
-            </div>
-        </div>
-    </div>
-
-
-    <!-- CARTÕES -->
-
-    <div class="menu">
-
-        {% if perfil in ["admin", "operador", "separacao"] %}
-
-        <a href="/cadastrar"
-           class="menu-item item-cadastrar">
-
-            <div class="icone">➕</div>
-
-            <div class="texto">
-                <div class="nome">Cadastrar Produto</div>
-                <div class="descricao">
-                    Adicionar produto ao estoque
-                </div>
-            </div>
-
-            <div class="seta">›</div>
-
-        </a>
-
-        {% endif %}
-
-
-        {% if perfil in ["admin", "operador", "separacao"] %}
-
-        <a href="/solicitacoes"
-           class="menu-item item-solicitacoes">
-
-            <div class="icone">📋</div>
-
-            <div class="texto">
-                <div class="nome">Solicitações</div>
-                <div class="descricao">
-                    Pedidos e abastecimentos
-                </div>
-            </div>
-
-            {% if total_solicitacoes > 0 %}
-                <div class="contador">
-                    {{ total_solicitacoes }}
-                </div>
+            {% if perfil in ["admin", "operador", "separacao"] %}
+            <a href="/solicitacoes">
+                <span class="nav-icon">☷</span>
+                <span>Solicitações</span>
+                {% if total_solicitacoes and total_solicitacoes > 0 %}
+                <span class="nav-badge">{{ total_solicitacoes }}</span>
+                {% endif %}
+            </a>
             {% endif %}
 
-            <div class="seta">›</div>
+            {% if perfil in ["admin", "operador", "separacao"] %}
+            <a href="/separacao">
+                <span class="nav-icon">⇄</span>
+                <span>Separação</span>
+            </a>
+            {% endif %}
 
-        </a>
+            <a href="/consulta">
+                <span class="nav-icon">⌕</span>
+                <span>Consultar estoque</span>
+            </a>
 
-        {% endif %}
+            {% if perfil in ["admin", "operador", "separacao"] %}
+            <a href="/inventario">
+                <span class="nav-icon">▤</span>
+                <span>Inventário</span>
+            </a>
+            {% endif %}
 
+            {% if perfil == "admin" %}
+            <a href="/historico">
+                <span class="nav-icon">◷</span>
+                <span>Histórico</span>
+            </a>
 
-        {% if perfil in ["admin", "operador", "separacao"] %}
+            <a href="/administracao">
+                <span class="nav-icon">⚙</span>
+                <span>Administração</span>
+            </a>
+            {% endif %}
 
-        <a href="/separacao"
-           class="menu-item item-separacao">
+        </nav>
 
-            <div class="icone">📦</div>
+        <div class="dashboard-sidebar-bottom">
 
-            <div class="texto">
-                <div class="nome">Separação</div>
-                <div class="descricao">
-                    Separar solicitações
+            <div class="dashboard-user">
+                <div class="dashboard-avatar">
+                    {{ usuario[0]|upper if usuario else 'U' }}
+                </div>
+                <div class="dashboard-user-info">
+                    <strong>{{ usuario }}</strong>
+                    <span>{{ perfil }}</span>
                 </div>
             </div>
 
-            <div class="seta">›</div>
+            <a href="/logout" class="dashboard-logout">
+                <span class="nav-icon">↪</span>
+                <span>Sair do sistema</span>
+            </a>
 
-        </a>
+        </div>
+    </aside>
 
-        {% endif %}
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="dashboard-main">
 
-
-        <a href="/consulta"
-           class="menu-item item-consulta">
-
-            <div class="icone">🔎</div>
-
-            <div class="texto">
-                <div class="nome">Consulta</div>
-                <div class="descricao">
-                    Localizar produtos e endereços
+        <header class="dashboard-topbar">
+            <div>
+                <div class="dashboard-breadcrumb">
+                    Painel <strong>/ Visão geral</strong>
                 </div>
+                <h1 class="dashboard-heading">Visão geral</h1>
+                <p class="dashboard-subtitle">
+                    Bem-vindo ao seu painel de controle de estoque.
+                </p>
             </div>
 
-            <div class="seta">›</div>
+            <div class="dashboard-top-actions">
+                <a href="/notificacoes"
+                   class="dashboard-icon-button"
+                   aria-label="Notificações"
+                   title="Notificações">
+                    ♧
+                    {% if total_notificacoes and total_notificacoes > 0 %}
+                    <span class="notification-dot"></span>
+                    {% endif %}
+                </a>
+                <div class="dashboard-date-label">PAINEL DE GESTÃO</div>
+            </div>
+        </header>
 
-        </a>
+        <section class="dashboard-welcome">
+            <small>CONTROLE • ORGANIZAÇÃO • RESULTADOS</small>
+            <h2>Olá, {{ usuario }}! 👋</h2>
+            <p>
+                Acesse as ferramentas do sistema para consultar produtos,
+                acompanhar solicitações e manter seu estoque organizado.
+            </p>
+        </section>
 
-
-        {% if perfil in ["admin", "operador", "separacao"] %}
-
-        <a href="/inventario"
-           class="menu-item item-inventario">
-
-            <div class="icone">🗃️</div>
-
-            <div class="texto">
-                <div class="nome">Inventário</div>
-                <div class="descricao">
-                    Conferência do estoque
+        <section>
+            <div class="dashboard-section-head">
+                <div>
+                    <h3>Acesso rápido</h3>
+                    <p>Selecione uma opção para continuar.</p>
                 </div>
+                <span class="dashboard-section-tag">SEU SISTEMA</span>
             </div>
 
-            <div class="seta">›</div>
+            <div class="dashboard-grid">
 
-        </a>
+                {% if perfil in ["admin", "operador", "separacao"] %}
+                <a href="/cadastrar" class="dashboard-card">
+                    <div class="dashboard-card-top">
+                        <div class="dashboard-card-icon icon-blue">▦</div>
+                        <span class="dashboard-card-arrow">↗</span>
+                    </div>
+                    <h4>Cadastrar produto</h4>
+                    <p>Cadastre produtos e mantenha as informações do estoque atualizadas.</p>
+                    <div class="dashboard-card-footer">
+                        <span class="dashboard-card-action">ACESSAR MÓDULO →</span>
+                    </div>
+                </a>
+                {% endif %}
 
-        {% endif %}
+                {% if perfil in ["admin", "operador", "separacao"] %}
+                <a href="/solicitacoes" class="dashboard-card">
+                    <div class="dashboard-card-top">
+                        <div class="dashboard-card-icon icon-orange">☷</div>
+                        <span class="dashboard-card-arrow">↗</span>
+                    </div>
+                    <h4>Solicitações</h4>
+                    <p>Acompanhe as solicitações e consulte seus respectivos status.</p>
+                    <div class="dashboard-card-footer">
+                        <span class="dashboard-card-action">VER SOLICITAÇÕES →</span>
+                        {% if total_solicitacoes and total_solicitacoes > 0 %}
+                        <span class="dashboard-card-count">{{ total_solicitacoes }} pendente(s)</span>
+                        {% endif %}
+                    </div>
+                </a>
+                {% endif %}
 
+                {% if perfil in ["admin", "operador", "separacao"] %}
+                <a href="/separacao" class="dashboard-card">
+                    <div class="dashboard-card-top">
+                        <div class="dashboard-card-icon icon-green">⇄</div>
+                        <span class="dashboard-card-arrow">↗</span>
+                    </div>
+                    <h4>Separação</h4>
+                    <p>Acesse as ferramentas de separação de produtos do estoque.</p>
+                    <div class="dashboard-card-footer">
+                        <span class="dashboard-card-action">INICIAR →</span>
+                    </div>
+                </a>
+                {% endif %}
 
-        {% if perfil == "admin" %}
+                <a href="/consulta" class="dashboard-card">
+                    <div class="dashboard-card-top">
+                        <div class="dashboard-card-icon icon-cyan">⌕</div>
+                        <span class="dashboard-card-arrow">↗</span>
+                    </div>
+                    <h4>Consultar estoque</h4>
+                    <p>Localize produtos e confira as informações disponíveis.</p>
+                    <div class="dashboard-card-footer">
+                        <span class="dashboard-card-action">CONSULTAR →</span>
+                    </div>
+                </a>
 
-        <a href="/historico"
-           class="menu-item item-historico">
+                {% if perfil in ["admin", "operador", "separacao"] %}
+                <a href="/inventario" class="dashboard-card">
+                    <div class="dashboard-card-top">
+                        <div class="dashboard-card-icon icon-purple">▤</div>
+                        <span class="dashboard-card-arrow">↗</span>
+                    </div>
+                    <h4>Inventário</h4>
+                    <p>Acesse o módulo de inventário e confira os registros disponíveis.</p>
+                    <div class="dashboard-card-footer">
+                        <span class="dashboard-card-action">ACESSAR →</span>
+                    </div>
+                </a>
+                {% endif %}
 
-            <div class="icone">🕒</div>
+                {% if perfil == "admin" %}
+                <a href="/historico" class="dashboard-card">
+                    <div class="dashboard-card-top">
+                        <div class="dashboard-card-icon icon-yellow">◷</div>
+                        <span class="dashboard-card-arrow">↗</span>
+                    </div>
+                    <h4>Histórico</h4>
+                    <p>Consulte o histórico de movimentações e registros do sistema.</p>
+                    <div class="dashboard-card-footer">
+                        <span class="dashboard-card-action">CONSULTAR HISTÓRICO →</span>
+                    </div>
+                </a>
 
-            <div class="texto">
-                <div class="nome">Histórico</div>
-                <div class="descricao">
-                    Movimentações do sistema
-                </div>
+                <a href="/administracao" class="dashboard-card">
+                    <div class="dashboard-card-top">
+                        <div class="dashboard-card-icon icon-red">⚙</div>
+                        <span class="dashboard-card-arrow">↗</span>
+                    </div>
+                    <h4>Administração</h4>
+                    <p>Acesse as ferramentas administrativas disponíveis para seu perfil.</p>
+                    <div class="dashboard-card-footer">
+                        <span class="dashboard-card-action">GERENCIAR →</span>
+                    </div>
+                </a>
+                {% endif %}
+
             </div>
+        </section>
 
-            <div class="seta">›</div>
+        <footer class="dashboard-footer">
+            <span>Controle de Estoque · Sistema de Gestão</span>
+            <span>Área de acesso: {{ perfil }}</span>
+        </footer>
 
-        </a>
-
-
-        <a href="/administracao"
-           class="menu-item admin">
-
-            <div class="icone">⚙️</div>
-
-            <div class="texto">
-                <div class="nome">Administração</div>
-                <div class="descricao">
-                    Usuários e configurações
-                </div>
-            </div>
-
-            <div class="seta">›</div>
-
-        </a>
-
-        {% endif %}
-
-    </div>
-
-
-    <!-- SAIR -->
-
-    <a href="/logout" class="sair">
-        🚪 Sair do sistema
-    </a>
-
+    </main>
 </div>
-
 {% endblock %}
