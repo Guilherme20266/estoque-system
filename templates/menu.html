@@ -3,448 +3,910 @@
 {% block title %}Menu{% endblock %}
 
 {% block style %}
-<style>
-:root {
-    --menu-bg: #f4f6fa;
-    --menu-card: #ffffff;
-    --menu-text: #202b40;
-    --menu-muted: #8993a5;
-    --menu-border: #e9edf3;
-    --menu-blue: #4169f5;
-    --menu-soft: #edf1ff;
+
+*{
+    box-sizing:border-box;
 }
 
-body.dark-mode {
-    --menu-bg: #101522;
-    --menu-card: #1a2232;
-    --menu-text: #eef2fa;
-    --menu-muted: #9ba8bd;
-    --menu-border: #2b3448;
-    --menu-blue: #8198ff;
-    --menu-soft: #283451;
+/* ==========================================
+   TEMA
+   ========================================== */
+
+:root{
+    --menu-bg:#eef2f7;
+    --menu-text:#172033;
+
+    --menu-surface:#ffffff;
+    --menu-border:#dfe5ec;
+    --menu-divider:#edf0f4;
+
+    --menu-item-text:#1e293b;
+    --menu-muted:#64748b;
+    --menu-description:#94a3b8;
+
+    --menu-hover:#f8fafc;
+
+    --menu-icon-bg:#eff6ff;
+
+    --menu-counter-bg:#fee2e2;
+    --menu-counter-text:#dc2626;
+
+    --menu-exit-text:#64748b;
+    --menu-exit-hover:#fffafa;
 }
 
-body {
-    background: var(--menu-bg);
+
+/* ==========================================
+   MODO NOITE
+   ========================================== */
+
+body.dark-mode{
+
+    --menu-bg:#0f172a;
+    --menu-text:#f8fafc;
+
+    --menu-surface:#1e293b;
+    --menu-border:#334155;
+    --menu-divider:#334155;
+
+    --menu-item-text:#f8fafc;
+    --menu-muted:#cbd5e1;
+    --menu-description:#94a3b8;
+
+    --menu-hover:#273449;
+
+    --menu-icon-bg:#263b5c;
+
+    --menu-counter-bg:#4c2028;
+    --menu-counter-text:#fda4af;
+
+    --menu-exit-text:#cbd5e1;
+    --menu-exit-hover:#273449;
 }
 
-#simple-menu,
-#simple-menu * {
-    box-sizing: border-box;
+
+/* ==========================================
+   BODY
+   ========================================== */
+
+body{
+    margin:0;
+    min-height:100vh;
+
+    font-family:Arial,sans-serif;
+
+    background:var(--menu-bg);
+
+    color:var(--menu-text);
+
+    padding:20px 0;
+
+    transition:
+        background .25s ease,
+        color .25s ease;
 }
 
-#simple-menu {
-    min-height: 100vh;
-    padding: 22px 16px 30px;
-    background: var(--menu-bg);
-    color: var(--menu-text);
-    font-family: inherit;
+
+/* ==========================================
+   CONTAINER
+   ========================================== */
+
+.box{
+    width:92%;
+    max-width:520px;
+    margin:auto;
 }
 
-.simple-container {
-    width: 100%;
-    max-width: 560px;
-    margin: 0 auto;
+
+/* ==========================================
+   CABEÇALHO AZUL
+   ========================================== */
+
+.topo{
+    position:relative;
+
+    background:#1d4ed8;
+
+    color:white;
+
+    border-radius:18px;
+
+    padding:26px 22px 23px;
+
+    margin-bottom:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 8px 24px rgba(30,64,175,.25);
 }
 
-/* TOPO */
 
-.simple-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 30px;
+/* ==========================================
+   DETALHE DECORATIVO
+   ========================================== */
+
+.topo::after{
+    content:"";
+
+    position:absolute;
+
+    width:170px;
+    height:170px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.06);
+
+    right:-70px;
+    top:-80px;
 }
 
-.simple-logo {
-    width: 46px;
-    height: 46px;
-    object-fit: contain;
-    border-radius: 14px;
-    background: white;
-    padding: 3px;
-    flex-shrink: 0;
+
+/* ==========================================
+   SINO
+   ========================================== */
+
+.sino-notificacao{
+    position:absolute;
+
+    right:15px;
+    top:15px;
+
+    z-index:2;
+
+    width:42px;
+    height:42px;
+
+    border-radius:11px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(255,255,255,.14);
+
+    border:1px solid rgba(255,255,255,.18);
+
+    text-decoration:none;
+
+    font-size:21px;
+
+    transition:.2s;
 }
 
-.simple-title {
-    flex: 1;
-    min-width: 0;
+.sino-notificacao:hover{
+    background:rgba(255,255,255,.23);
 }
 
-.simple-title strong {
-    display: block;
-    font-size: 15px;
-    font-weight: 850;
-    color: var(--menu-text);
+
+/* ==========================================
+   PONTO NOTIFICAÇÃO
+   ========================================== */
+
+.ponto-notificacao{
+    position:absolute;
+
+    top:1px;
+    right:1px;
+
+    width:10px;
+    height:10px;
+
+    background:#f43f5e;
+
+    border:2px solid #1d4ed8;
+
+    border-radius:50%;
+
+    animation:pulsar 1.2s infinite;
 }
 
-.simple-title span {
-    display: block;
-    margin-top: 4px;
-    font-size: 11px;
-    color: var(--menu-muted);
-}
+@keyframes pulsar{
 
-.simple-bell {
-    width: 43px;
-    height: 43px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 13px;
-    background: var(--menu-card);
-    border: 1px solid var(--menu-border);
-    color: var(--menu-text);
-    font-size: 21px;
-    text-decoration: none;
-    flex-shrink: 0;
-}
-
-.simple-dot {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    top: 8px;
-    right: 8px;
-    background: #f04452;
-    border-radius: 50%;
-    border: 2px solid var(--menu-card);
-}
-
-/* USUÁRIO */
-
-.simple-user {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 17px;
-    background: var(--menu-card);
-    border: 1px solid var(--menu-border);
-    border-radius: 17px;
-    margin-bottom: 27px;
-}
-
-.simple-avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    background: var(--menu-soft);
-    color: var(--menu-blue);
-    font-size: 19px;
-    font-weight: 850;
-    flex-shrink: 0;
-}
-
-.simple-user-info {
-    min-width: 0;
-    flex: 1;
-}
-
-.simple-user-info strong {
-    display: block;
-    font-size: 14px;
-    color: var(--menu-text);
-    overflow-wrap: anywhere;
-}
-
-.simple-user-info span {
-    display: block;
-    margin-top: 5px;
-    font-size: 11px;
-    color: var(--menu-muted);
-    text-transform: capitalize;
-}
-
-.simple-user-status {
-    color: #18a874;
-    font-size: 10px;
-    font-weight: 800;
-}
-
-/* MENU */
-
-.simple-heading {
-    font-size: 12px;
-    font-weight: 850;
-    color: var(--menu-muted);
-    margin: 0 0 13px 2px;
-    letter-spacing: .8px;
-}
-
-.simple-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.simple-card {
-    min-width: 0;
-    min-height: 128px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 18px;
-    padding: 16px;
-    border-radius: 17px;
-    background: var(--menu-card);
-    border: 1px solid var(--menu-border);
-    text-decoration: none;
-    color: var(--menu-text);
-    transition: transform .15s, border-color .15s;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.simple-card:active {
-    transform: scale(.97);
-    border-color: var(--menu-blue);
-}
-
-.simple-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-}
-
-.simple-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 13px;
-    background: var(--menu-soft);
-    color: var(--menu-blue);
-    font-size: 22px;
-}
-
-.simple-arrow {
-    color: var(--menu-muted);
-    font-size: 17px;
-}
-
-.simple-card-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-}
-
-.simple-card-name {
-    font-size: 12px;
-    font-weight: 800;
-    line-height: 1.4;
-    overflow-wrap: anywhere;
-}
-
-.simple-badge {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 21px;
-    height: 21px;
-    padding: 0 5px;
-    border-radius: 7px;
-    background: #ffebed;
-    color: #d92d3a;
-    font-size: 10px;
-    font-weight: 850;
-    flex-shrink: 0;
-}
-
-/* SAIR */
-
-.simple-logout {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    min-height: 47px;
-    margin-top: 22px;
-    border: 1px solid var(--menu-border);
-    border-radius: 14px;
-    background: var(--menu-card);
-    color: var(--menu-muted);
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: 800;
-}
-
-.simple-logout:active {
-    color: #e5484d;
-}
-
-/* COMPUTADOR */
-
-@media (min-width: 700px) {
-    #simple-menu {
-        padding-top: 35px;
+    0%{
+        transform:scale(1);
     }
 
-    .simple-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 15px;
+    50%{
+        transform:scale(1.35);
     }
 
-    .simple-card {
-        min-height: 145px;
-        padding: 18px;
+    100%{
+        transform:scale(1);
     }
 
-    .simple-card-name {
-        font-size: 13px;
-    }
 }
 
-@media (max-width: 350px) {
-    #simple-menu {
-        padding-left: 11px;
-        padding-right: 11px;
-    }
 
-    .simple-card {
-        padding: 12px;
-        min-height: 118px;
-    }
+/* ==========================================
+   LOGO
+   ========================================== */
 
-    .simple-card-name {
-        font-size: 11px;
-    }
+.logo{
+    position:relative;
+    z-index:1;
+
+    width:66px;
+    height:66px;
+
+    border-radius:15px;
+
+    display:block;
+
+    margin-bottom:14px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.18);
 }
-</style>
+
+
+/* ==========================================
+   TÍTULO
+   ========================================== */
+
+h1{
+    position:relative;
+    z-index:1;
+
+    margin:0;
+
+    font-size:21px;
+
+    font-weight:800;
+}
+
+.sub{
+    position:relative;
+    z-index:1;
+
+    margin-top:5px;
+
+    font-size:12px;
+
+    color:#dbeafe;
+}
+
+
+/* ==========================================
+   USUÁRIO
+   ========================================== */
+
+.usuario{
+    position:relative;
+    z-index:1;
+
+    display:inline-block;
+
+    margin-top:12px;
+
+    padding:6px 10px;
+
+    border-radius:7px;
+
+    background:rgba(255,255,255,.13);
+
+    color:white;
+
+    font-size:11px;
+
+    font-weight:bold;
+}
+
+
+/* ==========================================
+   TÍTULO MENU
+   ========================================== */
+
+.titulo-menu{
+    margin:0 0 9px 3px;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+    color:var(--menu-muted);
+
+    text-transform:uppercase;
+
+    letter-spacing:.8px;
+}
+
+
+/* ==========================================
+   MENU
+   ========================================== */
+
+.menu{
+    background:var(--menu-surface);
+
+    border:1px solid var(--menu-border);
+
+    border-radius:15px;
+
+    overflow:hidden;
+
+    box-shadow:0 4px 15px rgba(15,23,42,.07);
+
+    transition:
+        background .25s ease,
+        border-color .25s ease;
+}
+
+
+/* ==========================================
+   ITEM
+   ========================================== */
+
+.menu-item{
+    position:relative;
+
+    min-height:67px;
+
+    padding:11px 16px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+    text-decoration:none;
+
+    color:var(--menu-item-text);
+
+    border-bottom:1px solid var(--menu-divider);
+
+    transition:
+        background .15s ease,
+        color .15s ease;
+}
+
+.menu-item:last-child{
+    border-bottom:none;
+}
+
+.menu-item:hover{
+    background:var(--menu-hover);
+}
+
+
+/* ==========================================
+   ÍCONE
+   ========================================== */
+
+.icone{
+    width:40px;
+    height:40px;
+
+    flex-shrink:0;
+
+    border-radius:10px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:var(--menu-icon-bg);
+
+    font-size:20px;
+
+    transition:background .25s ease;
+}
+
+
+/* ==========================================
+   TEXTO
+   ========================================== */
+
+.texto{
+    flex:1;
+}
+
+.nome{
+    font-size:14px;
+
+    font-weight:bold;
+
+    color:var(--menu-item-text);
+}
+
+.descricao{
+    margin-top:3px;
+
+    font-size:10px;
+
+    color:var(--menu-description);
+}
+
+
+/* ==========================================
+   SETA
+   ========================================== */
+
+.seta{
+    color:var(--menu-description);
+
+    font-size:18px;
+
+    transition:.15s;
+}
+
+.menu-item:hover .seta{
+    transform:translateX(3px);
+
+    color:#2563eb;
+}
+
+
+/* ==========================================
+   CONTADOR
+   ========================================== */
+
+.contador{
+    min-width:24px;
+    height:24px;
+
+    padding:0 7px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:20px;
+
+    background:var(--menu-counter-bg);
+
+    color:var(--menu-counter-text);
+
+    font-size:11px;
+
+    font-weight:bold;
+}
+
+
+/* ==========================================
+   ADMINISTRAÇÃO
+   ========================================== */
+
+.admin .icone{
+    background:#fef2f2;
+}
+
+.admin .seta{
+    color:#ef4444;
+}
+
+
+/* ==========================================
+   SAIR
+   ========================================== */
+
+.sair{
+    margin-top:14px;
+
+    height:52px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    border-radius:13px;
+
+    text-decoration:none;
+
+    color:var(--menu-exit-text);
+
+    background:var(--menu-surface);
+
+    border:1px solid var(--menu-border);
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    transition:
+        color .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+}
+
+.sair:hover{
+    color:#dc2626;
+
+    border-color:#fecaca;
+
+    background:var(--menu-exit-hover);
+}
+
+
+/* ==========================================
+   CELULAR
+   ========================================== */
+
+@media(max-width:480px){
+
+    body{
+        padding:14px 0;
+    }
+
+    .box{
+        width:94%;
+    }
+
+    .topo{
+        padding:22px 18px 20px;
+    }
+
+    .logo{
+        width:60px;
+        height:60px;
+    }
+
+    h1{
+        font-size:19px;
+    }
+
+    .menu-item{
+        min-height:63px;
+
+        padding:10px 13px;
+    }
+
+    .icone{
+        width:37px;
+        height:37px;
+
+        font-size:18px;
+    }
+
+}
+
 {% endblock %}
 
+
 {% block content %}
-<div id="simple-menu">
-    <div class="simple-container">
 
-        <header class="simple-header">
-            <img
-                class="simple-logo"
-                src="{{ url_for('static', filename='icon-192.png') }}"
-                alt="Logo"
-            >
+<div class="box">
 
-            <div class="simple-title">
-                <strong>Controle de Estoque</strong>
-                <span>Sistema de Gestão</span>
-            </div>
 
-            <a href="/notificacoes" class="simple-bell" aria-label="Notificações">
-                ♧
-                {% if total_notificacoes and total_notificacoes > 0 %}
-                <span class="simple-dot"></span>
-                {% endif %}
-            </a>
-        </header>
+    <!-- ==========================================
+         CABEÇALHO
+         ========================================== -->
 
-        <section class="simple-user">
-            <div class="simple-avatar">
-                {{ usuario[0]|upper if usuario else 'U' }}
-            </div>
+    <div class="topo">
 
-            <div class="simple-user-info">
-                <strong>{{ usuario }}</strong>
-                <span>{{ perfil }}</span>
-            </div>
 
-            <span class="simple-user-status">● Online</span>
-        </section>
+        <!-- NOTIFICAÇÕES -->
 
-        <h2 class="simple-heading">MENU PRINCIPAL</h2>
+        <a
+            href="/notificacoes"
+            class="sino-notificacao"
+        >
 
-        <nav class="simple-grid">
+            🔔
 
-            {% if perfil in ["admin", "operador", "separacao"] %}
-            <a href="/cadastrar" class="simple-card">
-                <div class="simple-card-top">
-                    <span class="simple-icon">＋</span>
-                    <span class="simple-arrow">↗</span>
-                </div>
-                <div class="simple-card-bottom">
-                    <span class="simple-card-name">Cadastrar produto</span>
-                </div>
-            </a>
-
-            <a href="/solicitacoes" class="simple-card">
-                <div class="simple-card-top">
-                    <span class="simple-icon">☷</span>
-                    <span class="simple-arrow">↗</span>
-                </div>
-                <div class="simple-card-bottom">
-                    <span class="simple-card-name">Solicitações</span>
-                    {% if total_solicitacoes and total_solicitacoes > 0 %}
-                    <span class="simple-badge">{{ total_solicitacoes }}</span>
-                    {% endif %}
-                </div>
-            </a>
-
-            <a href="/separacao" class="simple-card">
-                <div class="simple-card-top">
-                    <span class="simple-icon">⇄</span>
-                    <span class="simple-arrow">↗</span>
-                </div>
-                <div class="simple-card-bottom">
-                    <span class="simple-card-name">Separação</span>
-                </div>
-            </a>
+            {% if total_notificacoes > 0 %}
+                <span class="ponto-notificacao"></span>
             {% endif %}
 
-            <a href="/consulta" class="simple-card">
-                <div class="simple-card-top">
-                    <span class="simple-icon">⌕</span>
-                    <span class="simple-arrow">↗</span>
-                </div>
-                <div class="simple-card-bottom">
-                    <span class="simple-card-name">Consultar estoque</span>
-                </div>
-            </a>
-
-            {% if perfil in ["admin", "operador", "separacao"] %}
-            <a href="/inventario" class="simple-card">
-                <div class="simple-card-top">
-                    <span class="simple-icon">▤</span>
-                    <span class="simple-arrow">↗</span>
-                </div>
-                <div class="simple-card-bottom">
-                    <span class="simple-card-name">Inventário</span>
-                </div>
-            </a>
-            {% endif %}
-
-            {% if perfil == "admin" %}
-            <a href="/historico" class="simple-card">
-                <div class="simple-card-top">
-                    <span class="simple-icon">◷</span>
-                    <span class="simple-arrow">↗</span>
-                </div>
-                <div class="simple-card-bottom">
-                    <span class="simple-card-name">Histórico</span>
-                </div>
-            </a>
-
-            <a href="/administracao" class="simple-card">
-                <div class="simple-card-top">
-                    <span class="simple-icon">⚙</span>
-                    <span class="simple-arrow">↗</span>
-                </div>
-                <div class="simple-card-bottom">
-                    <span class="simple-card-name">Administração</span>
-                </div>
-            </a>
-            {% endif %}
-
-        </nav>
-
-        <a href="/logout" class="simple-logout">
-            ↪ Sair do sistema
         </a>
 
+
+        <!-- LOGO -->
+
+        <img
+            src="/static/icon-192.png"
+            class="logo"
+        >
+
+
+        <h1>
+            CONTROLE DE ESTOQUE
+        </h1>
+
+
+        <div class="sub">
+            Sistema de Gestão
+        </div>
+
+
+        <div class="usuario">
+            👤 {{ usuario }} · {{ perfil }}
+        </div>
+
+
     </div>
+
+
+
+    <!-- ==========================================
+         MENU
+         ========================================== -->
+
+    <div class="titulo-menu">
+        Menu principal
+    </div>
+
+
+    <div class="menu">
+
+
+        <!-- CADASTRAR -->
+
+        {% if perfil in ["admin", "operador", "separacao"] %}
+
+        <a
+            href="/cadastrar"
+            class="menu-item"
+        >
+
+            <div class="icone">
+                ➕
+            </div>
+
+            <div class="texto">
+
+                <div class="nome">
+                    Cadastrar Produto
+                </div>
+
+                <div class="descricao">
+                    Adicionar produto ao estoque
+                </div>
+
+            </div>
+
+            <div class="seta">
+                ›
+            </div>
+
+        </a>
+
+        {% endif %}
+
+
+
+        <!-- SOLICITAÇÕES -->
+
+        {% if perfil in ["admin", "operador", "separacao"] %}
+
+        <a
+            href="/solicitacoes"
+            class="menu-item"
+        >
+
+            <div class="icone">
+                📋
+            </div>
+
+            <div class="texto">
+
+                <div class="nome">
+                    Solicitações
+                </div>
+
+                <div class="descricao">
+                    Pedidos e abastecimentos
+                </div>
+
+            </div>
+
+
+            {% if total_solicitacoes > 0 %}
+
+                <div class="contador">
+                    {{ total_solicitacoes }}
+                </div>
+
+            {% endif %}
+
+
+            <div class="seta">
+                ›
+            </div>
+
+        </a>
+
+        {% endif %}
+
+
+
+        <!-- SEPARAÇÃO -->
+
+        {% if perfil in ["admin", "operador", "separacao"] %}
+
+        <a
+            href="/separacao"
+            class="menu-item"
+        >
+
+            <div class="icone">
+                📦
+            </div>
+
+            <div class="texto">
+
+                <div class="nome">
+                    Separação
+                </div>
+
+                <div class="descricao">
+                    Separar solicitações
+                </div>
+
+            </div>
+
+            <div class="seta">
+                ›
+            </div>
+
+        </a>
+
+        {% endif %}
+
+
+
+        <!-- CONSULTA -->
+
+        <a
+            href="/consulta"
+            class="menu-item"
+        >
+
+            <div class="icone">
+                🔎
+            </div>
+
+            <div class="texto">
+
+                <div class="nome">
+                    Consulta
+                </div>
+
+                <div class="descricao">
+                    Localizar produtos e endereços
+                </div>
+
+            </div>
+
+            <div class="seta">
+                ›
+            </div>
+
+        </a>
+
+
+
+        <!-- INVENTÁRIO -->
+
+        {% if perfil in ["admin", "operador", "separacao"] %}
+
+        <a
+            href="/inventario"
+            class="menu-item"
+        >
+
+            <div class="icone">
+                🗃️
+            </div>
+
+            <div class="texto">
+
+                <div class="nome">
+                    Inventário
+                </div>
+
+                <div class="descricao">
+                    Conferência do estoque
+                </div>
+
+            </div>
+
+            <div class="seta">
+                ›
+            </div>
+
+        </a>
+
+        {% endif %}
+
+
+
+        <!-- HISTÓRICO -->
+
+        {% if perfil == "admin" %}
+
+        <a
+            href="/historico"
+            class="menu-item"
+        >
+
+            <div class="icone">
+                🕒
+            </div>
+
+            <div class="texto">
+
+                <div class="nome">
+                    Histórico
+                </div>
+
+                <div class="descricao">
+                    Movimentações do sistema
+                </div>
+
+            </div>
+
+            <div class="seta">
+                ›
+            </div>
+
+        </a>
+
+        {% endif %}
+
+
+
+        <!-- ADMINISTRAÇÃO -->
+
+        {% if perfil == "admin" %}
+
+        <a
+            href="/administracao"
+            class="menu-item admin"
+        >
+
+            <div class="icone">
+                ⚙️
+            </div>
+
+            <div class="texto">
+
+                <div class="nome">
+                    Administração
+                </div>
+
+                <div class="descricao">
+                    Usuários e configurações
+                </div>
+
+            </div>
+
+            <div class="seta">
+                ›
+            </div>
+
+        </a>
+
+        {% endif %}
+
+
+    </div>
+
+
+
+    <!-- ==========================================
+         SAIR
+         ========================================== -->
+
+    <a
+        href="/logout"
+        class="sair"
+    >
+
+        🚪
+
+        Sair do sistema
+
+    </a>
+
+
 </div>
+
 {% endblock %}
