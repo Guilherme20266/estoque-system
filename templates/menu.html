@@ -1,788 +1,449 @@
 {% extends "base.html" %}
 
-{% block title %}Controle de Estoque{% endblock %}
+{% block title %}Menu{% endblock %}
 
 {% block style %}
 <style>
 :root {
-    --app-bg: #f3f5fa;
-    --app-card: #ffffff;
-    --app-text: #192238;
-    --app-muted: #8791a5;
-    --app-border: #e9edf5;
-    --app-blue: #4169f5;
-    --app-blue-soft: #edf1ff;
-    --app-green: #18a874;
-    --app-shadow: 0 5px 20px rgba(31, 47, 80, .045);
+    --menu-bg: #f4f6fa;
+    --menu-card: #ffffff;
+    --menu-text: #202b40;
+    --menu-muted: #8993a5;
+    --menu-border: #e9edf3;
+    --menu-blue: #4169f5;
+    --menu-soft: #edf1ff;
 }
 
 body.dark-mode {
-    --app-bg: #0d1320;
-    --app-card: #171f30;
-    --app-text: #eef2fb;
-    --app-muted: #9aa7bd;
-    --app-border: #293349;
-    --app-blue: #8198ff;
-    --app-blue-soft: #252f4b;
-    --app-green: #50d6a2;
-    --app-shadow: 0 5px 20px rgba(0, 0, 0, .12);
+    --menu-bg: #101522;
+    --menu-card: #1a2232;
+    --menu-text: #eef2fa;
+    --menu-muted: #9ba8bd;
+    --menu-border: #2b3448;
+    --menu-blue: #8198ff;
+    --menu-soft: #283451;
 }
 
 body {
-    background: var(--app-bg);
+    background: var(--menu-bg);
 }
 
-#estoque-app,
-#estoque-app * {
+#simple-menu,
+#simple-menu * {
     box-sizing: border-box;
 }
 
-#estoque-app {
-    background: var(--app-bg);
-    color: var(--app-text);
+#simple-menu {
     min-height: 100vh;
+    padding: 22px 16px 30px;
+    background: var(--menu-bg);
+    color: var(--menu-text);
     font-family: inherit;
-    padding-bottom: 26px;
 }
 
-.app-container {
+.simple-container {
     width: 100%;
-    max-width: 1120px;
-    padding: 18px 16px 25px;
+    max-width: 560px;
     margin: 0 auto;
 }
 
-/* CABEÇALHO */
+/* TOPO */
 
-.app-header {
+.simple-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 12px;
-    margin-bottom: 27px;
+    margin-bottom: 30px;
 }
 
-.app-brand {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    min-width: 0;
-}
-
-.app-logo {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
+.simple-logo {
+    width: 46px;
+    height: 46px;
     object-fit: contain;
-    background: #fff;
+    border-radius: 14px;
+    background: white;
     padding: 3px;
     flex-shrink: 0;
-    box-shadow: var(--app-shadow);
 }
 
-.app-brand-text {
+.simple-title {
+    flex: 1;
     min-width: 0;
 }
 
-.app-brand-text strong {
+.simple-title strong {
     display: block;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 850;
-    letter-spacing: -.3px;
-    line-height: 1.3;
+    color: var(--menu-text);
 }
 
-.app-brand-text span {
+.simple-title span {
     display: block;
-    font-size: 11px;
-    color: var(--app-muted);
     margin-top: 4px;
+    font-size: 11px;
+    color: var(--menu-muted);
 }
 
-.app-header-actions {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    flex-shrink: 0;
-}
-
-.app-notification {
-    position: relative;
+.simple-bell {
     width: 43px;
     height: 43px;
-    border-radius: 14px;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--app-card);
-    border: 1px solid var(--app-border);
-    color: var(--app-text);
-    text-decoration: none;
+    border-radius: 13px;
+    background: var(--menu-card);
+    border: 1px solid var(--menu-border);
+    color: var(--menu-text);
     font-size: 21px;
-    box-shadow: var(--app-shadow);
+    text-decoration: none;
+    flex-shrink: 0;
 }
 
-.app-notification:active {
-    transform: scale(.96);
-}
-
-.app-notification-dot {
+.simple-dot {
     position: absolute;
-    width: 9px;
-    height: 9px;
+    width: 8px;
+    height: 8px;
     top: 8px;
     right: 8px;
-    border-radius: 50%;
     background: #f04452;
-    border: 2px solid var(--app-card);
-}
-
-/* BOAS-VINDAS */
-
-.app-welcome {
-    position: relative;
-    overflow: hidden;
-    padding: 23px 21px;
-    border-radius: 23px;
-    background: linear-gradient(130deg, #3156df 0%, #5375ff 100%);
-    color: white;
-    margin-bottom: 26px;
-    box-shadow: 0 10px 27px rgba(65, 105, 245, .18);
-}
-
-.app-welcome::after {
-    content: "";
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    right: -65px;
-    top: -75px;
-    border: 25px solid rgba(255,255,255,.10);
     border-radius: 50%;
-    pointer-events: none;
+    border: 2px solid var(--menu-card);
 }
 
-.app-welcome-label {
-    display: inline-flex;
+/* USUÁRIO */
+
+.simple-user {
+    display: flex;
     align-items: center;
-    gap: 6px;
-    color: #e0e7ff;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.1px;
-    margin-bottom: 12px;
+    gap: 12px;
+    padding: 17px;
+    background: var(--menu-card);
+    border: 1px solid var(--menu-border);
+    border-radius: 17px;
+    margin-bottom: 27px;
 }
 
-.app-welcome h1 {
-    color: #fff;
-    font-size: clamp(22px, 5vw, 30px);
+.simple-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--menu-soft);
+    color: var(--menu-blue);
+    font-size: 19px;
     font-weight: 850;
-    letter-spacing: -.8px;
-    line-height: 1.2;
-    margin: 0;
+    flex-shrink: 0;
+}
+
+.simple-user-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.simple-user-info strong {
+    display: block;
+    font-size: 14px;
+    color: var(--menu-text);
     overflow-wrap: anywhere;
 }
 
-.app-welcome p {
-    color: #e5eaff;
-    font-size: 12px;
-    line-height: 1.7;
-    margin: 10px 0 0;
-    max-width: 390px;
-}
-
-.app-welcome-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255,255,255,.2);
-}
-
-.app-role {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    color: white;
-    background: rgba(255,255,255,.15);
-    border: 1px solid rgba(255,255,255,.12);
-    border-radius: 9px;
-    padding: 8px 10px;
-    font-size: 10px;
-    font-weight: 750;
+.simple-user-info span {
+    display: block;
+    margin-top: 5px;
+    font-size: 11px;
+    color: var(--menu-muted);
     text-transform: capitalize;
 }
 
-.app-status {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #e4ffef;
-    font-size: 10px;
-    font-weight: 650;
-}
-
-.app-status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #62f1a7;
-}
-
-/* TÍTULOS */
-
-.app-section-heading {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 14px;
-}
-
-.app-section-heading h2 {
-    margin: 0;
-    font-size: 17px;
-    font-weight: 850;
-    letter-spacing: -.35px;
-    color: var(--app-text);
-}
-
-.app-section-heading p {
-    color: var(--app-muted);
-    font-size: 11px;
-    line-height: 1.5;
-    margin: 5px 0 0;
-}
-
-.app-section-count {
-    color: var(--app-blue);
-    background: var(--app-blue-soft);
-    padding: 7px 10px;
-    border-radius: 9px;
+.simple-user-status {
+    color: #18a874;
     font-size: 10px;
     font-weight: 800;
-    white-space: nowrap;
 }
 
-/* CARDS */
+/* MENU */
 
-.app-grid {
+.simple-heading {
+    font-size: 12px;
+    font-weight: 850;
+    color: var(--menu-muted);
+    margin: 0 0 13px 2px;
+    letter-spacing: .8px;
+}
+
+.simple-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
 }
 
-.app-card {
-    position: relative;
+.simple-card {
+    min-width: 0;
+    min-height: 128px;
     display: flex;
     flex-direction: column;
-    min-width: 0;
-    min-height: 166px;
-    padding: 15px;
-    background: var(--app-card);
-    color: var(--app-text);
+    justify-content: space-between;
+    gap: 18px;
+    padding: 16px;
+    border-radius: 17px;
+    background: var(--menu-card);
+    border: 1px solid var(--menu-border);
     text-decoration: none;
-    border: 1px solid var(--app-border);
-    border-radius: 18px;
-    box-shadow: var(--app-shadow);
+    color: var(--menu-text);
     transition: transform .15s, border-color .15s;
     -webkit-tap-highlight-color: transparent;
 }
 
-.app-card:active {
-    transform: scale(.975);
-    border-color: var(--app-blue);
+.simple-card:active {
+    transform: scale(.97);
+    border-color: var(--menu-blue);
 }
 
-.app-card-top {
+.simple-card-top {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 7px;
-    margin-bottom: 15px;
+    align-items: center;
+    gap: 8px;
 }
 
-.app-card-icon {
-    width: 43px;
-    height: 43px;
+.simple-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 14px;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: var(--menu-soft);
+    color: var(--menu-blue);
     font-size: 22px;
-    flex-shrink: 0;
 }
 
-.app-icon-blue { background: #edf1ff; }
-.app-icon-green { background: #e5f8ef; }
-.app-icon-orange { background: #fff1e2; }
-.app-icon-purple { background: #f0eaff; }
-.app-icon-cyan { background: #e4f8fc; }
-.app-icon-red { background: #ffebee; }
-.app-icon-yellow { background: #fff6d9; }
-
-body.dark-mode .app-icon-blue { background: #273454; }
-body.dark-mode .app-icon-green { background: #1b3a32; }
-body.dark-mode .app-icon-orange { background: #443323; }
-body.dark-mode .app-icon-purple { background: #352c4d; }
-body.dark-mode .app-icon-cyan { background: #1c3943; }
-body.dark-mode .app-icon-red { background: #472b35; }
-body.dark-mode .app-icon-yellow { background: #443a24; }
-
-.app-card-arrow {
-    color: var(--app-muted);
-    font-size: 18px;
-    line-height: 1;
+.simple-arrow {
+    color: var(--menu-muted);
+    font-size: 17px;
 }
 
-.app-card h3 {
-    font-size: 13px;
-    font-weight: 800;
-    line-height: 1.4;
-    color: var(--app-text);
-    margin: 0 0 6px;
-    overflow-wrap: anywhere;
-}
-
-.app-card p {
-    font-size: 10px;
-    line-height: 1.6;
-    color: var(--app-muted);
-    margin: 0 0 12px;
-}
-
-.app-card-bottom {
+.simple-card-bottom {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 6px;
-    margin-top: auto;
-    padding-top: 8px;
 }
 
-.app-card-link {
-    color: var(--app-blue);
-    font-size: 10px;
+.simple-card-name {
+    font-size: 12px;
     font-weight: 800;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
 }
 
-.app-count {
+.simple-badge {
     display: inline-flex;
-    align-items: center;
     justify-content: center;
-    min-width: 22px;
-    height: 22px;
-    padding: 0 6px;
-    border-radius: 8px;
+    align-items: center;
+    min-width: 21px;
+    height: 21px;
+    padding: 0 5px;
+    border-radius: 7px;
     background: #ffebed;
     color: #d92d3a;
     font-size: 10px;
     font-weight: 850;
-}
-
-body.dark-mode .app-count {
-    background: #472b35;
-    color: #ffabb2;
-}
-
-/* ATALHO INFERIOR */
-
-.app-quick-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 22px;
-    padding: 15px;
-    border: 1px solid var(--app-border);
-    background: var(--app-card);
-    border-radius: 16px;
-}
-
-.app-quick-info-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     flex-shrink: 0;
-    background: var(--app-blue-soft);
-    font-size: 19px;
 }
 
-.app-quick-info-text {
-    flex: 1;
-    min-width: 0;
-}
+/* SAIR */
 
-.app-quick-info-text strong {
-    display: block;
+.simple-logout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 47px;
+    margin-top: 22px;
+    border: 1px solid var(--menu-border);
+    border-radius: 14px;
+    background: var(--menu-card);
+    color: var(--menu-muted);
+    text-decoration: none;
     font-size: 12px;
     font-weight: 800;
-    color: var(--app-text);
 }
 
-.app-quick-info-text span {
-    display: block;
-    font-size: 10px;
-    color: var(--app-muted);
-    margin-top: 4px;
-    line-height: 1.5;
+.simple-logout:active {
+    color: #e5484d;
 }
 
-.app-quick-info a {
-    color: var(--app-blue);
-    text-decoration: none;
-    font-size: 11px;
-    font-weight: 800;
-    white-space: nowrap;
-}
-
-.app-footer {
-    text-align: center;
-    padding: 24px 5px 5px;
-    font-size: 10px;
-    line-height: 1.7;
-    color: var(--app-muted);
-}
-
-/* NAVEGAÇÃO PARA COMPUTADOR */
-
-.app-desktop-nav {
-    display: none;
-}
-
-/* TABLETS E COMPUTADORES */
+/* COMPUTADOR */
 
 @media (min-width: 700px) {
-    .app-container {
-        padding: 28px 28px 35px;
-    }
-
-    .app-header {
-        margin-bottom: 30px;
-    }
-
-    .app-welcome {
-        padding: 30px;
-        margin-bottom: 32px;
-    }
-
-    .app-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
-    }
-
-    .app-card {
-        min-height: 190px;
-        padding: 20px;
-    }
-
-    .app-card-icon {
-        width: 48px;
-        height: 48px;
-        font-size: 24px;
-    }
-
-    .app-card h3 {
-        font-size: 14px;
-    }
-
-    .app-card p {
-        font-size: 11px;
-    }
-
-    .app-section-heading h2 {
-        font-size: 19px;
-    }
-}
-
-@media (min-width: 1050px) {
-    .app-container {
+    #simple-menu {
         padding-top: 35px;
     }
 
-    .app-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+    .simple-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
     }
 
-    .app-card {
-        min-height: 185px;
+    .simple-card {
+        min-height: 145px;
+        padding: 18px;
     }
 
-    .app-welcome {
-        padding: 34px;
+    .simple-card-name {
+        font-size: 13px;
     }
 }
 
-/* CELULARES PEQUENOS */
-
-@media (max-width: 360px) {
-    .app-container {
-        padding: 13px 11px 22px;
+@media (max-width: 350px) {
+    #simple-menu {
+        padding-left: 11px;
+        padding-right: 11px;
     }
 
-    .app-brand {
-        gap: 8px;
-    }
-
-    .app-logo {
-        width: 39px;
-        height: 39px;
-    }
-
-    .app-brand-text strong {
-        font-size: 12px;
-    }
-
-    .app-brand-text span {
-        font-size: 10px;
-    }
-
-    .app-notification {
-        width: 39px;
-        height: 39px;
-    }
-
-    .app-welcome {
-        padding: 19px 16px;
-        border-radius: 19px;
-    }
-
-    .app-card {
+    .simple-card {
         padding: 12px;
-        min-height: 158px;
-        border-radius: 15px;
+        min-height: 118px;
     }
 
-    .app-card-icon {
-        width: 38px;
-        height: 38px;
-        font-size: 20px;
-        border-radius: 12px;
-    }
-
-    .app-card h3 {
-        font-size: 12px;
-    }
-
-    .app-card p {
-        font-size: 10px;
-    }
-
-    .app-card-link {
-        font-size: 9px;
-    }
-
-    .app-quick-info {
-        padding: 12px;
-        gap: 8px;
+    .simple-card-name {
+        font-size: 11px;
     }
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div id="estoque-app">
-    <div class="app-container">
+<div id="simple-menu">
+    <div class="simple-container">
 
-        <!-- CABEÇALHO -->
-        <header class="app-header">
-            <div class="app-brand">
-                <img
-                    class="app-logo"
-                    src="{{ url_for('static', filename='icon-192.png') }}"
-                    alt="Logo"
-                    onerror="this.style.display='none'"
-                >
-                <div class="app-brand-text">
-                    <strong>Controle de Estoque</strong>
-                    <span>Sistema de Gestão</span>
-                </div>
+        <header class="simple-header">
+            <img
+                class="simple-logo"
+                src="{{ url_for('static', filename='icon-192.png') }}"
+                alt="Logo"
+            >
+
+            <div class="simple-title">
+                <strong>Controle de Estoque</strong>
+                <span>Sistema de Gestão</span>
             </div>
 
-            <div class="app-header-actions">
-                <a
-                    class="app-notification"
-                    href="/notificacoes"
-                    aria-label="Abrir notificações"
-                    title="Notificações"
-                >
-                    ♧
-                    {% if total_notificacoes and total_notificacoes > 0 %}
-                    <span class="app-notification-dot"></span>
-                    {% endif %}
-                </a>
-            </div>
+            <a href="/notificacoes" class="simple-bell" aria-label="Notificações">
+                ♧
+                {% if total_notificacoes and total_notificacoes > 0 %}
+                <span class="simple-dot"></span>
+                {% endif %}
+            </a>
         </header>
 
-        <!-- BOAS-VINDAS -->
-        <section class="app-welcome">
-            <div class="app-welcome-label">
-                <span>✦</span>
-                <span>SEU PAINEL DE CONTROLE</span>
+        <section class="simple-user">
+            <div class="simple-avatar">
+                {{ usuario[0]|upper if usuario else 'U' }}
             </div>
 
-            <h1>Olá, {{ usuario }}! 👋</h1>
-
-            <p>
-                Tudo organizado para facilitar seu trabalho.
-                Escolha abaixo o que você precisa fazer.
-            </p>
-
-            <div class="app-welcome-bottom">
-                <span class="app-role">
-                    <span>♙</span>
-                    {{ perfil }}
-                </span>
-
-                <span class="app-status">
-                    <span class="app-status-dot"></span>
-                    Sistema de gestão
-                </span>
+            <div class="simple-user-info">
+                <strong>{{ usuario }}</strong>
+                <span>{{ perfil }}</span>
             </div>
+
+            <span class="simple-user-status">● Online</span>
         </section>
 
-        <!-- FERRAMENTAS -->
-        <section>
-            <div class="app-section-heading">
-                <div>
-                    <h2>Acesso rápido</h2>
-                    <p>Toque em uma opção para acessar.</p>
+        <h2 class="simple-heading">MENU PRINCIPAL</h2>
+
+        <nav class="simple-grid">
+
+            {% if perfil in ["admin", "operador", "separacao"] %}
+            <a href="/cadastrar" class="simple-card">
+                <div class="simple-card-top">
+                    <span class="simple-icon">＋</span>
+                    <span class="simple-arrow">↗</span>
                 </div>
-                <span class="app-section-count">MENU</span>
-            </div>
-
-            <div class="app-grid">
-
-                {% if perfil in ["admin", "operador", "separacao"] %}
-                <a href="/cadastrar" class="app-card">
-                    <div class="app-card-top">
-                        <div class="app-card-icon app-icon-blue">＋</div>
-                        <span class="app-card-arrow">↗</span>
-                    </div>
-                    <h3>Cadastrar produto</h3>
-                    <p>Cadastre e atualize os produtos do estoque.</p>
-                    <div class="app-card-bottom">
-                        <span class="app-card-link">ACESSAR →</span>
-                    </div>
-                </a>
-                {% endif %}
-
-                {% if perfil in ["admin", "operador", "separacao"] %}
-                <a href="/solicitacoes" class="app-card">
-                    <div class="app-card-top">
-                        <div class="app-card-icon app-icon-orange">☷</div>
-                        <span class="app-card-arrow">↗</span>
-                    </div>
-                    <h3>Solicitações</h3>
-                    <p>Consulte e acompanhe as solicitações.</p>
-                    <div class="app-card-bottom">
-                        <span class="app-card-link">ACESSAR →</span>
-                        {% if total_solicitacoes and total_solicitacoes > 0 %}
-                        <span class="app-count">{{ total_solicitacoes }}</span>
-                        {% endif %}
-                    </div>
-                </a>
-                {% endif %}
-
-                {% if perfil in ["admin", "operador", "separacao"] %}
-                <a href="/separacao" class="app-card">
-                    <div class="app-card-top">
-                        <div class="app-card-icon app-icon-green">⇄</div>
-                        <span class="app-card-arrow">↗</span>
-                    </div>
-                    <h3>Separação</h3>
-                    <p>Acesse os itens e as tarefas de separação.</p>
-                    <div class="app-card-bottom">
-                        <span class="app-card-link">ACESSAR →</span>
-                    </div>
-                </a>
-                {% endif %}
-
-                <a href="/consulta" class="app-card">
-                    <div class="app-card-top">
-                        <div class="app-card-icon app-icon-cyan">⌕</div>
-                        <span class="app-card-arrow">↗</span>
-                    </div>
-                    <h3>Consultar estoque</h3>
-                    <p>Encontre produtos e confira suas informações.</p>
-                    <div class="app-card-bottom">
-                        <span class="app-card-link">CONSULTAR →</span>
-                    </div>
-                </a>
-
-                {% if perfil in ["admin", "operador", "separacao"] %}
-                <a href="/inventario" class="app-card">
-                    <div class="app-card-top">
-                        <div class="app-card-icon app-icon-purple">▤</div>
-                        <span class="app-card-arrow">↗</span>
-                    </div>
-                    <h3>Inventário</h3>
-                    <p>Acesse o módulo de inventário.</p>
-                    <div class="app-card-bottom">
-                        <span class="app-card-link">ACESSAR →</span>
-                    </div>
-                </a>
-                {% endif %}
-
-                {% if perfil == "admin" %}
-                <a href="/historico" class="app-card">
-                    <div class="app-card-top">
-                        <div class="app-card-icon app-icon-yellow">◷</div>
-                        <span class="app-card-arrow">↗</span>
-                    </div>
-                    <h3>Histórico</h3>
-                    <p>Confira o histórico de movimentações.</p>
-                    <div class="app-card-bottom">
-                        <span class="app-card-link">CONSULTAR →</span>
-                    </div>
-                </a>
-
-                <a href="/administracao" class="app-card">
-                    <div class="app-card-top">
-                        <div class="app-card-icon app-icon-red">⚙</div>
-                        <span class="app-card-arrow">↗</span>
-                    </div>
-                    <h3>Administração</h3>
-                    <p>Gerencie as ferramentas administrativas.</p>
-                    <div class="app-card-bottom">
-                        <span class="app-card-link">GERENCIAR →</span>
-                    </div>
-                </a>
-                {% endif %}
-
-            </div>
-        </section>
-
-        <!-- NOTIFICAÇÕES -->
-        <a href="/notificacoes" class="app-quick-info"
-           style="text-decoration:none;">
-            <div class="app-quick-info-icon">♧</div>
-            <div class="app-quick-info-text">
-                <strong>Central de notificações</strong>
-                <span>
-                    {% if total_notificacoes and total_notificacoes > 0 %}
-                    Você tem {{ total_notificacoes }} notificação(ões).
-                    {% else %}
-                    Confira as atualizações do sistema.
-                    {% endif %}
-                </span>
-            </div>
-            <span style="color:var(--app-blue);font-size:20px;">›</span>
-        </a>
-
-        <footer class="app-footer">
-            Controle de Estoque · Sistema de Gestão<br>
-            Usuário: {{ usuario }} · Perfil: {{ perfil }}
-            <br><br>
-            <a href="/logout"
-               style="color:var(--app-muted);text-decoration:none;font-weight:750;">
-                ↪ Sair do sistema
+                <div class="simple-card-bottom">
+                    <span class="simple-card-name">Cadastrar produto</span>
+                </div>
             </a>
-        </footer>
+
+            <a href="/solicitacoes" class="simple-card">
+                <div class="simple-card-top">
+                    <span class="simple-icon">☷</span>
+                    <span class="simple-arrow">↗</span>
+                </div>
+                <div class="simple-card-bottom">
+                    <span class="simple-card-name">Solicitações</span>
+                    {% if total_solicitacoes and total_solicitacoes > 0 %}
+                    <span class="simple-badge">{{ total_solicitacoes }}</span>
+                    {% endif %}
+                </div>
+            </a>
+
+            <a href="/separacao" class="simple-card">
+                <div class="simple-card-top">
+                    <span class="simple-icon">⇄</span>
+                    <span class="simple-arrow">↗</span>
+                </div>
+                <div class="simple-card-bottom">
+                    <span class="simple-card-name">Separação</span>
+                </div>
+            </a>
+            {% endif %}
+
+            <a href="/consulta" class="simple-card">
+                <div class="simple-card-top">
+                    <span class="simple-icon">⌕</span>
+                    <span class="simple-arrow">↗</span>
+                </div>
+                <div class="simple-card-bottom">
+                    <span class="simple-card-name">Consultar estoque</span>
+                </div>
+            </a>
+
+            {% if perfil in ["admin", "operador", "separacao"] %}
+            <a href="/inventario" class="simple-card">
+                <div class="simple-card-top">
+                    <span class="simple-icon">▤</span>
+                    <span class="simple-arrow">↗</span>
+                </div>
+                <div class="simple-card-bottom">
+                    <span class="simple-card-name">Inventário</span>
+                </div>
+            </a>
+            {% endif %}
+
+            {% if perfil == "admin" %}
+            <a href="/historico" class="simple-card">
+                <div class="simple-card-top">
+                    <span class="simple-icon">◷</span>
+                    <span class="simple-arrow">↗</span>
+                </div>
+                <div class="simple-card-bottom">
+                    <span class="simple-card-name">Histórico</span>
+                </div>
+            </a>
+
+            <a href="/administracao" class="simple-card">
+                <div class="simple-card-top">
+                    <span class="simple-icon">⚙</span>
+                    <span class="simple-arrow">↗</span>
+                </div>
+                <div class="simple-card-bottom">
+                    <span class="simple-card-name">Administração</span>
+                </div>
+            </a>
+            {% endif %}
+
+        </nav>
+
+        <a href="/logout" class="simple-logout">
+            ↪ Sair do sistema
+        </a>
 
     </div>
 </div>
