@@ -1,915 +1,755 @@
 {% extends "base.html" %}
 
-{% block title %}Painel de Controle{% endblock %}
+{% block title %}Controle de Estoque{% endblock %}
 
 {% block style %}
 <style>
 :root {
-    --dash-bg: #f4f6fb;
-    --dash-card: #ffffff;
-    --dash-text: #172033;
-    --dash-muted: #7c879c;
-    --dash-border: #e7ebf3;
-    --dash-primary: #4263eb;
-    --dash-primary-light: #edf1ff;
-    --dash-sidebar: #151c2c;
-    --dash-sidebar-text: #aeb8ca;
-    --dash-shadow: 0 8px 28px rgba(25, 42, 75, .045);
+    --app-bg: #f3f5fa;
+    --app-card: #ffffff;
+    --app-text: #192238;
+    --app-muted: #8791a5;
+    --app-border: #e9edf5;
+    --app-blue: #4169f5;
+    --app-blue-soft: #edf1ff;
+    --app-green: #18a874;
+    --app-shadow: 0 5px 20px rgba(31, 47, 80, .045);
 }
 
 body.dark-mode {
-    --dash-bg: #0d1320;
-    --dash-card: #151d2d;
-    --dash-text: #edf2fc;
-    --dash-muted: #9aa8bf;
-    --dash-border: #273249;
-    --dash-primary: #8195ff;
-    --dash-primary-light: #222e4c;
-    --dash-sidebar: #101725;
-    --dash-sidebar-text: #b6c0d2;
-    --dash-shadow: 0 8px 28px rgba(0, 0, 0, .12);
+    --app-bg: #0d1320;
+    --app-card: #171f30;
+    --app-text: #eef2fb;
+    --app-muted: #9aa7bd;
+    --app-border: #293349;
+    --app-blue: #8198ff;
+    --app-blue-soft: #252f4b;
+    --app-green: #50d6a2;
+    --app-shadow: 0 5px 20px rgba(0, 0, 0, .12);
 }
 
 body {
-    background: var(--dash-bg);
+    background: var(--app-bg);
 }
 
-.dashboard {
-    min-height: 100vh;
-    display: flex;
-    color: var(--dash-text);
-    background: var(--dash-bg);
-    margin: -0px;
-    font-family: inherit;
-}
-
-/* BARRA LATERAL */
-
-.dashboard-sidebar {
-    width: 255px;
-    min-width: 255px;
-    background: var(--dash-sidebar);
-    color: white;
-    padding: 28px 17px 20px;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+#estoque-app,
+#estoque-app * {
     box-sizing: border-box;
 }
 
-.dashboard-brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 10px 30px;
-    border-bottom: 1px solid rgba(255,255,255,.09);
+#estoque-app {
+    background: var(--app-bg);
+    color: var(--app-text);
+    min-height: 100vh;
+    font-family: inherit;
+    padding-bottom: 26px;
 }
 
-.dashboard-brand img {
+.app-container {
+    width: 100%;
+    max-width: 1120px;
+    padding: 18px 16px 25px;
+    margin: 0 auto;
+}
+
+/* CABEÇALHO */
+
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 27px;
+}
+
+.app-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+}
+
+.app-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    object-fit: contain;
+    background: #fff;
+    padding: 3px;
+    flex-shrink: 0;
+    box-shadow: var(--app-shadow);
+}
+
+.app-brand-text {
+    min-width: 0;
+}
+
+.app-brand-text strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 850;
+    letter-spacing: -.3px;
+    line-height: 1.3;
+}
+
+.app-brand-text span {
+    display: block;
+    font-size: 11px;
+    color: var(--app-muted);
+    margin-top: 4px;
+}
+
+.app-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-shrink: 0;
+}
+
+.app-notification {
+    position: relative;
     width: 43px;
     height: 43px;
-    object-fit: contain;
-    border-radius: 12px;
-    background: white;
-    padding: 3px;
-    box-sizing: border-box;
-}
-
-.dashboard-brand h2 {
-    font-size: 15px;
-    line-height: 1.3;
-    margin: 0;
-    font-weight: 800;
-    letter-spacing: .2px;
-    color: #fff;
-}
-
-.dashboard-brand span {
-    display: block;
-    color: #8e9bb2;
-    font-size: 11px;
-    margin-top: 4px;
-    font-weight: 500;
-}
-
-.dashboard-section-label {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    color: #77849b;
-    padding: 27px 12px 12px;
-}
-
-.dashboard-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.dashboard-nav a {
+    border-radius: 14px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 13px 12px;
+    justify-content: center;
+    background: var(--app-card);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
     text-decoration: none;
-    color: var(--dash-sidebar-text);
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: 10px;
-    transition: background .2s, color .2s;
+    font-size: 21px;
+    box-shadow: var(--app-shadow);
 }
 
-.dashboard-nav a:hover {
-    background: rgba(255,255,255,.07);
-    color: #fff;
+.app-notification:active {
+    transform: scale(.96);
 }
 
-.dashboard-nav a.active {
-    background: #4263eb;
-    color: #fff;
-    box-shadow: 0 5px 15px rgba(66,99,235,.24);
+.app-notification-dot {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    top: 8px;
+    right: 8px;
+    border-radius: 50%;
+    background: #f04452;
+    border: 2px solid var(--app-card);
 }
 
-.dashboard-nav .nav-icon {
-    width: 23px;
-    text-align: center;
-    font-size: 17px;
-    flex-shrink: 0;
+/* BOAS-VINDAS */
+
+.app-welcome {
+    position: relative;
+    overflow: hidden;
+    padding: 23px 21px;
+    border-radius: 23px;
+    background: linear-gradient(130deg, #3156df 0%, #5375ff 100%);
+    color: white;
+    margin-bottom: 26px;
+    box-shadow: 0 10px 27px rgba(65, 105, 245, .18);
 }
 
-.nav-badge {
-    margin-left: auto;
-    min-width: 20px;
-    height: 20px;
+.app-welcome::after {
+    content: "";
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    right: -65px;
+    top: -75px;
+    border: 25px solid rgba(255,255,255,.10);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.app-welcome-label {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding: 0 5px;
-    box-sizing: border-box;
-    border-radius: 7px;
-    background: #f04452;
-    color: white;
+    gap: 6px;
+    color: #e0e7ff;
     font-size: 10px;
     font-weight: 800;
-}
-
-.dashboard-sidebar-bottom {
-    margin-top: auto;
-    padding-top: 25px;
-}
-
-.dashboard-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px 10px;
-    border-top: 1px solid rgba(255,255,255,.09);
-    border-bottom: 1px solid rgba(255,255,255,.09);
+    letter-spacing: 1.1px;
     margin-bottom: 12px;
-    min-width: 0;
 }
 
-.dashboard-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 11px;
-    background: #2c3d62;
-    color: #dce5ff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    font-weight: 800;
-    flex-shrink: 0;
-}
-
-.dashboard-user-info {
-    min-width: 0;
-}
-
-.dashboard-user-info strong {
-    display: block;
+.app-welcome h1 {
     color: #fff;
-    font-size: 12px;
+    font-size: clamp(22px, 5vw, 30px);
+    font-weight: 850;
+    letter-spacing: -.8px;
+    line-height: 1.2;
+    margin: 0;
     overflow-wrap: anywhere;
 }
 
-.dashboard-user-info span {
-    display: block;
-    color: #8997af;
+.app-welcome p {
+    color: #e5eaff;
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 10px 0 0;
+    max-width: 390px;
+}
+
+.app-welcome-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,.2);
+}
+
+.app-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: white;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 9px;
+    padding: 8px 10px;
     font-size: 10px;
-    margin-top: 4px;
+    font-weight: 750;
     text-transform: capitalize;
 }
 
-.dashboard-logout {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    text-decoration: none;
-    padding: 12px;
-    border-radius: 10px;
-    color: #ff9b9b;
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.dashboard-logout:hover {
-    background: rgba(240,68,82,.12);
-}
-
-/* CONTEÚDO PRINCIPAL */
-
-.dashboard-main {
-    flex: 1;
-    min-width: 0;
-    padding: 35px 42px 45px;
-    box-sizing: border-box;
-}
-
-.dashboard-topbar {
+.app-status {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    margin-bottom: 34px;
-}
-
-.dashboard-breadcrumb {
-    color: var(--dash-muted);
-    font-size: 12px;
-    margin-bottom: 8px;
-}
-
-.dashboard-breadcrumb strong {
-    color: var(--dash-primary);
-}
-
-.dashboard-heading {
-    margin: 0;
-    font-size: clamp(23px, 2.5vw, 31px);
-    font-weight: 850;
-    letter-spacing: -.8px;
-    color: var(--dash-text);
-}
-
-.dashboard-subtitle {
-    margin: 9px 0 0;
-    font-size: 13px;
-    color: var(--dash-muted);
-    line-height: 1.6;
-}
-
-.dashboard-top-actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.dashboard-icon-button {
-    width: 43px;
-    height: 43px;
-    border-radius: 13px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--dash-card);
-    color: var(--dash-text);
-    border: 1px solid var(--dash-border);
-    text-decoration: none;
-    font-size: 19px;
-    position: relative;
-    box-shadow: var(--dash-shadow);
-}
-
-.dashboard-icon-button:hover {
-    border-color: var(--dash-primary);
-    color: var(--dash-primary);
-}
-
-.dashboard-icon-button .notification-dot {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 8px;
-    height: 8px;
-    background: #f04452;
-    border: 2px solid var(--dash-card);
-    border-radius: 50%;
-}
-
-.dashboard-date-label {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--dash-muted);
-    background: var(--dash-card);
-    border: 1px solid var(--dash-border);
-    padding: 12px 14px;
-    border-radius: 12px;
-}
-
-/* DESTAQUE */
-
-.dashboard-welcome {
-    position: relative;
-    overflow: hidden;
-    border-radius: 19px;
-    padding: 30px 32px;
-    background: linear-gradient(115deg, #3556dc 0%, #526ff0 58%, #7387ff 100%);
-    color: #fff;
-    margin-bottom: 32px;
-    box-shadow: 0 12px 28px rgba(66,99,235,.18);
-}
-
-.dashboard-welcome::after {
-    content: "";
-    position: absolute;
-    width: 220px;
-    height: 220px;
-    right: -55px;
-    top: -105px;
-    border: 35px solid rgba(255,255,255,.08);
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-.dashboard-welcome::before {
-    content: "";
-    position: absolute;
-    width: 110px;
-    height: 110px;
-    right: 90px;
-    bottom: -80px;
-    border: 24px solid rgba(255,255,255,.07);
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-.dashboard-welcome small {
-    display: block;
-    text-transform: uppercase;
+    gap: 6px;
+    color: #e4ffef;
     font-size: 10px;
-    letter-spacing: 1.8px;
-    font-weight: 800;
-    color: #dce4ff;
-    margin-bottom: 12px;
+    font-weight: 650;
 }
 
-.dashboard-welcome h2 {
-    font-size: clamp(20px, 2vw, 27px);
-    margin: 0;
-    font-weight: 850;
-    letter-spacing: -.5px;
-    color: #fff;
+.app-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #62f1a7;
 }
 
-.dashboard-welcome p {
-    font-size: 13px;
-    line-height: 1.7;
-    max-width: 470px;
-    color: #e2e8ff;
-    margin: 10px 0 0;
-}
+/* TÍTULOS */
 
-/* SEÇÕES E CARDS */
-
-.dashboard-section-head {
+.app-section-heading {
     display: flex;
     align-items: end;
     justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 17px;
+    gap: 10px;
+    margin-bottom: 14px;
 }
 
-.dashboard-section-head h3 {
-    font-size: 17px;
+.app-section-heading h2 {
     margin: 0;
-    font-weight: 800;
-    color: var(--dash-text);
+    font-size: 17px;
+    font-weight: 850;
+    letter-spacing: -.35px;
+    color: var(--app-text);
 }
 
-.dashboard-section-head p {
-    margin: 6px 0 0;
-    font-size: 12px;
-    color: var(--dash-muted);
+.app-section-heading p {
+    color: var(--app-muted);
+    font-size: 11px;
+    line-height: 1.5;
+    margin: 5px 0 0;
 }
 
-.dashboard-section-tag {
+.app-section-count {
+    color: var(--app-blue);
+    background: var(--app-blue-soft);
+    padding: 7px 10px;
+    border-radius: 9px;
     font-size: 10px;
     font-weight: 800;
-    color: var(--dash-primary);
-    background: var(--dash-primary-light);
-    padding: 8px 11px;
-    border-radius: 8px;
     white-space: nowrap;
 }
 
-.dashboard-grid {
+/* CARDS */
+
+.app-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 17px;
-    margin-bottom: 32px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
 }
 
-.dashboard-card {
+.app-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     min-width: 0;
-    min-height: 180px;
-    position: relative;
-    padding: 22px;
-    box-sizing: border-box;
+    min-height: 166px;
+    padding: 15px;
+    background: var(--app-card);
+    color: var(--app-text);
     text-decoration: none;
-    color: var(--dash-text);
-    background: var(--dash-card);
-    border: 1px solid var(--dash-border);
-    border-radius: 16px;
-    box-shadow: var(--dash-shadow);
-    transition: transform .2s, border-color .2s, box-shadow .2s;
+    border: 1px solid var(--app-border);
+    border-radius: 18px;
+    box-shadow: var(--app-shadow);
+    transition: transform .15s, border-color .15s;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.dashboard-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--dash-primary);
-    box-shadow: 0 12px 28px rgba(45,70,120,.09);
-    color: var(--dash-text);
+.app-card:active {
+    transform: scale(.975);
+    border-color: var(--app-blue);
 }
 
-.dashboard-card-top {
+.app-card-top {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 7px;
+    margin-bottom: 15px;
 }
 
-.dashboard-card-icon {
+.app-card-icon {
+    width: 43px;
+    height: 43px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 47px;
-    height: 47px;
     border-radius: 14px;
     font-size: 22px;
     flex-shrink: 0;
 }
 
-.icon-blue { background: #eaf0ff; }
-.icon-green { background: #e5f8ef; }
-.icon-orange { background: #fff1df; }
-.icon-purple { background: #f0eaff; }
-.icon-cyan { background: #e0f7fb; }
-.icon-red { background: #ffebeb; }
-.icon-yellow { background: #fff7d9; }
+.app-icon-blue { background: #edf1ff; }
+.app-icon-green { background: #e5f8ef; }
+.app-icon-orange { background: #fff1e2; }
+.app-icon-purple { background: #f0eaff; }
+.app-icon-cyan { background: #e4f8fc; }
+.app-icon-red { background: #ffebee; }
+.app-icon-yellow { background: #fff6d9; }
 
-body.dark-mode .icon-blue { background: #253354; }
-body.dark-mode .icon-green { background: #1b3b34; }
-body.dark-mode .icon-orange { background: #443322; }
-body.dark-mode .icon-purple { background: #352b4f; }
-body.dark-mode .icon-cyan { background: #1b3a44; }
-body.dark-mode .icon-red { background: #472b35; }
-body.dark-mode .icon-yellow { background: #453c24; }
+body.dark-mode .app-icon-blue { background: #273454; }
+body.dark-mode .app-icon-green { background: #1b3a32; }
+body.dark-mode .app-icon-orange { background: #443323; }
+body.dark-mode .app-icon-purple { background: #352c4d; }
+body.dark-mode .app-icon-cyan { background: #1c3943; }
+body.dark-mode .app-icon-red { background: #472b35; }
+body.dark-mode .app-icon-yellow { background: #443a24; }
 
-.dashboard-card-arrow {
-    color: var(--dash-muted);
-    font-size: 19px;
-    transition: color .2s, transform .2s;
+.app-card-arrow {
+    color: var(--app-muted);
+    font-size: 18px;
+    line-height: 1;
 }
 
-.dashboard-card:hover .dashboard-card-arrow {
-    color: var(--dash-primary);
-    transform: translate(3px, -3px);
-}
-
-.dashboard-card h4 {
-    font-size: 14px;
+.app-card h3 {
+    font-size: 13px;
+    font-weight: 800;
     line-height: 1.4;
-    font-weight: 800;
-    margin: 0 0 7px;
-    color: var(--dash-text);
+    color: var(--app-text);
+    margin: 0 0 6px;
+    overflow-wrap: anywhere;
 }
 
-.dashboard-card p {
-    font-size: 11px;
-    line-height: 1.65;
-    color: var(--dash-muted);
-    margin: 0;
-}
-
-.dashboard-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-top: auto;
-    padding-top: 17px;
-}
-
-.dashboard-card-action {
-    font-size: 10px;
-    font-weight: 800;
-    color: var(--dash-primary);
-}
-
-.dashboard-card-count {
-    background: #fff0f0;
-    color: #d92d3a;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 5px 8px;
-    border-radius: 7px;
-}
-
-body.dark-mode .dashboard-card-count {
-    background: #472b35;
-    color: #ff9ca5;
-}
-
-/* RODAPÉ */
-
-.dashboard-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding-top: 22px;
-    border-top: 1px solid var(--dash-border);
-    color: var(--dash-muted);
+.app-card p {
     font-size: 10px;
     line-height: 1.6;
+    color: var(--app-muted);
+    margin: 0 0 12px;
 }
 
-/* RESPONSIVIDADE */
-
-@media (max-width: 1200px) {
-    .dashboard-main {
-        padding: 30px 25px;
-    }
-
-    .dashboard-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+.app-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 8px;
 }
 
-@media (max-width: 800px) {
-    .dashboard {
-        flex-direction: column;
+.app-card-link {
+    color: var(--app-blue);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.app-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 8px;
+    background: #ffebed;
+    color: #d92d3a;
+    font-size: 10px;
+    font-weight: 850;
+}
+
+body.dark-mode .app-count {
+    background: #472b35;
+    color: #ffabb2;
+}
+
+/* ATALHO INFERIOR */
+
+.app-quick-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+    padding: 15px;
+    border: 1px solid var(--app-border);
+    background: var(--app-card);
+    border-radius: 16px;
+}
+
+.app-quick-info-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--app-blue-soft);
+    font-size: 19px;
+}
+
+.app-quick-info-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.app-quick-info-text strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--app-text);
+}
+
+.app-quick-info-text span {
+    display: block;
+    font-size: 10px;
+    color: var(--app-muted);
+    margin-top: 4px;
+    line-height: 1.5;
+}
+
+.app-quick-info a {
+    color: var(--app-blue);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.app-footer {
+    text-align: center;
+    padding: 24px 5px 5px;
+    font-size: 10px;
+    line-height: 1.7;
+    color: var(--app-muted);
+}
+
+/* NAVEGAÇÃO PARA COMPUTADOR */
+
+.app-desktop-nav {
+    display: none;
+}
+
+/* TABLETS E COMPUTADORES */
+
+@media (min-width: 700px) {
+    .app-container {
+        padding: 28px 28px 35px;
     }
 
-    .dashboard-sidebar {
-        width: 100%;
-        min-width: 0;
-        min-height: 0;
-        padding: 16px;
+    .app-header {
+        margin-bottom: 30px;
     }
 
-    .dashboard-brand {
-        padding: 0 3px 15px;
+    .app-welcome {
+        padding: 30px;
+        margin-bottom: 32px;
     }
 
-    .dashboard-brand img {
-        width: 38px;
-        height: 38px;
+    .app-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
     }
 
-    .dashboard-section-label {
-        padding: 17px 4px 10px;
+    .app-card {
+        min-height: 190px;
+        padding: 20px;
     }
 
-    .dashboard-nav {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 7px;
-    }
-
-    .dashboard-nav a {
-        padding: 11px 9px;
-        font-size: 11px;
-        gap: 8px;
-    }
-
-    .dashboard-nav .nav-icon {
-        font-size: 15px;
-        width: 19px;
-    }
-
-    .dashboard-sidebar-bottom {
-        margin-top: 15px;
-        padding-top: 0;
-    }
-
-    .dashboard-user {
-        padding: 12px 4px;
-        margin-bottom: 5px;
-    }
-
-    .dashboard-logout {
-        padding: 10px 4px;
-    }
-
-    .dashboard-main {
-        padding: 24px 17px 28px;
-    }
-
-    .dashboard-topbar {
-        margin-bottom: 24px;
-        align-items: flex-start;
-    }
-
-    .dashboard-heading {
+    .app-card-icon {
+        width: 48px;
+        height: 48px;
         font-size: 24px;
     }
 
-    .dashboard-date-label {
-        display: none;
+    .app-card h3 {
+        font-size: 14px;
     }
 
-    .dashboard-welcome {
-        padding: 24px 21px;
-        margin-bottom: 27px;
+    .app-card p {
+        font-size: 11px;
     }
 
-    .dashboard-grid {
-        gap: 12px;
-    }
-
-    .dashboard-card {
-        padding: 17px;
-        min-height: 170px;
-    }
-
-    .dashboard-card-icon {
-        width: 40px;
-        height: 40px;
+    .app-section-heading h2 {
         font-size: 19px;
-    }
-
-    .dashboard-section-head h3 {
-        font-size: 16px;
     }
 }
 
-@media (max-width: 390px) {
-    .dashboard-main {
-        padding-left: 12px;
-        padding-right: 12px;
+@media (min-width: 1050px) {
+    .app-container {
+        padding-top: 35px;
     }
 
-    .dashboard-grid {
-        grid-template-columns: 1fr;
+    .app-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
-    .dashboard-card {
-        min-height: 150px;
+    .app-card {
+        min-height: 185px;
     }
 
-    .dashboard-welcome h2 {
-        font-size: 21px;
+    .app-welcome {
+        padding: 34px;
+    }
+}
+
+/* CELULARES PEQUENOS */
+
+@media (max-width: 360px) {
+    .app-container {
+        padding: 13px 11px 22px;
     }
 
-    .dashboard-topbar {
+    .app-brand {
         gap: 8px;
     }
 
-    .dashboard-heading {
-        font-size: 21px;
+    .app-logo {
+        width: 39px;
+        height: 39px;
+    }
+
+    .app-brand-text strong {
+        font-size: 12px;
+    }
+
+    .app-brand-text span {
+        font-size: 10px;
+    }
+
+    .app-notification {
+        width: 39px;
+        height: 39px;
+    }
+
+    .app-welcome {
+        padding: 19px 16px;
+        border-radius: 19px;
+    }
+
+    .app-card {
+        padding: 12px;
+        min-height: 158px;
+        border-radius: 15px;
+    }
+
+    .app-card-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 20px;
+        border-radius: 12px;
+    }
+
+    .app-card h3 {
+        font-size: 12px;
+    }
+
+    .app-card p {
+        font-size: 10px;
+    }
+
+    .app-card-link {
+        font-size: 9px;
+    }
+
+    .app-quick-info {
+        padding: 12px;
+        gap: 8px;
     }
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="dashboard">
+<div id="estoque-app">
+    <div class="app-container">
 
-    <!-- MENU LATERAL -->
-    <aside class="dashboard-sidebar">
-
-        <div class="dashboard-brand">
-            <img src="{{ url_for('static', filename='icon-192.png') }}"
-                 alt="Logo do sistema"
-                 onerror="this.style.display='none'">
-            <div>
-                <h2>CONTROLE DE ESTOQUE</h2>
-                <span>Sistema de Gestão</span>
-            </div>
-        </div>
-
-        <div class="dashboard-section-label">MENU PRINCIPAL</div>
-
-        <nav class="dashboard-nav">
-
-            {% if perfil in ["admin", "operador", "separacao"] %}
-            <a href="/cadastrar" class="active">
-                <span class="nav-icon">▦</span>
-                <span>Cadastrar produto</span>
-            </a>
-            {% endif %}
-
-            {% if perfil in ["admin", "operador", "separacao"] %}
-            <a href="/solicitacoes">
-                <span class="nav-icon">☷</span>
-                <span>Solicitações</span>
-                {% if total_solicitacoes and total_solicitacoes > 0 %}
-                <span class="nav-badge">{{ total_solicitacoes }}</span>
-                {% endif %}
-            </a>
-            {% endif %}
-
-            {% if perfil in ["admin", "operador", "separacao"] %}
-            <a href="/separacao">
-                <span class="nav-icon">⇄</span>
-                <span>Separação</span>
-            </a>
-            {% endif %}
-
-            <a href="/consulta">
-                <span class="nav-icon">⌕</span>
-                <span>Consultar estoque</span>
-            </a>
-
-            {% if perfil in ["admin", "operador", "separacao"] %}
-            <a href="/inventario">
-                <span class="nav-icon">▤</span>
-                <span>Inventário</span>
-            </a>
-            {% endif %}
-
-            {% if perfil == "admin" %}
-            <a href="/historico">
-                <span class="nav-icon">◷</span>
-                <span>Histórico</span>
-            </a>
-
-            <a href="/administracao">
-                <span class="nav-icon">⚙</span>
-                <span>Administração</span>
-            </a>
-            {% endif %}
-
-        </nav>
-
-        <div class="dashboard-sidebar-bottom">
-
-            <div class="dashboard-user">
-                <div class="dashboard-avatar">
-                    {{ usuario[0]|upper if usuario else 'U' }}
-                </div>
-                <div class="dashboard-user-info">
-                    <strong>{{ usuario }}</strong>
-                    <span>{{ perfil }}</span>
+        <!-- CABEÇALHO -->
+        <header class="app-header">
+            <div class="app-brand">
+                <img
+                    class="app-logo"
+                    src="{{ url_for('static', filename='icon-192.png') }}"
+                    alt="Logo"
+                    onerror="this.style.display='none'"
+                >
+                <div class="app-brand-text">
+                    <strong>Controle de Estoque</strong>
+                    <span>Sistema de Gestão</span>
                 </div>
             </div>
 
-            <a href="/logout" class="dashboard-logout">
-                <span class="nav-icon">↪</span>
-                <span>Sair do sistema</span>
-            </a>
-
-        </div>
-    </aside>
-
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="dashboard-main">
-
-        <header class="dashboard-topbar">
-            <div>
-                <div class="dashboard-breadcrumb">
-                    Painel <strong>/ Visão geral</strong>
-                </div>
-                <h1 class="dashboard-heading">Visão geral</h1>
-                <p class="dashboard-subtitle">
-                    Bem-vindo ao seu painel de controle de estoque.
-                </p>
-            </div>
-
-            <div class="dashboard-top-actions">
-                <a href="/notificacoes"
-                   class="dashboard-icon-button"
-                   aria-label="Notificações"
-                   title="Notificações">
+            <div class="app-header-actions">
+                <a
+                    class="app-notification"
+                    href="/notificacoes"
+                    aria-label="Abrir notificações"
+                    title="Notificações"
+                >
                     ♧
                     {% if total_notificacoes and total_notificacoes > 0 %}
-                    <span class="notification-dot"></span>
+                    <span class="app-notification-dot"></span>
                     {% endif %}
                 </a>
-                <div class="dashboard-date-label">PAINEL DE GESTÃO</div>
             </div>
         </header>
 
-        <section class="dashboard-welcome">
-            <small>CONTROLE • ORGANIZAÇÃO • RESULTADOS</small>
-            <h2>Olá, {{ usuario }}! 👋</h2>
-            <p>
-                Acesse as ferramentas do sistema para consultar produtos,
-                acompanhar solicitações e manter seu estoque organizado.
-            </p>
-        </section>
-
-        <section>
-            <div class="dashboard-section-head">
-                <div>
-                    <h3>Acesso rápido</h3>
-                    <p>Selecione uma opção para continuar.</p>
-                </div>
-                <span class="dashboard-section-tag">SEU SISTEMA</span>
+        <!-- BOAS-VINDAS -->
+        <section class="app-welcome">
+            <div class="app-welcome-label">
+                <span>✦</span>
+                <span>SEU PAINEL DE CONTROLE</span>
             </div>
 
-            <div class="dashboard-grid">
+            <h1>Olá, {{ usuario }}! 👋</h1>
+
+            <p>
+                Tudo organizado para facilitar seu trabalho.
+                Escolha abaixo o que você precisa fazer.
+            </p>
+
+            <div class="app-welcome-bottom">
+                <span class="app-role">
+                    <span>♙</span>
+                    {{ perfil }}
+                </span>
+
+                <span class="app-status">
+                    <span class="app-status-dot"></span>
+                    Sistema de gestão
+                </span>
+            </div>
+        </section>
+
+        <!-- FERRAMENTAS -->
+        <section>
+            <div class="app-section-heading">
+                <div>
+                    <h2>Acesso rápido</h2>
+                    <p>Toque em uma opção para acessar.</p>
+                </div>
+                <span class="app-section-count">MENU</span>
+            </div>
+
+            <div class="app-grid">
 
                 {% if perfil in ["admin", "operador", "separacao"] %}
-                <a href="/cadastrar" class="dashboard-card">
-                    <div class="dashboard-card-top">
-                        <div class="dashboard-card-icon icon-blue">▦</div>
-                        <span class="dashboard-card-arrow">↗</span>
+                <a href="/cadastrar" class="app-card">
+                    <div class="app-card-top">
+                        <div class="app-card-icon app-icon-blue">＋</div>
+                        <span class="app-card-arrow">↗</span>
                     </div>
-                    <h4>Cadastrar produto</h4>
-                    <p>Cadastre produtos e mantenha as informações do estoque atualizadas.</p>
-                    <div class="dashboard-card-footer">
-                        <span class="dashboard-card-action">ACESSAR MÓDULO →</span>
+                    <h3>Cadastrar produto</h3>
+                    <p>Cadastre e atualize os produtos do estoque.</p>
+                    <div class="app-card-bottom">
+                        <span class="app-card-link">ACESSAR →</span>
                     </div>
                 </a>
                 {% endif %}
 
                 {% if perfil in ["admin", "operador", "separacao"] %}
-                <a href="/solicitacoes" class="dashboard-card">
-                    <div class="dashboard-card-top">
-                        <div class="dashboard-card-icon icon-orange">☷</div>
-                        <span class="dashboard-card-arrow">↗</span>
+                <a href="/solicitacoes" class="app-card">
+                    <div class="app-card-top">
+                        <div class="app-card-icon app-icon-orange">☷</div>
+                        <span class="app-card-arrow">↗</span>
                     </div>
-                    <h4>Solicitações</h4>
-                    <p>Acompanhe as solicitações e consulte seus respectivos status.</p>
-                    <div class="dashboard-card-footer">
-                        <span class="dashboard-card-action">VER SOLICITAÇÕES →</span>
+                    <h3>Solicitações</h3>
+                    <p>Consulte e acompanhe as solicitações.</p>
+                    <div class="app-card-bottom">
+                        <span class="app-card-link">ACESSAR →</span>
                         {% if total_solicitacoes and total_solicitacoes > 0 %}
-                        <span class="dashboard-card-count">{{ total_solicitacoes }} pendente(s)</span>
+                        <span class="app-count">{{ total_solicitacoes }}</span>
                         {% endif %}
                     </div>
                 </a>
                 {% endif %}
 
                 {% if perfil in ["admin", "operador", "separacao"] %}
-                <a href="/separacao" class="dashboard-card">
-                    <div class="dashboard-card-top">
-                        <div class="dashboard-card-icon icon-green">⇄</div>
-                        <span class="dashboard-card-arrow">↗</span>
+                <a href="/separacao" class="app-card">
+                    <div class="app-card-top">
+                        <div class="app-card-icon app-icon-green">⇄</div>
+                        <span class="app-card-arrow">↗</span>
                     </div>
-                    <h4>Separação</h4>
-                    <p>Acesse as ferramentas de separação de produtos do estoque.</p>
-                    <div class="dashboard-card-footer">
-                        <span class="dashboard-card-action">INICIAR →</span>
+                    <h3>Separação</h3>
+                    <p>Acesse os itens e as tarefas de separação.</p>
+                    <div class="app-card-bottom">
+                        <span class="app-card-link">ACESSAR →</span>
                     </div>
                 </a>
                 {% endif %}
 
-                <a href="/consulta" class="dashboard-card">
-                    <div class="dashboard-card-top">
-                        <div class="dashboard-card-icon icon-cyan">⌕</div>
-                        <span class="dashboard-card-arrow">↗</span>
+                <a href="/consulta" class="app-card">
+                    <div class="app-card-top">
+                        <div class="app-card-icon app-icon-cyan">⌕</div>
+                        <span class="app-card-arrow">↗</span>
                     </div>
-                    <h4>Consultar estoque</h4>
-                    <p>Localize produtos e confira as informações disponíveis.</p>
-                    <div class="dashboard-card-footer">
-                        <span class="dashboard-card-action">CONSULTAR →</span>
+                    <h3>Consultar estoque</h3>
+                    <p>Encontre produtos e confira suas informações.</p>
+                    <div class="app-card-bottom">
+                        <span class="app-card-link">CONSULTAR →</span>
                     </div>
                 </a>
 
                 {% if perfil in ["admin", "operador", "separacao"] %}
-                <a href="/inventario" class="dashboard-card">
-                    <div class="dashboard-card-top">
-                        <div class="dashboard-card-icon icon-purple">▤</div>
-                        <span class="dashboard-card-arrow">↗</span>
+                <a href="/inventario" class="app-card">
+                    <div class="app-card-top">
+                        <div class="app-card-icon app-icon-purple">▤</div>
+                        <span class="app-card-arrow">↗</span>
                     </div>
-                    <h4>Inventário</h4>
-                    <p>Acesse o módulo de inventário e confira os registros disponíveis.</p>
-                    <div class="dashboard-card-footer">
-                        <span class="dashboard-card-action">ACESSAR →</span>
+                    <h3>Inventário</h3>
+                    <p>Acesse o módulo de inventário.</p>
+                    <div class="app-card-bottom">
+                        <span class="app-card-link">ACESSAR →</span>
                     </div>
                 </a>
                 {% endif %}
 
                 {% if perfil == "admin" %}
-                <a href="/historico" class="dashboard-card">
-                    <div class="dashboard-card-top">
-                        <div class="dashboard-card-icon icon-yellow">◷</div>
-                        <span class="dashboard-card-arrow">↗</span>
+                <a href="/historico" class="app-card">
+                    <div class="app-card-top">
+                        <div class="app-card-icon app-icon-yellow">◷</div>
+                        <span class="app-card-arrow">↗</span>
                     </div>
-                    <h4>Histórico</h4>
-                    <p>Consulte o histórico de movimentações e registros do sistema.</p>
-                    <div class="dashboard-card-footer">
-                        <span class="dashboard-card-action">CONSULTAR HISTÓRICO →</span>
+                    <h3>Histórico</h3>
+                    <p>Confira o histórico de movimentações.</p>
+                    <div class="app-card-bottom">
+                        <span class="app-card-link">CONSULTAR →</span>
                     </div>
                 </a>
 
-                <a href="/administracao" class="dashboard-card">
-                    <div class="dashboard-card-top">
-                        <div class="dashboard-card-icon icon-red">⚙</div>
-                        <span class="dashboard-card-arrow">↗</span>
+                <a href="/administracao" class="app-card">
+                    <div class="app-card-top">
+                        <div class="app-card-icon app-icon-red">⚙</div>
+                        <span class="app-card-arrow">↗</span>
                     </div>
-                    <h4>Administração</h4>
-                    <p>Acesse as ferramentas administrativas disponíveis para seu perfil.</p>
-                    <div class="dashboard-card-footer">
-                        <span class="dashboard-card-action">GERENCIAR →</span>
+                    <h3>Administração</h3>
+                    <p>Gerencie as ferramentas administrativas.</p>
+                    <div class="app-card-bottom">
+                        <span class="app-card-link">GERENCIAR →</span>
                     </div>
                 </a>
                 {% endif %}
@@ -917,11 +757,33 @@ body.dark-mode .dashboard-card-count {
             </div>
         </section>
 
-        <footer class="dashboard-footer">
-            <span>Controle de Estoque · Sistema de Gestão</span>
-            <span>Área de acesso: {{ perfil }}</span>
+        <!-- NOTIFICAÇÕES -->
+        <a href="/notificacoes" class="app-quick-info"
+           style="text-decoration:none;">
+            <div class="app-quick-info-icon">♧</div>
+            <div class="app-quick-info-text">
+                <strong>Central de notificações</strong>
+                <span>
+                    {% if total_notificacoes and total_notificacoes > 0 %}
+                    Você tem {{ total_notificacoes }} notificação(ões).
+                    {% else %}
+                    Confira as atualizações do sistema.
+                    {% endif %}
+                </span>
+            </div>
+            <span style="color:var(--app-blue);font-size:20px;">›</span>
+        </a>
+
+        <footer class="app-footer">
+            Controle de Estoque · Sistema de Gestão<br>
+            Usuário: {{ usuario }} · Perfil: {{ perfil }}
+            <br><br>
+            <a href="/logout"
+               style="color:var(--app-muted);text-decoration:none;font-weight:750;">
+                ↪ Sair do sistema
+            </a>
         </footer>
 
-    </main>
+    </div>
 </div>
 {% endblock %}
